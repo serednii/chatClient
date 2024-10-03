@@ -11,7 +11,6 @@ const FIELDS = {
 
 const Main = () => {
   const { NAME, ROOM } = FIELDS;
-
   const [values, setValues] = useState({ [NAME]: "", [ROOM]: "" });
 
   const handleChange = ({ target: { value, name } }) => {
@@ -20,7 +19,6 @@ const Main = () => {
 
   const handleClick = (e) => {
     const isDisabled = Object.values(values).some((v) => !v);
-
     if (isDisabled) e.preventDefault();
   };
 
@@ -42,6 +40,7 @@ const Main = () => {
               required
             />
           </div>
+
           <div className={styles.group}>
             <input
               type="text"
