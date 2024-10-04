@@ -117,7 +117,14 @@ const Chat = () => {
     <div className={styles.wrap}>
       <header className={styles.header}>
         <h2 className={styles.title}>
-          Room {params.room} Name {params.name} {isWrite && "..."}
+          Room {params.room} Name {params.name}{" "}
+          {isWrite && (
+            <div className="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          )}
         </h2>
         <div className={styles.users}>{users} users in this room</div>
         <button className={styles.left} onClick={leftRoom}>
@@ -130,7 +137,11 @@ const Chat = () => {
           <Messages messages={state} name={params.name} />
         </section>
         <aside className={styles.users_list}>
-          <Users usersName={usersName} userWrite={userWrite} />
+          <Users
+            usersName={usersName}
+            userWrite={userWrite}
+            IAmUser={params.name}
+          />
         </aside>
       </main>
       <footer className={styles.footer}>
