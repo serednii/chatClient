@@ -11,9 +11,8 @@ import Messages from "./Messages";
 import Users from "./Users";
 import { useRef } from "react";
 
-// const socket = io.connect("https://online-chat-900l.onrender.com");
-// const socket = io.connect("https://chatserver-production-5470.up.railway.app/");
-const socket = io.connect("http://localhost:5000/");
+const socket = io.connect("https://chatserver-production-5470.up.railway.app/");
+// const socket = io.connect("http://localhost:5000/");
 
 const Chat = () => {
   const { search } = useLocation();
@@ -140,7 +139,7 @@ const Chat = () => {
           <Users
             usersName={usersName}
             userWrite={userWrite}
-            IAmUser={params.name}
+            name={params.name}
           />
         </aside>
       </main>

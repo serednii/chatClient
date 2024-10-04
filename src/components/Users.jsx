@@ -1,12 +1,10 @@
-import React from "react";
 import { useState } from "react";
 import styles from "../styles/Users.module.css";
 import TypingIndicator from "./TypingIndicator";
-// let usersName = [{ name: "John" }, { name: "Jane" }, { name: "Tom" }];
-// usersName = undefined;
-const Users = ({ usersName, userWrite, IAmUser }) => {
+
+const Users = ({ usersName, userWrite, name }) => {
   const [show, setShow] = useState(true);
-  // console.log(usersName);
+
   return (
     <ul className={styles.usersName}>
       <button className={styles.title} onClick={() => setShow((prev) => !prev)}>
@@ -16,11 +14,13 @@ const Users = ({ usersName, userWrite, IAmUser }) => {
         usersName &&
         usersName.map((user, index) => {
           const findUser = userWrite.includes(user.name);
+          const itsMe =
+            user.name.trim().toLowerCase() === name.trim().toLowerCase();
 
           return (
             <li key={index} className={styles.user__message}>
               <h3>{user.name} </h3>
-              {findUser && user.name !== IAmUser && <TypingIndicator />}
+              {findUser && !itsMe && <TypingIndicator />}
             </li>
           );
         })}

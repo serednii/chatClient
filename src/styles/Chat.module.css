@@ -101,6 +101,8 @@
   font-size: 18px;
   background: rgb(35, 35, 35);
   padding: 32px;
+  overflow-y: auto;
+  height: calc(100vh - 150px);
 }
 
 .emoji {
