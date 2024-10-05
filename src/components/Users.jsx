@@ -5,13 +5,23 @@ import TypingIndicator from "./TypingIndicator";
 const Users = ({ usersName, userWrite, name }) => {
   const [show, setShow] = useState(true);
 
-  const usersNameYesWrite = usersName
+  //Відкидаємо з списку себе як користувача,
+  //Відкидаємо тих користувачів які набирають текст
+  //Сортуємо
+  const filterUsersName = usersName
     ? usersName
-        .filter((user) => user.name !== name)
+        .filter((user) => {
+          const findUser = userWrite.find((_user) => _user.name === user.name);
+          return user.name !== name && !findUser;
+        })
         .sort((a, b) => a.name.localeCompare(b.name))
-    : null;
+    : [];
+  //Обєднюємо два списки, першими йдуть користувачі які набирають текст а потім інші
+  const newListUser = [
+    ...userWrite.sort((a, b) => a.name.localeCompare(b.name)),
+    ...filterUsersName,
+  ];
 
-  console.log("usersNameYesWrite", usersNameYesWrite);
   return (
     <ul className={styles.usersName}>
       <button className={styles.title} onClick={() => setShow((prev) => !prev)}>
@@ -19,12 +29,8 @@ const Users = ({ usersName, userWrite, name }) => {
       </button>
 
       {show &&
-        usersNameYesWrite &&
-        usersNameYesWrite.map((user, index) => {
-          const findUser = userWrite.includes(user.name);
-          const itsMe =
-            user.name.trim().toLowerCase() === name.trim().toLowerCase();
-
+        newListUser.map((user, index) => {
+          const findUser = userWrite.find((_user) => _user.name === user.name);
           return (
             <li key={index} className={styles.user__message}>
               <h3>{user.name} </h3>

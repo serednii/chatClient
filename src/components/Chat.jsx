@@ -39,7 +39,7 @@ const Chat = () => {
       setWrite(false);
       //посилаємо gпісля натискання клавіш що закінчили ввід
       socket.emit("sendWrite", { isWrite: false, params });
-    }, 10000);
+    }, 15000);
   };
 
   const handleUserWrite = () => {
@@ -67,18 +67,18 @@ const Chat = () => {
       //маємо добавити в масив нового користувача який набирає текст
       if (isWrite) {
         //Находимо користувача в масиві
-        const isUser = userWrite.includes(user.name);
+        const isUser = userWrite.find((_user) => _user.name === user.name);
         //Добавляємо нового який набирає текст
         console.log("isUser", isUser);
         if (!isUser) {
-          setUserWrite([...userWrite, user.name]);
+          setUserWrite([...userWrite, { name: user.name }]);
         }
       } else {
         //тут видаляємо користувача який закінчив набирати текст
         const isUser = userWrite.includes(user.name);
         //Видаляємо користувача який набирає текст
         if (!isUser) {
-          setUserWrite(userWrite.filter((user) => user !== user.name));
+          setUserWrite(userWrite.filter((_user) => _user.name !== user.name));
         }
       }
       // console.log(data);
