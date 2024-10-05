@@ -16,11 +16,13 @@ const Users = ({ usersName, userWrite, name }) => {
         })
         .sort((a, b) => a.name.localeCompare(b.name))
     : [];
+
+  const filterUserWrite = userWrite
+    .filter((user) => user.name !== name)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
   //Обєднюємо два списки, першими йдуть користувачі які набирають текст а потім інші
-  const newListUser = [
-    ...userWrite.sort((a, b) => a.name.localeCompare(b.name)),
-    ...filterUsersName,
-  ];
+  const newListUser = [...filterUserWrite, ...filterUsersName];
 
   return (
     <ul className={styles.usersName}>

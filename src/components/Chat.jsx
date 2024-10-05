@@ -10,9 +10,21 @@ import styles from "../styles/Chat.module.css";
 import Messages from "./Messages";
 import Users from "./Users";
 import { useRef } from "react";
+import { useCallback } from "react";
 
 // const socket = io.connect("https://chatserver-production-5470.up.railway.app/");
 const socket = io.connect("http://localhost:5000/");
+
+const debounce1 = (func, wait = 6000) => {
+  let timeout;
+  console.log(timeout);
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
+};
 
 const Chat = () => {
   const { search } = useLocation();
@@ -28,23 +40,32 @@ const Chat = () => {
   const numberTimeout = useRef(null);
   console.log("userWrite", userWrite);
 
-  const debounce = (time) => {
-    if (!isWrite) {
-      //посилаємо при натисканні першої клавіші
-      socket.emit("sendWrite", { isWrite: true, params });
-    }
-    setWrite(true);
-    clearTimeout(numberTimeout.current);
-    numberTimeout.current = setTimeout(() => {
-      setWrite(false);
-      //посилаємо gпісля натискання клавіш що закінчили ввід
-      socket.emit("sendWrite", { isWrite: false, params });
-    }, 15000);
+  const clearSetWrite = () => {
+    setWrite(false);
+    socket.emit("sendWrite", { isWrite: false, params });
   };
+  // const debounce = (time = 6000) => {
+  //   clearTimeout(numberTimeout.current);
+  //   numberTimeout.current = setTimeout(() => {
+  //     setWrite(false);
+  //     //посилаємо gпісля натискання клавіш що закінчили ввід
+  //     socket.emit("sendWrite", { isWrite: false, params });
+  //   }, time);
+  // };
 
-  const handleUserWrite = () => {
-    debounce(10000);
-  };
+  // const handleUserWrite = () => {
+  //   // if (!isWrite) {
+  //   //   //посилаємо при натисканні першої клавіші
+  //   //   socket.emit("sendWrite", { isWrite: true, params });
+  //   //   setWrite(true);
+  //   // }
+  //   debounce(6000);
+  //   // debounce(clearSetWrite, 3000);
+  // };
+
+  const handleUserWrite = debounce1(() => {
+    clearSetWrite();
+  }, 3000);
 
   //При вході користувача  приймаємо імя і кімнату
   useEffect(() => {
@@ -99,6 +120,11 @@ const Chat = () => {
   };
 
   const handleChange = ({ target: { value } }) => {
+    if (!isWrite) {
+      //посилаємо при натисканні першої клавіші
+      socket.emit("sendWrite", { isWrite: true, params });
+      setWrite(true);
+    }
     handleUserWrite();
     setMessage(value);
   };
