@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "./static/css/main.ceda89db.css",
-    "main.js": "./static/js/main.e75700c8.js",
+    "main.js": "./static/js/main.cc0adb33.js",
     "static/media/emoji.svg": "./static/media/emoji.d064efdc8e32ee37b0cfa385d4299669.svg",
     "index.html": "./index.html",
     "main.ceda89db.css.map": "./static/css/main.ceda89db.css.map",
-    "main.e75700c8.js.map": "./static/js/main.e75700c8.js.map"
+    "main.cc0adb33.js.map": "./static/js/main.cc0adb33.js.map"
   },
   "entrypoints": [
     "static/css/main.ceda89db.css",
-    "static/js/main.e75700c8.js"
+    "static/js/main.cc0adb33.js"
   ]
 }
