@@ -5,28 +5,34 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 
-import icon from "../images/emoji.svg";
-import styles from "../styles/Chat.module.css";
-import Messages from "./Messages";
-import Users from "./Users";
+import icon from "../../images/emoji.svg";
+import styles from "./Chat.module.css";
+import Messages from "../Messages";
+
 import { useRef } from "react";
 import { useCallback } from "react";
+import Users from "../Users";
 
 // const socket = io.connect("https://chatserver-production-5470.up.railway.app/");
 const socket = io.connect("http://localhost:5000/");
-
 const debounce1 = (func, wait = 6000) => {
   let timeout;
-  console.log(timeout);
-  return function (...args) {
+
+  const debouncedFunction = (...args) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       func(...args);
     }, wait);
+    console.log("timeout timeout timeout", timeout);
   };
+
+  const getTimer = () => timeout;
+
+  return [debouncedFunction, getTimer];
 };
 
 const Chat = () => {
+  console.log("RENDER CHAT");
   const { search } = useLocation();
   const navigate = useNavigate();
   const [params, setParams] = useState({ room: "", user: "" });
@@ -39,33 +45,52 @@ const Chat = () => {
   const [userWrite, setUserWrite] = useState([]);
   const numberTimeout = useRef(null);
   console.log("userWrite", userWrite);
+  console.log("params ", params);
 
-  const clearSetWrite = () => {
+  const [debouncedHandleUserWrite, getTimer] = useCallback(
+    debounce1((params) => {
+      clearSetWrite(params); // Очистка статусу "набирає текст"
+    }, 15000),
+    [] // додаємо clearSetWrite як залежність
+  );
+  console.log(userWrite);
+  console.log(numberTimeout.current === debouncedHandleUserWrite);
+  numberTimeout.current = debouncedHandleUserWrite;
+
+  const clearSetWrite = useCallback((params) => {
     setWrite(false);
+    console.log("clearSetWrite", params);
     socket.emit("sendWrite", { isWrite: false, params });
+  }, []);
+
+  const handleUserWrite = (params) => {
+    if (!isWrite) {
+      // Посилаємо подію при першому натисканні на клавіші
+      socket.emit("sendWrite", { isWrite: true, params });
+      setWrite(true);
+    }
+    debouncedHandleUserWrite(params); // Використовуємо дебаунс-функцію
   };
-  // const debounce = (time = 6000) => {
-  //   clearTimeout(numberTimeout.current);
-  //   numberTimeout.current = setTimeout(() => {
-  //     setWrite(false);
-  //     //посилаємо gпісля натискання клавіш що закінчили ввід
-  //     socket.emit("sendWrite", { isWrite: false, params });
-  //   }, time);
-  // };
 
-  // const handleUserWrite = () => {
-  //   // if (!isWrite) {
-  //   //   //посилаємо при натисканні першої клавіші
-  //   //   socket.emit("sendWrite", { isWrite: true, params });
-  //   //   setWrite(true);
-  //   // }
-  //   debounce(6000);
-  //   // debounce(clearSetWrite, 3000);
-  // };
+  // Ваша інша логіка, наприклад, для відправки повідомлення:
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!message) return;
 
-  const handleUserWrite = debounce1(() => {
-    clearSetWrite();
-  }, 3000);
+    clearTimeout(getTimer());
+    console.log("/////////////", getTimer());
+
+    setWrite(false);
+
+    socket.emit("sendWrite", { isWrite: false, params });
+    socket.emit("sendMessage", { message, params });
+    setMessage("");
+  };
+
+  const handleChange = useCallback(({ target: { value } }) => {
+    handleUserWrite(params);
+    setMessage(value);
+  });
 
   //При вході користувача  приймаємо імя і кімнату
   useEffect(() => {
@@ -76,7 +101,7 @@ const Chat = () => {
 
   useEffect(() => {
     socket.on("message", ({ data }) => {
-      // console.log(data);
+      console.log("message----------------------------", data);
       setState((_state) => [..._state, data]);
     });
   }, []);
@@ -84,19 +109,27 @@ const Chat = () => {
   useEffect(() => {
     socket.on("messageWrite", ({ data }) => {
       const { isWrite, user } = data;
-      console.log(data);
+      console.log(user.name);
+      if (user.name === params.user) {
+        return;
+      }
+      const isUser = userWrite.find((_user) => _user.name === user.name);
       //маємо добавити в масив нового користувача який набирає текст
       if (isWrite) {
         //Находимо користувача в масиві
-        const isUser = userWrite.find((_user) => _user.name === user.name);
         //Добавляємо нового який набирає текст
-        console.log("isUser", isUser);
         if (!isUser) {
-          setUserWrite([...userWrite, { name: user.name }]);
+          console.log("1111111111111111111111111111111111111111", isUser);
+          console.log(userWrite);
+          // setUserWrite([...userWrite, { name: user.name }]);
+          setUserWrite((prevUserWrite) => [
+            ...prevUserWrite,
+            { name: user.name },
+          ]);
         }
       } else {
         //тут видаляємо користувача який закінчив набирати текст
-        const isUser = userWrite.includes(user.name);
+
         //Видаляємо користувача який набирає текст
         if (!isUser) {
           setUserWrite(userWrite.filter((_user) => _user.name !== user.name));
@@ -104,11 +137,11 @@ const Chat = () => {
       }
       // console.log(data);
     });
-  }, [userWrite]);
+  }, []);
 
   useEffect(() => {
     socket.on("room", ({ data: { users } }) => {
-      // console.log(users);
+      console.log(socket);
       setUsers(users.length);
       setUsersName(users);
     });
@@ -119,22 +152,15 @@ const Chat = () => {
     navigate("/");
   };
 
-  const handleChange = ({ target: { value } }) => {
-    if (!isWrite) {
-      //посилаємо при натисканні першої клавіші
-      socket.emit("sendWrite", { isWrite: true, params });
-      setWrite(true);
-    }
-    handleUserWrite();
-    setMessage(value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!message) return;
-    socket.emit("sendMessage", { message, params });
-    setMessage("");
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (!message) return;
+  //   // const timeout = getTimeout();
+  //   // clearTimeout(timeout);
+  //   // socket.emit("sendWrite", { isWrite: false, params });
+  //   socket.emit("sendMessage", { message, params });
+  //   setMessage("");
+  // };
 
   const onEmojiClick = ({ emoji }) => setMessage(`${message} ${emoji}`);
 

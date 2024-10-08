@@ -2,9 +2,10 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Main from "./Main";
-import Chat from "./Chat";
+
 import NotFound from "./NotFound";
 import About from "./About";
+import Chat from "./chat/Chat";
 
 const AppRoutes = () => (
   <>

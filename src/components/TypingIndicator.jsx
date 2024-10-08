@@ -6,6 +6,7 @@ const TypingIndicator = () => {
       <span></span>
       <span></span>
       <span></span>
+      <h3> writes</h3>
     </div>
   );
 };

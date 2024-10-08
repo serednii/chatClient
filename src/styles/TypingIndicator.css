@@ -4,6 +4,12 @@
   align-items: center;
 }
 
+.typing_indicator h3 {
+  color: #666;
+  font-size: 14px;
+  padding-left: 3px;
+}
+
 .typing_indicator span {
   width: 4px;
   height: 4px;
