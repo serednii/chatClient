@@ -9,9 +9,10 @@ import Messages from "../Messages";
 
 import { useRef } from "react";
 import { useCallback } from "react";
-import Users from "../Users";
+import Users from "../users/Users";
 import { debounce } from "../Util";
 import Footer from "../footer/Footer";
+import Header from "../header/Header";
 
 // const socket = io.connect("https://chatserver-production-5470.up.railway.app/");
 const socket = io.connect("http://localhost:5000/");
@@ -138,7 +139,13 @@ const Chat = () => {
 
   return (
     <div className={styles.wrap}>
-      <header className={styles.header}>
+      <Header
+        leftRoom={leftRoom}
+        params={params}
+        users={users}
+        isWrite={isWrite}
+      />
+      {/* <header className={styles.header}>
         <h2 className={styles.title}>
           Room {params.room} Name {params.name}{" "}
           {isWrite && (
@@ -153,7 +160,7 @@ const Chat = () => {
         <button className={styles.left} onClick={leftRoom}>
           Left the room
         </button>
-      </header>
+      </header> */}
 
       <main className={styles.main}>
         <section className={styles.messages}>

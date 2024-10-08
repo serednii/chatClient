@@ -1,6 +1,6 @@
 import { useState } from "react";
-import styles from "../styles/Users.module.css";
-import TypingIndicator from "./TypingIndicator";
+import styles from "./users.module.css";
+import TypingIndicator from "../TypingIndicator";
 
 const Users = ({ usersName, userWrite, name }) => {
   const [show, setShow] = useState(true);
