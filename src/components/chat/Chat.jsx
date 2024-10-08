@@ -3,33 +3,18 @@ import io from "socket.io-client";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import EmojiPicker from "emoji-picker-react";
 
-import icon from "../../images/emoji.svg";
 import styles from "./Chat.module.css";
 import Messages from "../Messages";
 
 import { useRef } from "react";
 import { useCallback } from "react";
 import Users from "../Users";
+import { debounce } from "../Util";
+import Footer from "../footer/Footer";
 
 // const socket = io.connect("https://chatserver-production-5470.up.railway.app/");
 const socket = io.connect("http://localhost:5000/");
-const debounce1 = (func, wait = 6000) => {
-  let timeout;
-
-  const debouncedFunction = (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      func(...args);
-    }, wait);
-    console.log("timeout timeout timeout", timeout);
-  };
-
-  const getTimer = () => timeout;
-
-  return [debouncedFunction, getTimer];
-};
 
 const Chat = () => {
   console.log("RENDER CHAT");
@@ -38,7 +23,7 @@ const Chat = () => {
   const [params, setParams] = useState({ room: "", user: "" });
   const [state, setState] = useState([]);
   const [message, setMessage] = useState("");
-  const [isOpen, setOpen] = useState(false);
+
   const [users, setUsers] = useState(0);
   const [usersName, setUsersName] = useState(0);
   const [isWrite, setWrite] = useState(false);
@@ -48,14 +33,11 @@ const Chat = () => {
   console.log("params ", params);
 
   const [debouncedHandleUserWrite, getTimer] = useCallback(
-    debounce1((params) => {
+    debounce((params) => {
       clearSetWrite(params); // Очистка статусу "набирає текст"
     }, 15000),
     [] // додаємо clearSetWrite як залежність
   );
-  console.log(userWrite);
-  console.log(numberTimeout.current === debouncedHandleUserWrite);
-  numberTimeout.current = debouncedHandleUserWrite;
 
   const clearSetWrite = useCallback((params) => {
     setWrite(false);
@@ -152,16 +134,6 @@ const Chat = () => {
     navigate("/");
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (!message) return;
-  //   // const timeout = getTimeout();
-  //   // clearTimeout(timeout);
-  //   // socket.emit("sendWrite", { isWrite: false, params });
-  //   socket.emit("sendMessage", { message, params });
-  //   setMessage("");
-  // };
-
   const onEmojiClick = ({ emoji }) => setMessage(`${message} ${emoji}`);
 
   return (
@@ -195,7 +167,15 @@ const Chat = () => {
           />
         </aside>
       </main>
-      <footer className={styles.footer}>
+
+      <Footer
+        handleSubmit={handleSubmit}
+        onEmojiClick={onEmojiClick}
+        handleChange={handleChange}
+        message={message}
+      />
+
+      {/* <footer className={styles.footer}>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.input}>
             <input
@@ -226,7 +206,7 @@ const Chat = () => {
             />
           </div>
         </form>
-      </footer>
+      </footer> */}
     </div>
   );
 };
