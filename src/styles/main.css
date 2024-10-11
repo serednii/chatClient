@@ -58,3 +58,39 @@ li {
   min-height: 100vh;
   padding: 0 15px;
 }
+
+.user__message {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+
+/* .user__message h3 {
+  border-radius: 5px;
+  padding: 0 5px;
+  margin-bottom: 3px;
+
+} */
+
+.user__message {
+  border-radius: 10px;
+  padding: 0 5px;
+  margin-bottom: 3px;
+}
+
+.active {
+  background-color: #0a9b6a;
+}
+
+.lowActive {
+  background-color: #7e4400;
+}
+
+.notActive {
+  background-color: dimgrey;
+}
+
+.deleteUser {
+  background-color: rgb(96 34 34);
+}

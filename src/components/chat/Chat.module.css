@@ -5,11 +5,8 @@
   align-items: center;
   flex-direction: column;
   color: #fff;
-  /* padding: 15px 0; */
   padding-top: 65px;
 }
-
-
 
 .main {
   display: flex;
@@ -22,8 +19,6 @@
   overflow-y: auto;
   height: calc(100vh - 150px);
 }
-
-
 
 .messages {
   flex-grow: 1;

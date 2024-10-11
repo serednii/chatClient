@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import styles from "./Chat.module.css";
-import Messages from "../Messages";
+import Messages from "../message/Messages";
 
 import { useRef } from "react";
 import { useCallback } from "react";
@@ -13,9 +13,9 @@ import Users from "../users/Users";
 import { debounce } from "../Util";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
+import { URL_SERVER } from "../const";
 
-// const socket = io.connect("https://chatserver-production-5470.up.railway.app/");
-const socket = io.connect("http://localhost:5000/");
+const socket = io.connect(URL_SERVER);
 
 const Chat = () => {
   console.log("RENDER CHAT");
@@ -24,19 +24,20 @@ const Chat = () => {
   const [params, setParams] = useState({ room: "", user: "" });
   const [state, setState] = useState([]);
   const [message, setMessage] = useState("");
-
   const [users, setUsers] = useState(0);
   const [usersName, setUsersName] = useState(0);
   const [isWrite, setWrite] = useState(false);
   const [userWrite, setUserWrite] = useState([]);
+  const [userStatus, setUserStatus] = useState([]);
   const numberTimeout = useRef(null);
-  console.log("userWrite", userWrite);
+
+  console.log("userStatus", userStatus);
   console.log("params ", params);
 
   const [debouncedHandleUserWrite, getTimer] = useCallback(
     debounce((params) => {
       clearSetWrite(params); // Очистка статусу "набирає текст"
-    }, 15000),
+    }, 5000),
     [] // додаємо clearSetWrite як залежність
   );
 
@@ -86,6 +87,13 @@ const Chat = () => {
     socket.on("message", ({ data }) => {
       console.log("message----------------------------", data);
       setState((_state) => [..._state, data]);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("messageStatus", ({ data }) => {
+      console.log("messageStatus-------3333333333----------", data);
+      setUserStatus(data?.roomUsers);
     });
   }, []);
 
@@ -145,22 +153,6 @@ const Chat = () => {
         users={users}
         isWrite={isWrite}
       />
-      {/* <header className={styles.header}>
-        <h2 className={styles.title}>
-          Room {params.room} Name {params.name}{" "}
-          {isWrite && (
-            <div className="typing-indicator">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          )}
-        </h2>
-        <div className={styles.users}>{users} users in this room</div>
-        <button className={styles.left} onClick={leftRoom}>
-          Left the room
-        </button>
-      </header> */}
 
       <main className={styles.main}>
         <section className={styles.messages}>
@@ -171,6 +163,8 @@ const Chat = () => {
             usersName={usersName}
             userWrite={userWrite}
             name={params.name}
+            userStatus={userStatus}
+            leftRoom={leftRoom}
           />
         </aside>
       </main>
@@ -181,39 +175,6 @@ const Chat = () => {
         handleChange={handleChange}
         message={message}
       />
-
-      {/* <footer className={styles.footer}>
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.input}>
-            <input
-              type="text"
-              name="message"
-              placeholder="What do you want to say?"
-              value={message}
-              onChange={handleChange}
-              autoComplete="off"
-              required
-            />
-          </div>
-          <div className={styles.emoji}>
-            <img src={icon} alt="" onClick={() => setOpen(!isOpen)} />
-
-            {isOpen && (
-              <div className={styles.emojies}>
-                <EmojiPicker onEmojiClick={onEmojiClick} />
-              </div>
-            )}
-          </div>
-
-          <div className={styles.button}>
-            <input
-              type="submit"
-              onSubmit={handleSubmit}
-              value="Send a message"
-            />
-          </div>
-        </form>
-      </footer> */}
     </div>
   );
 };

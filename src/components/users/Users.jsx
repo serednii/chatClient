@@ -2,9 +2,15 @@ import { useState } from "react";
 import styles from "./users.module.css";
 import TypingIndicator from "../TypingIndicator";
 
-const Users = ({ usersName, userWrite, name }) => {
+const Users = ({ usersName, userWrite, name, userStatus, leftRoom }) => {
   const [show, setShow] = useState(true);
-  console.log("userWrite******", userWrite, name);
+
+  console.log("userName******", usersName);
+  console.log("userWrite******", userWrite);
+  console.log("userStatus******", userStatus);
+
+  console.log("Name******", name);
+
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст
   //Сортуємо
@@ -32,11 +38,18 @@ const Users = ({ usersName, userWrite, name }) => {
 
       {show &&
         newListUser.map((user, index) => {
-          const findUser = userWrite.find((_user) => _user.name === user.name);
+          const findUser = userWrite?.find((_user) => _user.name === user.name);
+          const classStatus = userStatus
+            ? userStatus.find((_user) => _user.name === user.name).status
+            : "";
+
+          console.log("classStatus", classStatus);
           return (
-            <li key={index} className={styles.user__message}>
+            <li key={index} className={classStatus + " user__message"}>
+              {/* <div className={userStatus}> */}
               <h3>{user.name} </h3>
               {findUser && <TypingIndicator />}
+              {/* </div> */}
             </li>
           );
         })}

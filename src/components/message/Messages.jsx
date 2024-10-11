@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-import styles from "../styles/Messages.module.css";
+import styles from "./Messages.module.css";
 
 const Messages = ({ messages, name }) => {
   const lastUserRef = useRef(null); // Реф на последний элемент
