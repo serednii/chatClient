@@ -1,0 +1,21 @@
+.auth-user {
+    position: absolute;
+    right: 0;
+
+    &__info {
+        display: flex;
+        margin-bottom: 15px;
+    }
+
+    &__verify {
+        color: red;
+    }
+}
+
+@media(max-width: 760px) {
+    .auth-user {
+        position: initial;
+        padding-top: 10px;
+
+    }
+}

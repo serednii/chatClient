@@ -1,0 +1,24 @@
+.login-form {
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    max-width: 600px;
+    width: max-content;
+
+    &__inner {
+        background-color: aliceblue;
+        padding: 10px;
+        max-width: 600px;
+        width: 100%;
+        border-radius: 15px;
+    }
+}
+
+@media(max-width: 760px) {
+    .login-form {
+        position: initial;
+        // padding-top: 10px;
+    }
+}
