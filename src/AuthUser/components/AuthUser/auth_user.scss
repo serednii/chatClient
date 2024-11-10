@@ -1,5 +1,8 @@
 .auth-user {
+    background-color: #32b9da;
     position: absolute;
+    padding: 10px;
+    border-bottom-left-radius: 15px;
     right: 0;
 
     &__info {
@@ -16,6 +19,5 @@
     .auth-user {
         position: initial;
         padding-top: 10px;
-
     }
 }

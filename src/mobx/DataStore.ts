@@ -6,15 +6,12 @@ class DataStore {
   sluice: any;
   breadcrumbs: string[];
 
-
   constructor() {
-
     makeAutoObservable(this, {
       setDataMain: action,
       setListLinkData: action,
       setSluice: action,
       setBreadcrumbs: action,
-
     });
 
     this.breadcrumbs = [];
@@ -32,19 +29,16 @@ class DataStore {
     this.sluice = sluice;
   }
 
-  setBreadcrumbs(breadcrumbs: string[]){
+  setBreadcrumbs(breadcrumbs: string[]) {
     this.breadcrumbs = breadcrumbs;
   }
 
-
-  clearStore(){
-    this.dataMain ={}
-    this.listLinkData = {}
-    this.sluice = []
-    this.breadcrumbs = []
-    
+  clearStore() {
+    this.dataMain = {};
+    this.listLinkData = {};
+    this.sluice = [];
+    this.breadcrumbs = [];
   }
-
 }
 
 const dataStore = new DataStore();

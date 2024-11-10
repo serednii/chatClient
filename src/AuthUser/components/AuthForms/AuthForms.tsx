@@ -3,7 +3,7 @@ import React, { useState, FormEvent } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import LoginForm from "./LoginForm/LoginForm";
-import SignInForm from "./Registratioh/SignInForm";
+import SignInForm from "./Registration/SignInForm";
 
 import "./AuthForms.scss";
 
