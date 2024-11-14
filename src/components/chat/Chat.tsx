@@ -9,7 +9,7 @@ import React, {
 import io, { Socket } from "socket.io-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import Messages from "../message/Messages";
-import { URL_SERVER } from "../const";
+import { URL_SERVER } from "../../confif";
 import Users from "../users/Users";
 import { debounce } from "../Util";
 import Footer from "../footer/Footer";
@@ -94,6 +94,7 @@ const Chat: React.FC = () => {
   //При вході користувача  приймаємо імя і кімнату
   useEffect(() => {
     const searchParams: any = Object.fromEntries(new URLSearchParams(search));
+    console.log(searchParams);
     setParams(searchParams);
     socket.emit("join", searchParams);
   }, [search]);
