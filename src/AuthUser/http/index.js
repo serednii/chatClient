@@ -1,5 +1,5 @@
 import axios from "axios";
-import { URL_AUTH } from "../../confif.js";
+import { URL_AUTH } from "../../config.js";
 
 
 

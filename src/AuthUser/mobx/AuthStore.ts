@@ -4,7 +4,7 @@ import axios from "axios";
 import UserService from "../services/UserService";
 import { IUser } from "../models/IUser";
 import { AuthResponse } from "../models/response/authResponse";
-import { URL_AUTH } from "../../confif";
+import { URL_AUTH } from "../../config";
 import AuthService from "../services/AuthServices"; // Додайте цей імпорт
 // import menuStore from "../../mobx/asyncDataStore/AsyncMenuStore";
 import dataStore from "../../mobx/DataStore";
