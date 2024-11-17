@@ -7,16 +7,20 @@ import authStore from "../AuthUser/mobx/AuthStore";
 import styles from "../styles/Main.module.scss";
 import Input from "./Input";
 
-const FIELDS = {
-  NAME: "name",
-  ROOM: "room",
-};
+// const FIELDS = {
+//   NAME: "name",
+//   ROOM: "room",
+// };
 // type IHandleChange = ({ target: { value: string, name: string } }) => void;
 type IHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
+type TValues = {
+  name: string;
+  room: string;
+};
 
 const Main = () => {
-  const { NAME, ROOM } = FIELDS;
-  const [values, setValues] = useState({ [NAME]: "", [ROOM]: "" });
+  // const { NAME, ROOM } = FIELDS;
+  const [values, setValues] = useState<TValues>({ name: "", room: "" });
   console.log(values);
 
   const handleChange: IHandleChange = ({ target: { name, value } }) => {
@@ -51,7 +55,7 @@ const Main = () => {
             /> */}
 
             <Input
-              value={values[NAME]}
+              value={values.name}
               handleChange={handleChange}
               style={styles.input}
               name="name"
@@ -72,7 +76,7 @@ const Main = () => {
             /> */}
 
             <Input
-              value={values[ROOM]}
+              value={values.room}
               handleChange={handleChange}
               style={styles.input}
               name="room"
@@ -83,8 +87,8 @@ const Main = () => {
           <Link
             className={styles.group}
             onClick={handleClick}
-            // to={`/chat?name=${authStore.user.userName}&room=${values[ROOM]}`}
-            to={`/chat?name=${values[NAME]}&room=${values[ROOM]}`}
+            // to={`/chat?name=${authStore.user.userName}&room=${values.room}`}
+            to={`/chat?name=${values.name}&room=${values.room}`}
           >
             <button type="submit" className={styles.button}>
               Join the room
