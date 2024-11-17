@@ -6,25 +6,14 @@ import authStore from "../AuthUser/mobx/AuthStore";
 
 import styles from "../styles/Main.module.scss";
 import Input from "./Input";
-
-// const FIELDS = {
-//   NAME: "name",
-//   ROOM: "room",
-// };
-// type IHandleChange = ({ target: { value: string, name: string } }) => void;
-type IHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
-type TValues = {
-  name: string;
-  room: string;
-};
+import { IParams } from "./interface";
+import { THandleChange } from "./type";
 
 const Main = () => {
-  // const { NAME, ROOM } = FIELDS;
-  const [values, setValues] = useState<TValues>({ name: "", room: "" });
-  console.log(values);
+  const [values, setValues] = useState<IParams>({ name: "", room: "" });
+  // console.log(values);
 
-  const handleChange: IHandleChange = ({ target: { name, value } }) => {
-    // console.log(event);
+  const handleChange: THandleChange = ({ target: { name, value } }) => {
     setValues({ ...values, [name]: value });
   };
 
@@ -43,17 +32,6 @@ const Main = () => {
 
         <form className={styles.form}>
           <div className={styles.group}>
-            {/* <input
-              type="text"
-              name="name"
-              value={values[NAME]}
-              placeholder="Username"
-              className={styles.input}
-              onChange={handleChange}
-              autoComplete="off"
-              required
-            /> */}
-
             <Input
               value={values.name}
               handleChange={handleChange}
@@ -64,17 +42,6 @@ const Main = () => {
           </div>
 
           <div className={styles.group}>
-            {/* <input
-              type="text"
-              name="room"
-              placeholder="Room"
-              value={values[ROOM]}
-              className={styles.input}
-              onChange={handleChange}
-              autoComplete="off"
-              required
-            /> */}
-
             <Input
               value={values.room}
               handleChange={handleChange}

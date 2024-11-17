@@ -14,19 +14,15 @@ import Users from "../users/Users";
 import { debounce } from "../Util";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
-import { IParams, IState } from "../interface";
+import { IParams, IState, IUsersName, IUserWrite } from "../interface";
 import styles from "./Chat.module.scss";
-
-type THandleChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
+import {
+  THandleChange,
+  TDebouncedFunction,
+  TGetTimer,
+  TDebounce,
+} from "../type";
 // const socket: Socket = io(URL_SERVER, { path: "/socket" });
-
-interface IUsersName {
-  name: string;
-  room: string;
-  status: string;
-  time: number;
-  userSocketId: string;
-}
 
 const Chat: React.FC = () => {
   console.log("RENDER CHAT");
@@ -38,12 +34,21 @@ const Chat: React.FC = () => {
   const [users, setUsers] = useState<number>(0);
   const [usersName, setUsersName] = useState<IUsersName[]>([]);
   const [isWrite, setWrite] = useState<boolean | null>(null);
-  const [userWrite, setUserWrite] = useState<any>([]);
-  const [userStatus, setUserStatus] = useState<any>([]);
-  const numberTimeout = useRef<any>(null);
-  const debouncedFunctionRef = useRef<any>(null);
-  const getTimerRef = useRef<any>(null);
+  const [userWrite, setUserWrite] = useState<IUserWrite[]>([]);
+  const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const debouncedFunctionRef = useRef<TDebouncedFunction | null>(null);
+  const getTimerRef = useRef<TGetTimer | null>(null);
+
+  // const numberTimeout = useRef<any>(null);
+  const [debouncedFunction, getTimer]: TDebounce = debounce(
+    (params: IParams) => {
+      // console.log(socket);
+      console.log("params ", params);
+      clearSetWrite(params); // Ваш код
+    },
+    6000
+  );
 
   useEffect(() => {
     const newSocket: Socket = io(URL_SERVER, { path: "/socket" });
@@ -54,32 +59,33 @@ const Chat: React.FC = () => {
     };
   }, []);
 
-  console.log("Start Socket", socket);
+  //При вході користувача  приймаємо імя і кімнату
+  useEffect(() => {
+    if (socket) {
+      const searchParamsObj = Object.fromEntries(new URLSearchParams(search));
+      const searchParams: IParams = {
+        name: searchParamsObj.name || "",
+        room: searchParamsObj.room || "",
+      };
+      if (searchParams.name && searchParams.room) {
+        setParams(searchParams);
+        socket.emit("join", searchParams);
+      } else {
+        console.error("Missing required search parameters: name and/or room.");
+      }
+    }
+  }, [socket, search]);
+
+  // console.log("Start Socket", socket);
   // Порожній масив залежностей означає, що useEffect виконується лише один раз
   // console.log("userStatus", userStatus);
-  console.log("userStatus ", userStatus);
-  console.log("userWrite ", userWrite);
+  // console.log("userStatus ", userStatus);
+  // console.log("userWrite ", userWrite);
+  // console.log("debouncedFunctionRef.current ", debouncedFunctionRef.current);
 
-  // useEffect(()=>{
-  //  const  socket: Socket = io(URL_SERVER, { path: "/socket" });
-  // },[])
-  // const { debouncedFunction, getTimer } = useCallback(
-  //   debounce((params: any) => {
-  //     clearSetWrite(params);
-  //   }, 6000),
-  //   []
-  // );
-
-  const [debouncedFunction, getTimer] = debounce((params: any) => {
-    console.log(socket);
-    clearSetWrite(params); // Ваш код
-  }, 6000);
-
-  // if (!debouncedFunctionRef.current) {
   useEffect(() => {
     debouncedFunctionRef.current = debouncedFunction;
   }, [socket]);
-  // }
 
   if (!getTimerRef.current) {
     getTimerRef.current = getTimer;
@@ -88,7 +94,7 @@ const Chat: React.FC = () => {
   const clearSetWrite = useCallback(
     (params: IParams): void => {
       setWrite(() => false);
-      console.log(socket);
+      // console.log(socket);
       socket?.emit("sendWrite", { isWrite: false, params });
     },
     [socket]
@@ -99,41 +105,36 @@ const Chat: React.FC = () => {
       socket?.emit("sendWrite", { isWrite: true, params });
       setWrite(true);
     }
-    debouncedFunctionRef.current(params);
+    if (debouncedFunctionRef.current) {
+      debouncedFunctionRef.current(params);
+    }
     setMessage(() => value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     if (!message) return;
-    clearTimeout(getTimerRef.current());
+    if (getTimerRef.current) {
+      clearTimeout(getTimerRef.current());
+    }
     setWrite(() => false);
     socket?.emit("sendWrite", { isWrite: false, params });
     socket?.emit("sendMessage", { message, params });
     setMessage("");
   };
 
-  //При вході користувача  приймаємо імя і кімнату
   useEffect(() => {
-    if (socket) {
-      const searchParams: any = Object.fromEntries(new URLSearchParams(search));
-      setParams(searchParams);
-      socket?.emit("join", searchParams);
-    }
-  }, [socket, search]);
-
-  useEffect(() => {
-    console.log(socket);
+    // console.log(socket);
     socket?.on("message", ({ data }) => {
-      console.log("message----------------------------", data);
-      setState((_state: any) => [..._state, data]);
+      // console.log("message----------------------------", data);
+      setState((_state: IState[]) => [..._state, data]);
       // setUserStatus([data]);
     });
   }, [socket]);
 
   useEffect(() => {
     socket?.on("messageStatus", ({ data }) => {
-      console.log("messageStatus-------3333333333----------", data);
+      // console.log("messageStatus-------3333333333----------", data);
       setUserStatus(data?.roomUsers);
     });
   }, [socket]);
@@ -141,21 +142,22 @@ const Chat: React.FC = () => {
   useEffect(() => {
     socket?.on("messageWrite", ({ data }) => {
       const { isWrite, user } = data;
-      console.log(user.name);
+      // console.log(user.name);
       if (user.name === params.name) {
         return;
       }
-      const isUser: any = userWrite.find(
-        (_user: any) => _user.name === user.name
+      const isUser: IUserWrite | undefined = userWrite.find(
+        (_user: IUserWrite) => _user.name === user.name
       );
+
       //маємо добавити в масив нового користувача який набирає текст
       if (isWrite) {
         //Находимо користувача в масиві
         //Добавляємо нового який набирає текст
         if (!isUser) {
-          console.log(userWrite);
+          // console.log(userWrite);
           // setUserWrite([...userWrite, { name: user.name }]);
-          setUserWrite((prevUserWrite: any) => [
+          setUserWrite((prevUserWrite: IUserWrite[]) => [
             ...prevUserWrite,
             { name: user.name },
           ]);
@@ -166,7 +168,7 @@ const Chat: React.FC = () => {
         //Видаляємо користувача який набирає текст
         if (!isUser) {
           setUserWrite(
-            userWrite.filter((_user: any) => _user.name !== user.name)
+            userWrite.filter((_user: IUserWrite) => _user.name !== user.name)
           );
         }
       }
@@ -175,7 +177,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     socket?.on("room", ({ data: { users } }) => {
-      console.log("room-----", users);
+      // console.log("room-----", users);
       setUsers(users.length);
       setUsersName(users);
     });

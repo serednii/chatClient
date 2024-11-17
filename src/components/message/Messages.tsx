@@ -9,7 +9,7 @@ interface IMessage {
 
 const Messages: React.FC<IMessage> = ({ messages, name }) => {
   const lastUserRef = useRef<HTMLDivElement | null>(null); // Реф на последний элемент
-  console.log("mesage", messages);
+  // console.log("mesage", messages);
   useEffect(() => {
     if (lastUserRef.current) {
       lastUserRef.current.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка

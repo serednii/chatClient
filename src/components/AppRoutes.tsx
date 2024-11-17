@@ -14,11 +14,11 @@ import AuthForms from "../AuthUser/components/AuthForms/AuthForms";
 // import AuthUser from "../AuthUser/components/AuthUser/AuthUser";
 
 const AppRoutes = () => {
-  console.log(authStore.user);
-  console.log(authStore.users);
+  // console.log(authStore.user);
+  // console.log(authStore.users);
 
-  console.log(authStore.isAuth);
-  console.log(authStore.isLoading);
+  // console.log(authStore.isAuth);
+  // console.log(authStore.isLoading);
 
   return (
     <div className="wrapper">

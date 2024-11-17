@@ -4,7 +4,7 @@ import TypingIndicator from "../TypingIndicator";
 
 const Users = ({ usersName, userWrite, name, userStatus, leftRoom }: any) => {
   const [show, setShow] = useState(true);
-  console.log(userStatus);
+  // console.log(userStatus);
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст
   //Сортуємо

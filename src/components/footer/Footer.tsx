@@ -34,6 +34,7 @@ const Footer: React.FC<any> = ({
               <EmojiPicker onEmojiClick={onEmojiClick} />
             </div>
           )}
+          
         </div>
 
         <div className={styles.button}>
