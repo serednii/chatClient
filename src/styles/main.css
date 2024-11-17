@@ -92,17 +92,24 @@ li {
 }
 
 .active {
-  background-color: #0a9b6a;
+  background-color: #00FF00;
+  color: #420707;
 }
 
 .lowActive {
-  background-color: #7e4400;
+  background-color: #FFFF00;
+  color: #000000;
+
 }
 
 .notActive {
-  background-color: dimgrey;
+  background-color: #FFA500;
+  color: #000000;
+
 }
 
 .deleteUser {
-  background-color: rgb(96 34 34);
+  background-color: #FF0000;
+  color: #FFFFFF;
+
 }
