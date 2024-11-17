@@ -44,7 +44,7 @@ const Chat: React.FC = () => {
   const [debouncedFunction, getTimer]: TDebounce = debounce(
     (params: IParams) => {
       // console.log(socket);
-      console.log("params ", params);
+      // console.log("params ", params);
       clearSetWrite(params); // Ваш код
     },
     6000
@@ -210,7 +210,6 @@ const Chat: React.FC = () => {
             userWrite={userWrite}
             name={params.name}
             userStatus={userStatus}
-            leftRoom={leftRoom}
           />
         </aside>
       </main>

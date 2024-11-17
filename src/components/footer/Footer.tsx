@@ -1,7 +1,6 @@
 import EmojiPicker from "emoji-picker-react";
 import React from "react";
 import { useState } from "react";
-// import icon from "../../images/emoji.svg";
 import styles from "./footer.module.scss";
 const icon = require("../../images/emoji.svg");
 
@@ -34,7 +33,6 @@ const Footer: React.FC<any> = ({
               <EmojiPicker onEmojiClick={onEmojiClick} />
             </div>
           )}
-          
         </div>
 
         <div className={styles.button}>
