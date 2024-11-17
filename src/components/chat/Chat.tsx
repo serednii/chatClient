@@ -18,7 +18,7 @@ import { IParams, IState } from "../interface";
 import styles from "./Chat.module.scss";
 
 type THandleChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
-const socket: Socket = io(URL_SERVER, { path: "/socket" });
+// const socket: Socket = io(URL_SERVER, { path: "/socket" });
 
 interface IUsersName {
   name: string;
@@ -43,11 +43,26 @@ const Chat: React.FC = () => {
   const numberTimeout = useRef<any>(null);
   const debouncedFunctionRef = useRef<any>(null);
   const getTimerRef = useRef<any>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
-  console.log("userStatus", userStatus);
+  useEffect(() => {
+    const newSocket: Socket = io(URL_SERVER, { path: "/socket" });
+    setSocket(newSocket);
+    return () => {
+      newSocket.disconnect();
+      // Очищаємо з'єднання при розмонтуванні компонента
+    };
+  }, []);
+
+  console.log("Start Socket", socket);
+  // Порожній масив залежностей означає, що useEffect виконується лише один раз
+  // console.log("userStatus", userStatus);
   console.log("userStatus ", userStatus);
   console.log("userWrite ", userWrite);
 
+  // useEffect(()=>{
+  //  const  socket: Socket = io(URL_SERVER, { path: "/socket" });
+  // },[])
   // const { debouncedFunction, getTimer } = useCallback(
   //   debounce((params: any) => {
   //     clearSetWrite(params);
@@ -56,25 +71,32 @@ const Chat: React.FC = () => {
   // );
 
   const [debouncedFunction, getTimer] = debounce((params: any) => {
+    console.log(socket);
     clearSetWrite(params); // Ваш код
   }, 6000);
 
-  if (!debouncedFunctionRef.current) {
+  // if (!debouncedFunctionRef.current) {
+  useEffect(() => {
     debouncedFunctionRef.current = debouncedFunction;
-  }
+  }, [socket]);
+  // }
 
   if (!getTimerRef.current) {
     getTimerRef.current = getTimer;
   }
 
-  const clearSetWrite = useCallback((params: IParams): void => {
-    setWrite(() => false);
-    socket.emit("sendWrite", { isWrite: false, params });
-  }, []);
+  const clearSetWrite = useCallback(
+    (params: IParams): void => {
+      setWrite(() => false);
+      console.log(socket);
+      socket?.emit("sendWrite", { isWrite: false, params });
+    },
+    [socket]
+  );
 
   const handleChange: THandleChange = ({ target: { value } }) => {
     if (!isWrite) {
-      socket.emit("sendWrite", { isWrite: true, params });
+      socket?.emit("sendWrite", { isWrite: true, params });
       setWrite(true);
     }
     debouncedFunctionRef.current(params);
@@ -86,36 +108,38 @@ const Chat: React.FC = () => {
     if (!message) return;
     clearTimeout(getTimerRef.current());
     setWrite(() => false);
-    socket.emit("sendWrite", { isWrite: false, params });
-    socket.emit("sendMessage", { message, params });
+    socket?.emit("sendWrite", { isWrite: false, params });
+    socket?.emit("sendMessage", { message, params });
     setMessage("");
   };
 
   //При вході користувача  приймаємо імя і кімнату
   useEffect(() => {
-    const searchParams: any = Object.fromEntries(new URLSearchParams(search));
-    console.log(searchParams);
-    setParams(searchParams);
-    socket.emit("join", searchParams);
-  }, []);
+    if (socket) {
+      const searchParams: any = Object.fromEntries(new URLSearchParams(search));
+      setParams(searchParams);
+      socket?.emit("join", searchParams);
+    }
+  }, [socket, search]);
 
   useEffect(() => {
-    socket.on("message", ({ data }) => {
+    console.log(socket);
+    socket?.on("message", ({ data }) => {
       console.log("message----------------------------", data);
       setState((_state: any) => [..._state, data]);
-      setUserStatus([data]);
+      // setUserStatus([data]);
     });
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
-    socket.on("messageStatus", ({ data }) => {
+    socket?.on("messageStatus", ({ data }) => {
       console.log("messageStatus-------3333333333----------", data);
       setUserStatus(data?.roomUsers);
     });
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
-    socket.on("messageWrite", ({ data }) => {
+    socket?.on("messageWrite", ({ data }) => {
       const { isWrite, user } = data;
       console.log(user.name);
       if (user.name === params.name) {
@@ -147,19 +171,20 @@ const Chat: React.FC = () => {
         }
       }
     });
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
-    socket.on("room", ({ data: { users } }) => {
-      console.log(socket);
+    socket?.on("room", ({ data: { users } }) => {
+      console.log("room-----", users);
       setUsers(users.length);
       setUsersName(users);
     });
-  }, []);
+  }, [socket]);
 
   const leftRoom = (): void => {
-    socket.emit("leftRoom", { params });
+    socket?.emit("leftRoom", { params });
     navigate("/");
+    socket?.disconnect();
   };
 
   const onEmojiClick = ({ emoji }: any) => setMessage(`${message} ${emoji}`);
