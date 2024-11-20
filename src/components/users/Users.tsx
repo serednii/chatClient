@@ -12,10 +12,10 @@ interface IUsers {
 
 const Users = ({ usersName, userWrite, name, userStatus }: IUsers) => {
   const [show, setShow] = useState(true);
-  console.log("usersName", usersName);
-  console.log("userWrite", userWrite);
-  console.log("name", name);
-  console.log("userStatus", userStatus);
+  // console.log("usersName", usersName);
+  // console.log("userWrite", userWrite);
+  // console.log("name", name);
+  // console.log("userStatus", userStatus);
 
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст

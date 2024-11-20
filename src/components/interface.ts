@@ -7,9 +7,28 @@ export interface IParams {
   name: string;
 }
 
-export interface IState {
+export interface IMessage {
+  author: string;
+  date: string;
+  id: number;
   message: string;
-  user: { name: string };
+  status: number;
+}
+interface IMessageAdmin {
+  message: string;
+  id: string;
+}
+
+export interface IState {
+  messageAdmin: IMessageAdmin | undefined;
+  message: {
+    room: string;
+    messages: IMessage[];
+  };
+  user: {
+    name: string;
+    room: string;
+  };
 }
 
 export interface IUsersName {

@@ -11,7 +11,7 @@ import Chat from "./chat/Chat";
 import SignInForm from "../AuthUser/components/AuthForms/Registration/SignInForm";
 import AuthForms from "../AuthUser/components/AuthForms/AuthForms";
 
-// import AuthUser from "../AuthUser/components/AuthUser/AuthUser";
+import AuthUser from "../AuthUser/components/AuthUser/AuthUser";
 
 const AppRoutes = () => {
   // console.log(authStore.user);

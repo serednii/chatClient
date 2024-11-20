@@ -88,7 +88,7 @@ li {
   padding-top: 20px;
   position: relative;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .active {

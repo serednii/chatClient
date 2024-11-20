@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 import AuthUser from "../AuthUser/components/AuthUser/AuthUser";
 import authStore from "../AuthUser/mobx/AuthStore";
 
-import styles from "../styles/Main.module.scss";
 import Input from "./Input";
 import { IParams } from "./interface";
 import { THandleChange } from "./type";
+import styles from "../styles/Main.module.scss";
 
 const Main = () => {
   const [values, setValues] = useState<IParams>({ name: "", room: "" });
