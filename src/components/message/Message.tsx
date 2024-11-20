@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { ReactHTMLElement, useRef, useState } from "react";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEdit } from "react-icons/md";
 import DateComponent from "../DateComponent";
-import { MessageProps } from "./interface";
+import { MessageProps, IData } from "./interface";
 import controllerMessages from "./controllerMessage";
 import styles from "./Messages.module.scss";
 
@@ -20,55 +20,8 @@ const Message: React.FC<MessageProps> = ({
 }) => {
   const divRef = useRef<HTMLDivElement | null>(null);
   const [isEditMessage, setIsEditMessage] = useState(false);
-  const [values, setValues] = useState("");
-  const [data, setData] = useState<any>();
-
-  // controllerMessages.handleChange(event, { setValues });
-
-  const handleDeleteMessage = () => {
-    if (divRef.current) {
-      const dataIdStr = divRef.current.getAttribute("data-id");
-      if (dataIdStr) {
-        const dataId = parseInt(dataIdStr);
-        /* eslint-disable no-restricted-globals */
-        if (confirm("Ви впевнені, що хочете видалити повідомлення")) {
-          deleteMessageById(dataId);
-        }
-      }
-      /* eslint-enable no-restricted-globals */
-    }
-    setBlockLastUserRef(false);
-    setTimeout(() => setBlockLastUserRef(true), 2050);
-  };
-
-  const handleEditMessage = () => {
-    if (divRef.current) {
-      const dataIdStr = divRef.current.getAttribute("data-id");
-      const dataMessage = divRef.current.innerText;
-      setData({
-        dataIdStr,
-        dataMessage,
-      });
-      setValues(dataMessage);
-      setIsEditMessage(true);
-      setBlockLastUserRef(false);
-      setTimeout(() => setBlockLastUserRef(true), 2050);
-    }
-  };
-
-  const handleClose = (event: any) => {
-    event.preventDefault();
-    setIsEditMessage(false);
-  };
-
-  const handleSendMessage = (event: any) => {
-    event.preventDefault();
-    if (data) {
-      const dataId = parseInt(data?.dataIdStr);
-      updateMessageById(dataId, values);
-    }
-    setTimeout(() => setIsEditMessage(false), 150);
-  };
+  const [values, setValues] = useState<string>("");
+  const [data, setData] = useState<IData>({ dataIdStr: "", dataMessage: "" });
 
   return (
     <div
@@ -100,7 +53,9 @@ const Message: React.FC<MessageProps> = ({
             </div>
 
             <button
-              onClick={(event) => handleClose(event)}
+              onClick={(event) =>
+                controllerMessages.handleClose(event, setIsEditMessage)
+              }
               className={styles.button__close}
             >
               Close
@@ -108,7 +63,15 @@ const Message: React.FC<MessageProps> = ({
 
             <button
               type="submit"
-              onClick={(event) => handleSendMessage(event)}
+              onClick={(event) =>
+                controllerMessages.handleSendMessage(
+                  event,
+                  setIsEditMessage,
+                  updateMessageById,
+                  data,
+                  values
+                )
+              }
               className={styles.button__message}
             >
               Edit message
@@ -121,8 +84,26 @@ const Message: React.FC<MessageProps> = ({
             {message}
             {itsMe && (
               <div className={styles.message__text_buttons}>
-                <AiTwotoneDelete onClick={handleDeleteMessage} />
-                <MdOutlineModeEdit onClick={handleEditMessage} />
+                <AiTwotoneDelete
+                  onClick={() =>
+                    controllerMessages.handleDeleteMessage(
+                      divRef,
+                      deleteMessageById,
+                      setBlockLastUserRef
+                    )
+                  }
+                />
+                <MdOutlineModeEdit
+                  onClick={() =>
+                    controllerMessages.handleEditMessage(
+                      divRef,
+                      setData,
+                      setValues,
+                      setIsEditMessage,
+                      setBlockLastUserRef
+                    )
+                  }
+                />
               </div>
             )}
           </div>

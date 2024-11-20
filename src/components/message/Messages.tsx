@@ -16,7 +16,7 @@ const Messages: React.FC<IMessageLocal> = ({
   updateMessageById,
 }) => {
   const { messages } = state.message;
-  const [blockLastUserRef, setBlockLastUserRef] = useState(true);
+  const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(true);
   const lastUserRef = useRef<HTMLDivElement | null>(null); // Реф на последний элемент
   // console.log("mesage", messages);
   // useEffect(() => {

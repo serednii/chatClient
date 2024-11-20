@@ -12,3 +12,8 @@ export interface MessageProps {
   deleteMessageById: (id: number) => void;
   updateMessageById: (id: number, message: string) => void;
 }
+
+export interface IData {
+  dataIdStr: string;
+  dataMessage: string;
+}
