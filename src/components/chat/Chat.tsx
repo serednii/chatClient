@@ -9,11 +9,12 @@ import React, {
 import io, { Socket } from "socket.io-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import Messages from "../message/Messages";
-import { URL_SERVER } from "../../config";
 import Users from "../users/Users";
 import { debounce } from "../Util";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
+import controllerChat from "./controllerChat";
+import useWebSocket from "../useWebsocket";
 import {
   IMessage,
   IParams,
@@ -28,8 +29,6 @@ import {
   TGetTimer,
   TDebounce,
 } from "../type";
-// const socket: Socket = io(URL_SERVER, { path: "/socket" });
-let reconnectInterval = 1000;
 
 const Chat: React.FC = () => {
   console.log("RENDER CHAT");
@@ -46,68 +45,12 @@ const Chat: React.FC = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const debouncedFunctionRef = useRef<TDebouncedFunction | null>(null);
   const getTimerRef = useRef<TGetTimer | null>(null);
-  const paramsRef = useRef(params);
-  // const [reconnect, setReconnect] = useState<boolean>(false);
 
   // console.log("state **** *** ", state);
 
-  const isTrue = useRef(state);
-  isTrue.current = state;
-
-  const deleteMessageStateById = (id: number, state: IState): void => {
-    isTrue.current = state;
-    const newMessages = state?.message?.messages?.filter(
-      (message) => message.id !== id
-    );
-    if (state && newMessages) {
-      // setState(structuredClone(state));
-      setState((prevState) => {
-        if (!prevState) {
-          return prevState; // або поверніть початковий стан, якщо це необхідно
-        }
-        return {
-          ...prevState,
-          message: {
-            ...prevState.message,
-            messages: newMessages,
-          },
-        };
-      });
-    }
-  };
-
-  const updateMessageStateById = (
-    id: number,
-    message: string,
-    state: IState
-  ): void => {
-    isTrue.current = state;
-    const newMessages = state?.message?.messages?.find(
-      (message) => message.id === id
-    );
-
-    if (newMessages) {
-      newMessages.message = message;
-    }
-
-    if (state && newMessages) {
-      // setState(structuredClone(state));
-      setState((prevState) => {
-        if (!prevState) {
-          return prevState; // або поверніть початковий стан, якщо це необхідно
-        }
-        return {
-          ...prevState,
-          message: {
-            ...prevState.message,
-          },
-        };
-      });
-    }
-  };
+  useWebSocket(params, setSocket);
 
   const deleteMessageById = (id: number): void => {
-    console.log('0000000000000000000',id)
     if (socket) {
       socket.emit("deleteMessageById", { id, room: params.room });
     }
@@ -118,92 +61,6 @@ const Chat: React.FC = () => {
       socket.emit("updateMessageById", { id, room: params.room, message });
     }
   };
-
-  // const numberTimeout = useRef<any>(null);
-  const [debouncedFunction, getTimer]: TDebounce = debounce(
-    (params: IParams) => {
-      // console.log(socket);
-      // console.log("params ", params);
-      clearSetWrite(params); // Ваш код
-    },
-    6000
-  );
-
-  useEffect(() => {
-    paramsRef.current = params;
-  }, [params]);
-
-  const getParams = () => paramsRef.current;
-
-  useEffect(() => {
-    const newSocket: Socket = io(URL_SERVER, {
-      path: "/socket",
-      reconnection: true,
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: reconnectInterval,
-      reconnectionDelayMax: 30000,
-    });
-
-    setSocket(newSocket);
-
-    const handleReconnect = () => {
-      console.log("WebSocket connection reestablished");
-      newSocket.emit("join", getParams());
-      reconnectInterval = 1000; // Скидаємо інтервал перепідключення
-    };
-
-    const handleDisconnect = () => {
-      console.log("WebSocket connection lost, attempting to reconnect...");
-      reconnectInterval = Math.min(reconnectInterval * 2, 30000); // Експоненціальне збільшення до 30 секунд
-    };
-
-    const handleError = (error: any) => {
-      console.error("WebSocket error observed:", error);
-    };
-
-    newSocket.on("connect", handleReconnect);
-    newSocket.on("disconnect", handleDisconnect);
-    newSocket.on("error", handleError);
-
-    return () => {
-      newSocket.off("connect", handleReconnect);
-      newSocket.off("disconnect", handleDisconnect);
-      newSocket.off("error", handleError);
-      newSocket.disconnect();
-      // Очищаємо з'єднання при розмонтуванні компонента
-    };
-  }, []);
-
-  //При вході користувача  приймаємо імя і кімнату
-  useEffect(() => {
-    if (socket) {
-      const searchParamsObj = Object.fromEntries(new URLSearchParams(search));
-      const searchParams: IParams = {
-        name: searchParamsObj.name || "",
-        room: searchParamsObj.room || "",
-      };
-      if (searchParams.name && searchParams.room) {
-        setParams(searchParams);
-        socket.emit("join", searchParams);
-      } else {
-        console.error("Missing required search parameters: name and/or room.");
-      }
-    }
-  }, [socket, search]);
-
-  // console.log("Start Socket", socket);
-  // Порожній масив залежностей означає, що useEffect виконується лише один раз
-  // console.log("userStatus ", userStatus);
-  // console.log("userWrite ", userWrite);
-  // console.log("debouncedFunctionRef.current ", debouncedFunctionRef.current);
-
-  useEffect(() => {
-    debouncedFunctionRef.current = debouncedFunction;
-  }, [socket]);
-
-  if (!getTimerRef.current) {
-    getTimerRef.current = getTimer;
-  }
 
   const clearSetWrite = useCallback(
     (params: IParams): void => {
@@ -236,6 +93,40 @@ const Chat: React.FC = () => {
     socket?.emit("sendMessage", { message, params });
     setMessage("");
   };
+
+  //************************************************************** */
+  const [debouncedFunction, getTimer]: TDebounce = debounce(
+    (params: IParams) => {
+      clearSetWrite(params); // Ваш код
+    },
+    6000
+  );
+
+  useEffect(() => {
+    debouncedFunctionRef.current = debouncedFunction;
+  }, [socket]);
+
+  if (!getTimerRef.current) {
+    getTimerRef.current = getTimer;
+  }
+  //************************************************************** */
+
+  //При вході користувача  приймаємо імя і кімнату
+  useEffect(() => {
+    if (socket) {
+      const searchParamsObj = Object.fromEntries(new URLSearchParams(search));
+      const searchParams: IParams = {
+        name: searchParamsObj.name || "",
+        room: searchParamsObj.room || "",
+      };
+      if (searchParams.name && searchParams.room) {
+        setParams(searchParams);
+        socket.emit("join", searchParams);
+      } else {
+        console.error("Missing required search parameters: name and/or room.");
+      }
+    }
+  }, [socket, search]);
 
   useEffect(() => {
     // console.log(socket);
@@ -275,7 +166,6 @@ const Chat: React.FC = () => {
           );
 
           state?.message?.messages.push(...lastMessages);
-          // console.log("lastMessage", lastMessages);
           setState(structuredClone(state));
 
           // const updatedMessages = [...state.message.messages, ...lastMessages];
@@ -339,7 +229,6 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     socket?.on("room", ({ data: { users } }) => {
-      // console.log("room-----", users);
       setUsers(users.length);
       setUsersName(users);
     });
@@ -347,28 +236,19 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     socket?.on("deleteMessageById", ({ id }) => {
-      console.log("deleteMessageById", id);
       if (state) {
-        deleteMessageStateById(id, state);
+        controllerChat.deleteMessageStateById(id, state, setState);
       }
     });
   }, [socket, state]);
 
   useEffect(() => {
     socket?.on("updateMessageById", ({ id, message }) => {
-      console.log("updateMessageById", id, message);
       if (state) {
-        updateMessageStateById(id, message, state);
+        controllerChat.updateMessageStateById(id, message, state, setState);
       }
     });
   }, [socket, state]);
-
-  // useEffect(() => {
-  //   socket?.on("privateMessage", ({ data }) => {
-  //     console.log("test test test test test ", data);
-
-  //   });
-  // }, [socket]);
 
   const leftRoom = (): void => {
     socket?.emit("leftRoom", { params });

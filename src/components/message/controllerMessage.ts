@@ -1,7 +1,7 @@
 import { MutableRefObject } from "react";
 import { IData } from "./interface";
 
-interface ControllerMessages {
+interface IControllerMessages {
   handleDeleteMessage: (
     divRef: MutableRefObject<HTMLDivElement | null>,
     deleteMessageById: (id: number) => void,
@@ -30,7 +30,7 @@ interface ControllerMessages {
   ) => void;
 }
 
-const controllerMessages: ControllerMessages = {
+const controllerMessages: IControllerMessages = {
   handleDeleteMessage: (divRef, deleteMessageById, setBlockLastUserRef) => {
     if (divRef.current) {
       const dataIdStr = divRef.current.getAttribute("data-id");

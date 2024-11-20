@@ -1,4 +1,4 @@
-import { ReactHTMLElement, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { MdOutlineModeEdit } from "react-icons/md";
 import DateComponent from "../DateComponent";
@@ -31,13 +31,10 @@ const Message: React.FC<MessageProps> = ({
       className={`${styles.message} ${MyClassName}`}
     >
       <div className={styles.message__inner}>
-        <span className={styles.user}>
+        <span className={styles.message__inner_user}>
           <span>{author}</span>
-          <br />
           <DateComponent date={date} />
         </span>
-
-        {/* <p className={styles.user}>{localDate.toString()}</p> */}
 
         {isEditMessage && (
           <FormMessage

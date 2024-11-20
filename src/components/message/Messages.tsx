@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { IState, IMessage } from "../interface";
 import Message from "./Message";
 import styles from "./Messages.module.scss";
+
 interface IMessageLocal {
   state: IState;
   name: string;
@@ -18,11 +19,7 @@ const Messages: React.FC<IMessageLocal> = ({
   const { messages } = state.message;
   const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(true);
   const lastUserRef = useRef<HTMLDivElement | null>(null); // Реф на последний элемент
-  // console.log("mesage", messages);
-  // useEffect(() => {
-  //   // Викликати setBlockLastUserRef(true) після завершення рендеру
-  //   setBlockLastUserRef(true);
-  // }, [messages]); // Залежність від messages
+
   useEffect(() => {
     if (lastUserRef.current && blockLastUserRef) {
       lastUserRef.current.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
