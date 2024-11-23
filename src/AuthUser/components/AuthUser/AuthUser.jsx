@@ -6,6 +6,12 @@ import "./auth_user.scss";
 
 const AuthUser = () => {
   console.log("AuthUser");
+
+  const handleLogOut = () => {
+    authStore.logout();
+    console.log(authStore.isAuth);
+  };
+
   return (
     <div className="auth-user">
       <div className="auth-user__info">
@@ -23,7 +29,7 @@ const AuthUser = () => {
           {/* {svgAdmin} */}
         </button>
 
-        <button className="user-exit" onClick={() => authStore.logout()}>
+        <button className="user-exit" onClick={handleLogOut}>
           {svgLogOut}
         </button>
       </div>

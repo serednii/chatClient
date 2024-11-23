@@ -29,6 +29,7 @@ import {
   TGetTimer,
   TDebounce,
 } from "../type";
+import authStore from "../../AuthUser/mobx/AuthStore";
 
 const Chat: React.FC = () => {
   console.log("RENDER CHAT");
@@ -45,7 +46,7 @@ const Chat: React.FC = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const debouncedFunctionRef = useRef<TDebouncedFunction | null>(null);
   const getTimerRef = useRef<TGetTimer | null>(null);
-
+  console.log(authStore.isAuth);
   // console.log("state **** *** ", state);
 
   useWebSocket(params, setSocket);
@@ -252,7 +253,7 @@ const Chat: React.FC = () => {
 
   const leftRoom = (): void => {
     socket?.emit("leftRoom", { params });
-    navigate("/");
+    navigate("/main");
     socket?.disconnect();
   };
 

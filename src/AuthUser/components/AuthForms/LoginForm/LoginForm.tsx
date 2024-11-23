@@ -10,16 +10,20 @@ const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
   console.log("LoginForm");
+
   useEffect(() => {
     logicStore.setError("");
   }, []);
+
   const handleLogin = (event: FormEvent) => {
     event.preventDefault();
     logicStore.setError("");
     authStore.login(email, password);
   };
 
+  console.log(authStore);
   return (
     <div className="login-form">
       <div className="login-form__inner">

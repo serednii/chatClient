@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthUser from "../AuthUser/components/AuthUser/AuthUser";
 import authStore from "../AuthUser/mobx/AuthStore";
 
@@ -10,6 +10,7 @@ import { THandleChange } from "./type";
 import styles from "../styles/Main.module.scss";
 
 const Main = () => {
+  // const location = useLocation();
   const [values, setValues] = useState<IParams>({ name: "1", room: "" });
   // console.log(values);
 

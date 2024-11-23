@@ -12,10 +12,7 @@ const SignInForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [lastUserName, setLastUserName] = useState<string>("");
-  // console.log(authStore.user);
-  // console.log(authStore.users);
-  // console.log(authStore.isAuth);
-  // console.log(authStore.isLoading);
+
   console.log("SignInForm");
   useEffect(() => {
     logicStore.setError("");
