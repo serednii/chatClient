@@ -10,7 +10,7 @@ interface IParams {
 const useWebSocket = (params: IParams, setSocket: (value: Socket) => void) => {
   const paramsRef = useRef<IParams>(params);
   const reconnectIntervalRef = useRef<number>(1000);
-
+  const isFirstConnect = useRef<boolean>(true);
   // Оновлюємо реф params при кожній зміні
   useEffect(() => {
     paramsRef.current = params;
@@ -31,7 +31,16 @@ const useWebSocket = (params: IParams, setSocket: (value: Socket) => void) => {
 
     const handleReconnect = () => {
       console.log("WebSocket connection reestablished");
-      newSocket.emit("join", getParams());
+
+      //При першому підключенні пропускаємо відправку join
+      if (isFirstConnect.current) {
+        console.log("First WebSocket connection established");
+        isFirstConnect.current = false; // Встановлюємо реф у false після першого підключення
+      } else {
+        console.log("WebSocket connection reestablished");
+        newSocket.emit("join", getParams());
+      }
+
       reconnectIntervalRef.current = 1000; // Скидаємо інтервал перепідключення
     };
 
@@ -59,7 +68,7 @@ const useWebSocket = (params: IParams, setSocket: (value: Socket) => void) => {
     };
   }, [URL_SERVER, getParams]);
 
-  return { };
+  return {};
 };
 
 export default useWebSocket;
