@@ -4,8 +4,9 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import DateComponent from "../DateComponent";
 import { MessageProps, IData } from "./interface";
 import controllerMessages from "./controllerMessage";
-import styles from "./Messages.module.scss";
 import FormMessage from "./FormMessage";
+import DateComponentMini from "../DateComponentMini";
+import styles from "./Messages.module.scss";
 
 const Message: React.FC<MessageProps> = ({
   author,
@@ -23,7 +24,6 @@ const Message: React.FC<MessageProps> = ({
   const [isEditMessage, setIsEditMessage] = useState(false);
   const [values, setValues] = useState<string>("");
   const [data, setData] = useState<IData>({ dataIdStr: "", dataMessage: "" });
-
   return (
     <div
       key={id}
@@ -31,10 +31,13 @@ const Message: React.FC<MessageProps> = ({
       className={`${styles.message} ${MyClassName}`}
     >
       <div className={styles.message__inner}>
-        <span className={styles.message__inner_user}>
-          <span>{author}</span>
-          <DateComponent date={date} />
-        </span>
+        <div className={styles.message__inner_top}>
+          <span className={styles.message__inner_user}>{author}</span>
+          <div className={styles.message__top_date}>
+            {/* <DateComponentMini date={date} /> */}
+            <DateComponent date={date} />
+          </div>
+        </div>
 
         {isEditMessage && (
           <FormMessage
