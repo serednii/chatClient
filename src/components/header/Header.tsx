@@ -1,19 +1,19 @@
 import React from "react";
 import { IParams } from "../interface";
+import chatStore from "../../mobx/chatStore";
 import styles from "./header.module.scss";
 
 interface IHeader {
   leftRoom: () => void;
   params: IParams;
   users: number;
-  isWrite: boolean | null;
 }
-const Header: React.FC<IHeader> = ({ leftRoom, params, users, isWrite }) => {
+const Header: React.FC<IHeader> = ({ leftRoom, params, users }) => {
   return (
     <header className={styles.header}>
       <h2 className={styles.title}>
         Room {params.room} Name {params.name}{" "}
-        {isWrite && (
+        {chatStore.isWrite && (
           <div className="typing-indicator">
             <span></span>
             <span></span>

@@ -1,5 +1,6 @@
 import { MutableRefObject } from "react";
 import { IData } from "./interface";
+import chatStore from "../../mobx/chatStore";
 
 interface IControllerMessages {
   handleDeleteMessage: (
@@ -32,6 +33,8 @@ interface IControllerMessages {
 
 const controllerMessages: IControllerMessages = {
   handleDeleteMessage: (divRef, deleteMessageById, setBlockLastUserRef) => {
+    console.log("handleDeleteMessage");
+    chatStore.setDeleteMessage(true);
     if (divRef.current) {
       const dataIdStr = divRef.current.getAttribute("data-id");
       if (dataIdStr) {
@@ -39,6 +42,9 @@ const controllerMessages: IControllerMessages = {
         /* eslint-disable no-restricted-globals */
         if (confirm("Ви впевнені, що хочете видалити повідомлення")) {
           deleteMessageById(dataId);
+          setTimeout(() => {
+            chatStore.setDeleteMessage(false);
+          }, 6000);
         }
       }
       /* eslint-enable no-restricted-globals */
@@ -57,6 +63,7 @@ const controllerMessages: IControllerMessages = {
     if (divRef.current) {
       const dataIdStr: string | null = divRef.current.getAttribute("data-id");
       const dataMessage: string | undefined = divRef.current.innerText;
+      chatStore.setDeleteMessage(true);
       if (dataIdStr && dataMessage) {
         setData({
           dataIdStr,
@@ -66,12 +73,16 @@ const controllerMessages: IControllerMessages = {
       setValues(dataMessage);
       setIsEditMessage(true);
       setBlockLastUserRef(false);
-      setTimeout(() => setBlockLastUserRef(true), 2050);
+      setTimeout(() => {
+        chatStore.setDeleteMessage(false);
+      }, 6000);
+      setTimeout(() => setBlockLastUserRef(true), 3050);
     }
   },
   handleClose: (event, setIsEditMessage) => {
     event.preventDefault();
     setIsEditMessage(false);
+    chatStore.setDeleteMessage(false);
   },
   handleSendMessage: (
     event,

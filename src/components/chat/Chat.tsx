@@ -1,16 +1,9 @@
-import React, {
-  useMemo,
-  useEffect,
-  useCallback,
-  useState,
-  useRef,
-} from "react";
+import React, { useMemo, useEffect, useCallback, useState } from "react";
 
 import io, { Socket } from "socket.io-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import Messages from "../message/Messages";
 import Users from "../users/Users";
-import { debounce } from "../Util";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
 import controllerChat from "./controllerChat";
@@ -22,14 +15,10 @@ import {
   IUsersName,
   IUserWrite,
 } from "../interface";
-import styles from "./Chat.module.scss";
-import {
-  THandleChange,
-  TDebouncedFunction,
-  TGetTimer,
-  TDebounce,
-} from "../type";
+import chatStore from "../../mobx/chatStore";
 import authStore from "../../AuthUser/mobx/AuthStore";
+
+import styles from "./Chat.module.scss";
 
 const Chat: React.FC = () => {
   console.log("RENDER CHAT");
@@ -40,15 +29,13 @@ const Chat: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [users, setUsers] = useState<number>(0);
   const [usersName, setUsersName] = useState<IUsersName[]>([]);
-  const [isWrite, setWrite] = useState<boolean | null>(null);
   const [userWrite, setUserWrite] = useState<IUserWrite[]>([]);
   const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
-  const debouncedFunctionRef = useRef<TDebouncedFunction | null>(null);
-  const getTimerRef = useRef<TGetTimer | null>(null);
   console.log(authStore.isAuth);
   // console.log("state **** *** ", state);
 
+  // const { isWrite, setWrite } = chatStore;
   useWebSocket(params, setSocket);
 
   const deleteMessageById = (id: number): void => {
@@ -63,55 +50,38 @@ const Chat: React.FC = () => {
     }
   };
 
-  const clearSetWrite = useCallback(
-    (params: IParams): void => {
-      setWrite(() => false);
-      // console.log(socket);
-      socket?.emit("sendWrite", { isWrite: false, params });
-    },
-    [socket]
-  );
-
-  const handleChange: THandleChange = ({ target: { value } }) => {
-    if (!isWrite) {
-      socket?.emit("sendWrite", { isWrite: true, params });
-      setWrite(true);
-    }
-    if (debouncedFunctionRef.current) {
-      debouncedFunctionRef.current(params);
-    }
-    setMessage(() => value);
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    if (!message) return;
-    if (getTimerRef.current) {
-      clearTimeout(getTimerRef.current());
-    }
-    setWrite(() => false);
+  const clearSetWrite = useCallback((): void => {
+    chatStore.setWrite(false);
     socket?.emit("sendWrite", { isWrite: false, params });
-    socket?.emit("sendMessage", { message, params });
-    setMessage("");
-  };
+  }, [socket, params]);
 
-  //************************************************************** */
-  const [debouncedFunction, getTimer]: TDebounce = debounce(
-    (params: IParams) => {
-      clearSetWrite(params); // Ваш код
+  const handleSubmitChat = useCallback(
+    (message: string): void => {
+      if (!message) return;
+      chatStore.setWrite(false);
+      socket?.emit("sendWrite", { isWrite: false, params });
+      socket?.emit("sendMessage", { message, params });
     },
-    6000
+    [socket, params]
   );
+
+  const handleChangeChat = useCallback(() => {
+    if (!chatStore.isWrite) {
+      console.log('socket?.emit("sendWrite", { isWrite: true, params });');
+      socket?.emit("sendWrite", { isWrite: true, params });
+      chatStore.setWrite(true);
+    }
+  }, [socket, params, chatStore.isWrite]);
 
   useEffect(() => {
-    debouncedFunctionRef.current = debouncedFunction;
-  }, [socket]);
+    if (chatStore.isDeleteMessage) {
+      handleChangeChat();
+    } else {
+      clearSetWrite();
+    }
+  }, [chatStore.isDeleteMessage]);
 
-  if (!getTimerRef.current) {
-    getTimerRef.current = getTimer;
-  }
-  //************************************************************** */
-
+  console.log("chatStore.isWrite", chatStore.isWrite);
   //При вході користувача  приймаємо імя і кімнату
   useEffect(() => {
     if (socket) {
@@ -261,12 +231,7 @@ const Chat: React.FC = () => {
 
   return (
     <div className={styles.wrap}>
-      <Header
-        leftRoom={leftRoom}
-        params={params}
-        users={users}
-        isWrite={isWrite}
-      />
+      <Header leftRoom={leftRoom} params={params} users={users} />
 
       <main className={styles.main}>
         <section className={styles.messages}>
@@ -290,10 +255,12 @@ const Chat: React.FC = () => {
       </main>
 
       <Footer
-        handleSubmit={handleSubmit}
+        handleSubmitChat={handleSubmitChat}
         onEmojiClick={onEmojiClick}
-        handleChange={handleChange}
-        message={message}
+        socket={socket}
+        params={params}
+        clearSetWrite={clearSetWrite}
+        handleChangeChat={handleChangeChat}
       />
     </div>
   );
