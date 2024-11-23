@@ -1,9 +1,9 @@
 import EmojiPicker from "emoji-picker-react";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, memo } from "react";
 import { useState } from "react";
 import { IParams } from "../interface";
 import { debounce } from "../Util";
-
+import chatStore from "../../mobx/chatStore";
 import {
   THandleChange,
   TDebouncedFunction,
@@ -17,7 +17,6 @@ const Footer: React.FC<any> = ({
   handleSubmitChat,
   handleChangeChat,
   onEmojiClick,
-  socket,
   params,
   clearSetWrite,
 }) => {
@@ -45,7 +44,7 @@ const Footer: React.FC<any> = ({
 
   useEffect(() => {
     debouncedFunctionRef.current = debouncedFunction;
-  }, [socket]);
+  }, [chatStore.socket]);
 
   if (!getTimerRef.current) {
     getTimerRef.current = getTimer;
@@ -92,4 +91,4 @@ const Footer: React.FC<any> = ({
   );
 };
 
-export default Footer;
+export default memo(Footer);

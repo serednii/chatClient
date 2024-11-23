@@ -68,6 +68,7 @@ class ChatStore {
   }
 
   setSocket(socket: Socket) {
+    console.log("socket");
     this.socket = socket;
   }
 

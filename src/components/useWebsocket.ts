@@ -1,13 +1,14 @@
 import { useEffect, useRef, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
 import { URL_SERVER } from "../config";
+import chatStore from "../mobx/chatStore";
 
 interface IParams {
   room: string;
   name: string;
 }
 
-const useWebSocket = (params: IParams, setSocket: (value: Socket) => void) => {
+const useWebSocket = (params: IParams) => {
   const paramsRef = useRef<IParams>(params);
   const reconnectIntervalRef = useRef<number>(1000);
   const isFirstConnect = useRef<boolean>(true);
@@ -27,7 +28,7 @@ const useWebSocket = (params: IParams, setSocket: (value: Socket) => void) => {
       reconnectionDelayMax: 30000,
     });
 
-    setSocket(newSocket);
+    chatStore.setSocket(newSocket);
 
     const handleReconnect = () => {
       console.log("WebSocket connection reestablished");
