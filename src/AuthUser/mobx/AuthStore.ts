@@ -62,7 +62,7 @@ class AuthStore {
     } catch (e) {
       const error = e as AxiosError<{ message: string }>;
       console.log(error?.response?.data?.message);
-      logicStore.setError(error.response?.data?.message || "Error login");
+      logicStore.setError(error.response?.data?.message || "Error login or password");
     }
   }
 
