@@ -8,7 +8,7 @@ import NotFound from "./NotFound";
 import About from "./About";
 import Chat from "./chat/Chat";
 // import LoginForm from "../AuthUser/components/AuthForms/LoginForm/LoginForm";
-import SignInForm from "../AuthUser/components/AuthForms/Registration/SignInForm";
+// import SignInForm from "../AuthUser/components/AuthForms/Registration/SignInForm";
 import AuthForms from "../AuthUser/components/AuthForms/AuthForms";
 
 import AuthUser from "../AuthUser/components/AuthUser/AuthUser";
@@ -22,15 +22,15 @@ const AppRoutes = () => {
 
   return (
     <div className="wrapper">
-      {/* {!authStore.isAuth && <AuthForms />}
-      {authStore.isAuth && ( */}
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/about" element={<About />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      {/* // )} */}
+      {!authStore.isAuth && <AuthForms />}
+      {authStore.isAuth && (
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      )}
     </div>
   );
 };

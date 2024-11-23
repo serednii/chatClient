@@ -10,7 +10,7 @@ import { THandleChange } from "./type";
 import styles from "../styles/Main.module.scss";
 
 const Main = () => {
-  const [values, setValues] = useState<IParams>({ name: "", room: "" });
+  const [values, setValues] = useState<IParams>({ name: "1", room: "" });
   // console.log(values);
 
   const handleChange: THandleChange = ({ target: { name, value } }) => {
@@ -26,12 +26,12 @@ const Main = () => {
 
   return (
     <div className={styles.wrap}>
-      {/* <AuthUser></AuthUser> */}
+      <AuthUser></AuthUser>
       <div className={styles.container}>
         <h1 className={styles.heading}>Join</h1>
 
         <form className={styles.form}>
-          <div className={styles.group}>
+          {/* <div className={styles.group}>
             <Input
               value={values.name}
               handleChange={handleChange}
@@ -39,7 +39,7 @@ const Main = () => {
               name="name"
               placeholder="UserName"
             />
-          </div>
+          </div> */}
 
           <div className={styles.group}>
             <Input
@@ -54,8 +54,8 @@ const Main = () => {
           <Link
             className={styles.group}
             onClick={handleClick}
-            // to={`/chat?name=${authStore.user.userName}&room=${values.room}`}
-            to={`/chat?name=${values.name}&room=${values.room}`}
+            to={`/chat?name=${authStore.user.userName}&room=${values.room}`}
+            // to={`/chat?name=${values.name}&room=${values.room}`}
           >
             <button type="submit" className={styles.button}>
               Join the room

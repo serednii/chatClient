@@ -27,7 +27,7 @@ const Messages: React.FC<IMessageLocal> = ({
   }, [messages]); // Сработает каждый раз, когда изменится список usersName
 
   return (
-    <div>
+    <div key="messages">
       {messages &&
         messages.map(({ author, message, id, date }: IMessage, i: number) => {
           const itsMe =
