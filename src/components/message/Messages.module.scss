@@ -5,7 +5,6 @@
 }
 
 .message {
-  // background-color: #c6c2d2;
   display: flex;
   flex-direction: column;
   margin-bottom: 5px;
@@ -13,12 +12,12 @@
 
 .message__inner {
   background-color: #9e3737;
-  border-radius: 20px;
-  padding: 5px;
+  border-radius: 10px;
+  padding: 0 9px;
+  border: 1px solid white;
 }
 
 .message__text {
-  // padding: 10px;
   border-radius: 12px;
   font-size: 15px;
   color: #fff;
@@ -29,15 +28,14 @@
 .message__text_buttons {
   position: absolute;
   width: 70px;
-  height: 60px;
-  top: -30px;
+  height: 50px;
+  top: -40px;
   left: 5px;
   padding: 3px;
   border-radius: 5px;
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
   background-color: #554646;
-  // height: 24px;
   display: flex;
   gap: 5px;
 }
@@ -45,7 +43,6 @@
 .message__text_buttons>* {
   width: 50px;
   height: 50px;
-
 }
 
 .message__text:hover {
@@ -54,13 +51,39 @@
   }
 }
 
-.message__inner_user {
+.message__inner_top {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  // flex-direction: column;
   font-size: 14px;
   color: rgb(176, 176, 176);
+  position: relative;
 }
 
+.message__top_date {
+  // position: relative;
+}
+
+.message__top_date_full {
+  // position: absolute;
+  color: #94e30c;
+  opacity: 1;
+  width: 140px;
+  // background-color: #8e0808;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px;
+  border-radius: 5px;
+  z-index: 10;
+  transition: opacity 0.2s ease-in-out;
+}
+
+// .message__inner_top:hover {
+//   .message__top_date_full {
+//     opacity: 1;
+//   }
+// }
 
 .user,
 .admin {

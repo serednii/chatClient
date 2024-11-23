@@ -9,24 +9,29 @@
 }
 
 .main {
-  display: flex;
+  // display: flex;
   width: 100%;
-  flex-grow: 1;
+  // flex-grow: 1;
+  position: relative;
 }
 
 .users_list {
-  flex: 150px 1 1;
+  // flex: 150px 1 1;
   overflow-y: auto;
-  height: calc(100vh - 150px);
+  // height: calc(100vh - 150px);
+  position: absolute;
+  top: 0px;
+  right: 135px;
+  border-radius: 15px;
 }
 
 .messages {
-  flex-grow: 1;
+  // flex-grow: 1;
   width: 100%;
   color: #fff;
   font-size: 18px;
   background: rgb(35, 35, 35);
-  padding: 32px;
+  padding: 4px;
   overflow-y: auto;
   height: calc(100vh - 150px);
 }

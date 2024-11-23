@@ -61,7 +61,7 @@ li {
   max-width: 1240px;
   margin: 0 auto;
   min-height: 100vh;
-  padding: 0 15px;
+  padding: 0 5px;
 }
 
 .user__message {
