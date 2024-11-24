@@ -1,6 +1,6 @@
 import { makeAutoObservable, observable } from "mobx";
 import { Socket } from "socket.io-client";
-import { IMessage, IParams } from "../components/interface";
+import { IMessage, IParams, IUsersName } from "../components/interface";
 
 class ChatStore {
   isWrite: boolean;
@@ -8,7 +8,8 @@ class ChatStore {
   socket: Socket | null;
   params: IParams;
   state: IMessage[];
-  // const [users, setUsers] = useState<number>(0);
+  // const [usersName, setUsersName] = useState<IUsersName[]>([]);
+  usersName: IUsersName[];
   users: number;
   message: string;
 
@@ -21,6 +22,11 @@ class ChatStore {
     this.state = observable.array([]); // Ініціалізація як спостережуваного масиву
     this.message = "";
     this.users = 0;
+    this.usersName = [];
+  }
+
+  setUsersName(usersName: IUsersName[]) {
+    this.usersName = [...usersName];
   }
 
   setUsers(counter: number) {

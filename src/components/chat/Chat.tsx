@@ -31,9 +31,7 @@ const Chat: React.FC = () => {
   console.log("RENDER CHAT");
   const { search } = useLocation();
   const navigate = useNavigate();
-  // const [message, setMessage] = useState<string>("");
-  // const [users, setUsers] = useState<number>(0);
-  const [usersName, setUsersName] = useState<IUsersName[]>([]);
+  // const [usersName, setUsersName] = useState<IUsersName[]>([]);
   const [userWrite, setUserWrite] = useState<IUserWrite[]>([]);
   const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
 
@@ -221,7 +219,7 @@ const Chat: React.FC = () => {
   useEffect(() => {
     const handleRoom = ({ data: { users } }: any) => {
       chatStore.setUsers(users.length);
-      setUsersName(users);
+      chatStore.setUsersName(users);
     };
     chatStore.socket?.on("room", handleRoom);
     return () => {
@@ -276,7 +274,7 @@ const Chat: React.FC = () => {
         </section>
         <aside className={styles.users_list}>
           <Users
-            usersName={usersName}
+            // usersName={usersName}
             userWrite={userWrite}
             userStatus={userStatus}
           />

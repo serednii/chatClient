@@ -5,18 +5,17 @@ import chatStore from "../../mobx/chatStore";
 import styles from "./users.module.scss";
 
 interface IUsers {
-  usersName: IUsersName[];
   userWrite: IUserWrite[];
   userStatus: IUsersName[];
 }
 
-const Users = ({ usersName, userWrite, userStatus }: IUsers) => {
+const Users = ({ userWrite, userStatus }: IUsers) => {
   const [show, setShow] = useState(true);
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст
   //Сортуємо
-  const filterUsersName = usersName
-    ? usersName
+  const filterUsersName = chatStore.usersName
+    ? chatStore.usersName
         .filter((user: IUsersName) => {
           const findUser = userWrite.find(
             (_user: IUserWrite) => _user.name === user.name
