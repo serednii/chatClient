@@ -12,7 +12,6 @@ import Messages from "../message/Messages";
 import Users from "../users/Users";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
-import controllerChat from "./controllerChat";
 import useWebSocket from "../useWebsocket";
 import {
   IMessage,
@@ -27,19 +26,18 @@ import chatStore from "../../mobx/chatStore";
 import authStore from "../../AuthUser/mobx/AuthStore";
 
 import styles from "./Chat.module.scss";
-// let hasJoined = false; // Флаг для перевірки
+
 const Chat: React.FC = () => {
   console.log("RENDER CHAT");
   const { search } = useLocation();
   const navigate = useNavigate();
-  const [state, setState] = useState<IMessage[]>();
   const [message, setMessage] = useState<string>("");
   const [users, setUsers] = useState<number>(0);
   const [usersName, setUsersName] = useState<IUsersName[]>([]);
   const [userWrite, setUserWrite] = useState<IUserWrite[]>([]);
   const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
+
   console.log(authStore.isAuth);
-  // console.log("state **** *** ", state);
   const hasJoined = useRef(false);
 
   useWebSocket();
@@ -134,21 +132,19 @@ const Chat: React.FC = () => {
     const handleMessageStart = ({ data }: IMessageStart) => {
       console.log("messageStart----------------------------", data);
       if (data) {
-        setState(data.messages);
+        chatStore.setState(data.messages);
       }
     };
     chatStore.socket?.on("messageStart", handleMessageStart);
     return () => {
       chatStore.socket?.off("messageStart", handleMessageStart);
     };
-  }, [chatStore.socket, state]);
+  }, [chatStore.socket, chatStore.state]);
 
   useEffect(() => {
     const handleMessageAdd = ({ data }: IMessageAdd) => {
-      // console.log("messageAdd----------------------------", data);
-      // console.log("messageAdd----------------------------", state);
       if (data && data.message) {
-        setState((prev: any) => [...prev, data]);
+        chatStore.addMessage(data.message);
       }
     };
 
@@ -156,7 +152,7 @@ const Chat: React.FC = () => {
     return () => {
       chatStore.socket?.off("messageAdd", handleMessageAdd);
     };
-  }, [chatStore.socket, state]);
+  }, [chatStore.socket, chatStore.state]);
 
   useEffect(() => {
     const handleStatusMessage = ({ data }: any) => {
@@ -235,27 +231,25 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     const handleDeleteMessageById = ({ id }: any) => {
-      if (state) {
-        controllerChat.deleteMessageStateById(id, state, setState);
-      }
+      chatStore.deleteMessageById(id);
     };
     chatStore.socket?.on("deleteMessageById", handleDeleteMessageById);
     return () => {
       chatStore.socket?.off("deleteMessageById", handleDeleteMessageById);
     };
-  }, [chatStore.socket, state]);
+  }, [chatStore.socket, chatStore.state]);
 
   useEffect(() => {
     const handleUpdateMessageById = ({ id, message }: any) => {
-      if (state) {
-        controllerChat.updateMessageStateById(id, message, state, setState);
+      if (chatStore.state) {
+        chatStore.updateMessageById(id, message);
       }
     };
     chatStore.socket?.on("updateMessageById", handleUpdateMessageById);
     return () => {
       chatStore.socket?.off("updateMessageById", handleUpdateMessageById);
     };
-  }, [chatStore.socket, state]);
+  }, [chatStore.socket, chatStore.state]);
 
   const leftRoom = (): void => {
     chatStore.socket?.emit("leftRoom", { params: chatStore.params });
@@ -271,11 +265,10 @@ const Chat: React.FC = () => {
 
       <main className={styles.main}>
         <section className={styles.messages}>
-          {state !== undefined && (
+          {chatStore.state.length > 0 && (
             <Messages
               deleteMessageById={deleteMessageById}
               updateMessageById={updateMessageById}
-              state={state}
               name={chatStore.params.name}
             />
           )}
