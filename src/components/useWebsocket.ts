@@ -8,14 +8,16 @@ interface IParams {
   name: string;
 }
 
-const useWebSocket = (params: IParams) => {
-  const paramsRef = useRef<IParams>(params);
+const useWebSocket = () => {
+  const paramsRef = useRef<IParams>(chatStore.params);
   const reconnectIntervalRef = useRef<number>(1000);
   const isFirstConnect = useRef<boolean>(true);
   // Оновлюємо реф params при кожній зміні
   useEffect(() => {
-    paramsRef.current = params;
-  }, [params]);
+    paramsRef.current = chatStore.params;
+
+    console.log("RENDER SOCKET", chatStore.params);
+  }, [chatStore.params]);
 
   const getParams = useCallback(() => paramsRef.current, []);
 

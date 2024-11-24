@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import styles from "./users.module.scss";
 import TypingIndicator from "../TypingIndicator";
 import { IUsersName, IUserWrite } from "../interface";
+import chatStore from "../../mobx/chatStore";
+import styles from "./users.module.scss";
 
 interface IUsers {
   usersName: IUsersName[];
   userWrite: IUserWrite[];
-  name: string;
   userStatus: IUsersName[];
 }
 
-const Users = ({ usersName, userWrite, name, userStatus }: IUsers) => {
+const Users = ({ usersName, userWrite, userStatus }: IUsers) => {
   const [show, setShow] = useState(true);
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст
@@ -21,13 +21,13 @@ const Users = ({ usersName, userWrite, name, userStatus }: IUsers) => {
           const findUser = userWrite.find(
             (_user: IUserWrite) => _user.name === user.name
           );
-          return user.name !== name && !findUser;
+          return user.name !== chatStore.params.name && !findUser;
         })
         .sort((a: IUsersName, b: IUsersName) => a.name.localeCompare(b.name))
     : [];
 
   const filterUserWrite = userWrite
-    .filter((user: IUserWrite) => user.name !== name)
+    .filter((user: IUserWrite) => user.name !== chatStore.params.name)
     .sort((a: IUserWrite, b: IUserWrite) => a.name.localeCompare(b.name));
 
   //Обєднюємо два списки, першими йдуть користувачі які набирають текст а потім інші

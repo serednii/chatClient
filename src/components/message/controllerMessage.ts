@@ -44,7 +44,7 @@ const controllerMessages: IControllerMessages = {
           deleteMessageById(dataId);
           setTimeout(() => {
             chatStore.setDeleteMessage(false);
-          }, 6000);
+          }, 2000);
         }
       }
       /* eslint-enable no-restricted-globals */
@@ -75,7 +75,7 @@ const controllerMessages: IControllerMessages = {
       setBlockLastUserRef(false);
       setTimeout(() => {
         chatStore.setDeleteMessage(false);
-      }, 6000);
+      }, 2000);
       setTimeout(() => setBlockLastUserRef(true), 3050);
     }
   },

@@ -37,6 +37,7 @@ const Messages: React.FC<IMessageLocal> = ({
           MyClassName = itsAdmin ? styles.admin : MyClassName;
           return (
             <Message
+            key={id} // Додаємо унікальний ключ
               lastUserRef={i === messages.length - 1 ? lastUserRef : null}
               MyClassName={MyClassName}
               author={author}

@@ -5,14 +5,13 @@ import styles from "./header.module.scss";
 
 interface IHeader {
   leftRoom: () => void;
-  params: IParams;
   users: number;
 }
-const Header: React.FC<IHeader> = ({ leftRoom, params, users }) => {
+const Header: React.FC<IHeader> = ({ leftRoom, users }) => {
   return (
     <header className={styles.header}>
       <h2 className={styles.title}>
-        Room {params.room} Name {params.name}{" "}
+        Room {chatStore.params.room} Name {chatStore.params.name}{" "}
         {chatStore.isWrite && (
           <div className="typing-indicator">
             <span></span>

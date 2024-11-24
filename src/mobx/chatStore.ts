@@ -1,12 +1,13 @@
 import { makeAutoObservable, action } from "mobx";
 import { Socket } from "socket.io-client";
+import { IParams } from "../components/interface";
 
 class ChatStore {
   // idArticle: string;
   isWrite: boolean;
   isDeleteMessage: boolean;
   socket: Socket | null;
-
+  params: IParams;
   // isModal: boolean;
   // isAddCategoryOther: boolean;
   // isLoading: boolean;
@@ -23,6 +24,7 @@ class ChatStore {
       setWrite: action,
       setDeleteMessage: action,
       setSocket: action,
+      setParams: action,
       // setChangeLinks: action,
       // toggleChangeLinks: action,
       // setModal: action,
@@ -40,6 +42,7 @@ class ChatStore {
     this.isWrite = false;
     this.isDeleteMessage = false;
     this.socket = null;
+    this.params = { room: "", name: "" };
     // this.idArticle = "";
     // this.isChangeLinks = false;
     // this.isModal = false;
@@ -63,6 +66,7 @@ class ChatStore {
     this.isWrite = value;
     // }
   }
+
   setDeleteMessage(value: boolean) {
     this.isDeleteMessage = value;
   }
@@ -72,6 +76,9 @@ class ChatStore {
     this.socket = socket;
   }
 
+  setParams(params: IParams) {
+    this.params = params;
+  }
   // toggleChangeLinks() {
   //   this.isChangeLinks = !this.isChangeLinks;
   // }

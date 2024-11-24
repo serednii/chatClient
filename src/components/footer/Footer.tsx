@@ -17,7 +17,6 @@ const Footer: React.FC<any> = ({
   handleSubmitChat,
   handleChangeChat,
   onEmojiClick,
-  params,
   clearSetWrite,
 }) => {
   const [isOpen, setOpen] = useState(false);
@@ -54,7 +53,7 @@ const Footer: React.FC<any> = ({
     handleChangeChat();
 
     if (debouncedFunctionRef.current) {
-      debouncedFunctionRef.current(params);
+      debouncedFunctionRef.current(chatStore.params);
     }
     setMessage(() => value);
   };

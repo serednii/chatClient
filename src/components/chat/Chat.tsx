@@ -1,4 +1,10 @@
-import React, { useMemo, useEffect, useCallback, useState } from "react";
+import React, {
+  useMemo,
+  useEffect,
+  useCallback,
+  useState,
+  useRef,
+} from "react";
 
 import io, { Socket } from "socket.io-client";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,28 +25,29 @@ import chatStore from "../../mobx/chatStore";
 import authStore from "../../AuthUser/mobx/AuthStore";
 
 import styles from "./Chat.module.scss";
-
+// let hasJoined = false; // Флаг для перевірки
 const Chat: React.FC = () => {
   console.log("RENDER CHAT");
   const { search } = useLocation();
   const navigate = useNavigate();
-  const [params, setParams] = useState<IParams>({ room: "", name: "" });
   const [state, setState] = useState<IState>();
   const [message, setMessage] = useState<string>("");
   const [users, setUsers] = useState<number>(0);
   const [usersName, setUsersName] = useState<IUsersName[]>([]);
   const [userWrite, setUserWrite] = useState<IUserWrite[]>([]);
   const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
-  // const [socket, setSocket] = useState<Socket | null>(null);
   console.log(authStore.isAuth);
   // console.log("state **** *** ", state);
+  const hasJoined = useRef(false);
 
-  // const { isWrite, setWrite } = chatStore;
-  useWebSocket(params);
+  useWebSocket();
 
   const deleteMessageById = (id: number): void => {
     if (chatStore.socket) {
-      chatStore.socket.emit("deleteMessageById", { id, room: params.room });
+      chatStore.socket.emit("deleteMessageById", {
+        id,
+        room: chatStore.params.room,
+      });
     }
   };
 
@@ -48,7 +55,7 @@ const Chat: React.FC = () => {
     if (chatStore.socket) {
       chatStore.socket.emit("updateMessageById", {
         id,
-        room: params.room,
+        room: chatStore.params.room,
         message,
       });
     }
@@ -56,26 +63,38 @@ const Chat: React.FC = () => {
 
   const clearSetWrite = useCallback((): void => {
     chatStore.setWrite(false);
-    chatStore.socket?.emit("sendWrite", { isWrite: false, params });
-  }, [chatStore.socket, params]);
+    chatStore.socket?.emit("sendWrite", {
+      isWrite: false,
+      params: chatStore.params,
+    });
+  }, [chatStore.socket, chatStore.params]);
 
   const handleSubmitChat = useCallback(
     (message: string): void => {
       if (!message) return;
       chatStore.setWrite(false);
-      chatStore.socket?.emit("sendWrite", { isWrite: false, params });
-      chatStore.socket?.emit("sendMessage", { message, params });
+      chatStore.socket?.emit("sendWrite", {
+        isWrite: false,
+        params: chatStore.params,
+      });
+      chatStore.socket?.emit("sendMessage", {
+        message,
+        params: chatStore.params,
+      });
     },
-    [chatStore.socket, params]
+    [chatStore.socket, chatStore.params]
   );
 
   const handleChangeChat = useCallback(() => {
     if (!chatStore.isWrite) {
       console.log('socket?.emit("sendWrite", { isWrite: true, params });');
-      chatStore.socket?.emit("sendWrite", { isWrite: true, params });
+      chatStore.socket?.emit("sendWrite", {
+        isWrite: true,
+        params: chatStore.params,
+      });
       chatStore.setWrite(true);
     }
-  }, [chatStore.socket, params, chatStore.isWrite]);
+  }, [chatStore.socket, chatStore.params, chatStore.isWrite]);
 
   useEffect(() => {
     if (chatStore.isDeleteMessage) {
@@ -85,18 +104,23 @@ const Chat: React.FC = () => {
     }
   }, [chatStore.isDeleteMessage]);
 
-  console.log("chatStore.isWrite", chatStore.isWrite);
-  //При вході користувача  приймаємо імя і кімнату
+  // //При вході користувача  приймаємо імя і кімнату
   useEffect(() => {
-    if (chatStore.socket) {
+    if (!chatStore.socket) return;
+
+    if (!hasJoined.current) {
+      console.log("JOIN----------------------------", search);
+
       const searchParamsObj = Object.fromEntries(new URLSearchParams(search));
       const searchParams: IParams = {
         name: searchParamsObj.name || "",
         room: searchParamsObj.room || "",
       };
+
       if (searchParams.name && searchParams.room) {
-        setParams(searchParams);
+        chatStore.setParams(searchParams);
         chatStore.socket.emit("join", searchParams);
+        hasJoined.current = true; // Позначаємо, що користувач уже приєднався
       } else {
         console.error("Missing required search parameters: name and/or room.");
       }
@@ -108,13 +132,7 @@ const Chat: React.FC = () => {
     const handleMessage = ({ data }: any) => {
       console.log("message----------------------------", data);
       if (data) {
-        // console.log("lastMessage", state?.message?.messages);
-        // console.log("lastMessage", data);
-
         //Якщо є особисте повідомлення messageAdmin то добавляємо його в потік повідомлень
-
-        // console.log("data?.messageAdmin?.id,", data?.messageAdmin?.id);
-        // console.log("data?.messageAdmin?.message", data?.messageAdmin?.message);
         if (data?.messageAdmin) {
           const adminMessage = {
             author: "Admin",
@@ -192,7 +210,7 @@ const Chat: React.FC = () => {
     const handleStatusMessageWrite = ({ data }: any) => {
       const { isWrite, user } = data;
       console.log(user.name);
-      if (user.name === params.name) {
+      if (user.name === chatStore.params.name) {
         return;
       }
       const isUser: IUserWrite | undefined = userWrite.find(
@@ -264,7 +282,7 @@ const Chat: React.FC = () => {
   }, [chatStore.socket, state]);
 
   const leftRoom = (): void => {
-    chatStore.socket?.emit("leftRoom", { params });
+    chatStore.socket?.emit("leftRoom", { params: chatStore.params });
     navigate("/main");
     chatStore.socket?.disconnect();
   };
@@ -273,7 +291,7 @@ const Chat: React.FC = () => {
 
   return (
     <div className={styles.wrap}>
-      <Header leftRoom={leftRoom} params={params} users={users} />
+      <Header leftRoom={leftRoom} users={users} />
 
       <main className={styles.main}>
         <section className={styles.messages}>
@@ -282,7 +300,7 @@ const Chat: React.FC = () => {
               deleteMessageById={deleteMessageById}
               updateMessageById={updateMessageById}
               state={state}
-              name={params.name}
+              name={chatStore.params.name}
             />
           )}
         </section>
@@ -290,7 +308,6 @@ const Chat: React.FC = () => {
           <Users
             usersName={usersName}
             userWrite={userWrite}
-            name={params.name}
             userStatus={userStatus}
           />
         </aside>
@@ -299,7 +316,6 @@ const Chat: React.FC = () => {
       <Footer
         handleSubmitChat={handleSubmitChat}
         onEmojiClick={onEmojiClick}
-        params={params}
         clearSetWrite={clearSetWrite}
         handleChangeChat={handleChangeChat}
       />
