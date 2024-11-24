@@ -12,15 +12,16 @@ export interface IMessage {
   date: string;
   id: number;
   message: string;
-  status: number;
+  room: string;
 }
+
 interface IMessageAdmin {
   message: string;
   id: string;
 }
 
 export interface IState {
-  messageAdmin: IMessageAdmin | undefined;
+  // messageAdmin: IMessageAdmin | undefined;
   message: {
     room: string;
     messages: IMessage[];
@@ -29,6 +30,34 @@ export interface IState {
     name: string;
     room: string;
   };
+}
+
+interface IUser {
+  author: string;
+  date: number;
+  userSocketId: string;
+  id: number;
+}
+
+export interface IMessageStart {
+  data: {
+    room: string;
+    messages: IMessage[];
+  };
+}
+export interface IMessageAdd {
+  data: {
+    room: string;
+    message: IMessage;
+  };
+}
+
+export interface IMessageNext {
+  message: {
+    room: string;
+    messages: IMessage[];
+  };
+  user: IUser;
 }
 
 export interface IUsersName {

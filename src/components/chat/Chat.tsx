@@ -16,6 +16,8 @@ import controllerChat from "./controllerChat";
 import useWebSocket from "../useWebsocket";
 import {
   IMessage,
+  IMessageAdd,
+  IMessageStart,
   IParams,
   IState,
   IUsersName,
@@ -30,7 +32,7 @@ const Chat: React.FC = () => {
   console.log("RENDER CHAT");
   const { search } = useLocation();
   const navigate = useNavigate();
-  const [state, setState] = useState<IState>();
+  const [state, setState] = useState<IMessage[]>();
   const [message, setMessage] = useState<string>("");
   const [users, setUsers] = useState<number>(0);
   const [usersName, setUsersName] = useState<IUsersName[]>([]);
@@ -129,55 +131,30 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     // console.log(socket);
-    const handleMessage = ({ data }: any) => {
-      console.log("message----------------------------", data);
+    const handleMessageStart = ({ data }: IMessageStart) => {
+      console.log("messageStart----------------------------", data);
       if (data) {
-        //Якщо є особисте повідомлення messageAdmin то добавляємо його в потік повідомлень
-        if (data?.messageAdmin) {
-          const adminMessage = {
-            author: "Admin",
-            date: new Date(),
-            id: data?.messageAdmin?.id,
-            message: data?.messageAdmin?.message,
-            status: 0,
-          };
-          data?.message?.messages?.push(adminMessage);
-          delete data?.messageAdmin;
-        }
-        console.log("lastMessage", data);
-
-        //Якщо state пустий , зайшли перший раз
-        if (!state) {
-          setState(data);
-        } else {
-          //вибрати останні повідомлення яких немає в нашому списку
-          const lastMessages: IMessage[] = data?.message?.messages?.filter(
-            (message: IMessage) =>
-              !state?.message?.messages?.some(
-                (m: IMessage) => m.id === message.id
-              )
-          );
-
-          state?.message?.messages.push(...lastMessages);
-          setState(structuredClone(state));
-
-          // const updatedMessages = [...state.message.messages, ...lastMessages];
-          // const updatedState = {
-          //   ...state,
-          //   message: { ...state.message, messages: updatedMessages },
-          // };
-          // setState(updatedState);
-        }
-
-        // setState((prevState) => ({
-        //   ...prevState,
-        //   ...state,
-        // }));
+        setState(data.messages);
       }
     };
-    chatStore.socket?.on("message", handleMessage);
+    chatStore.socket?.on("messageStart", handleMessageStart);
     return () => {
-      chatStore.socket?.off("message", handleMessage);
+      chatStore.socket?.off("messageStart", handleMessageStart);
+    };
+  }, [chatStore.socket, state]);
+
+  useEffect(() => {
+    const handleMessageAdd = ({ data }: IMessageAdd) => {
+      // console.log("messageAdd----------------------------", data);
+      // console.log("messageAdd----------------------------", state);
+      if (data && data.message) {
+        setState((prev: any) => [...prev, data]);
+      }
+    };
+
+    chatStore.socket?.on("messageAdd", handleMessageAdd);
+    return () => {
+      chatStore.socket?.off("messageAdd", handleMessageAdd);
     };
   }, [chatStore.socket, state]);
 
@@ -231,7 +208,6 @@ const Chat: React.FC = () => {
         }
       } else {
         //тут видаляємо користувача який закінчив набирати текст
-
         //Видаляємо користувача який набирає текст
         if (!isUser) {
           setUserWrite(

@@ -4,7 +4,7 @@ import Message from "./Message";
 import styles from "./Messages.module.scss";
 
 interface IMessageLocal {
-  state: IState;
+  state: IMessage[];
   name: string;
   deleteMessageById: (id: number) => void;
   updateMessageById: (id: number, message: string) => void;
@@ -16,7 +16,7 @@ const Messages: React.FC<IMessageLocal> = ({
   deleteMessageById,
   updateMessageById,
 }) => {
-  const { messages } = state.message;
+  // const { messages } = state.message;
   const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(true);
   const lastUserRef = useRef<HTMLDivElement | null>(null); // Реф на последний элемент
 
@@ -24,12 +24,29 @@ const Messages: React.FC<IMessageLocal> = ({
     if (lastUserRef.current && blockLastUserRef) {
       lastUserRef.current.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
     }
-  }, [messages]); // Сработает каждый раз, когда изменится список usersName
+  }, [state]); // Сработает каждый раз, когда изменится список usersName
 
   return (
     <div key="messages">
-      {messages &&
-        messages.map(({ author, message, id, date }: IMessage, i: number) => {
+      {state.length > 0 &&
+        state.map((data: IMessage, i: number) => {
+          if (!data) {
+            return;
+          }
+
+          const { author, message, id, date } = data;
+
+          // Перевірка типів значень
+          if (
+            typeof name !== "string" ||
+            typeof author !== "string" ||
+            typeof message !== "string" ||
+            typeof id !== "number" ||
+            typeof date !== "string"
+          ) {
+            return;
+          }
+
           const itsMe =
             author.trim().toLowerCase() === name.trim().toLowerCase();
           const itsAdmin = author.trim().toLowerCase() === "admin";
@@ -37,8 +54,8 @@ const Messages: React.FC<IMessageLocal> = ({
           MyClassName = itsAdmin ? styles.admin : MyClassName;
           return (
             <Message
-            key={id} // Додаємо унікальний ключ
-              lastUserRef={i === messages.length - 1 ? lastUserRef : null}
+              key={id} // Додаємо унікальний ключ
+              lastUserRef={i === state.length - 1 ? lastUserRef : null}
               MyClassName={MyClassName}
               author={author}
               message={message}

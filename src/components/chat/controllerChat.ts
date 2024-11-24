@@ -1,17 +1,17 @@
 import { useCallback } from "react";
 import { Socket } from "socket.io-client";
-import { IParams, IState } from "../interface";
+import { IMessage, IParams, IState } from "../interface";
 
 interface IControllerChat {
   deleteMessageStateById(
     id: number,
-    state: IState,
+    state: IMessage[],
     setState: (value: any) => void
   ): void; // Виправлено тут
   updateMessageStateById(
     id: number,
     message: string,
-    state: IState,
+    state: IMessage[],
     setState: (value: any) => void
   ): void;
   //   clearSetWrite(
@@ -32,49 +32,46 @@ interface IControllerChat {
 
 const controllerChat: IControllerChat = {
   deleteMessageStateById: (id, state, setState) => {
-    const newMessages = state?.message?.messages?.filter(
-      (message) => message.id !== id
-    );
+    const newMessages = state.filter((message: IMessage) => message.id !== id);
     if (state && newMessages) {
       // setState(structuredClone(state));
-      setState((prevState: any) => {
-        if (!prevState) {
-          return prevState; // або поверніть початковий стан, якщо це необхідно
-        }
-        return {
-          ...prevState,
-          message: {
-            ...prevState.message,
-            messages: newMessages,
-          },
-        };
-      });
+      setState(newMessages);
+      // setState((prevState: any) => {
+      //   if (!prevState) {
+      //     return prevState; // або поверніть початковий стан, якщо це необхідно
+      //   }
+      //   return {
+      //     ...prevState,
+      //     message: {
+      //       ...prevState.message,
+      //       messages: newMessages,
+      //     },
+      //   };
+      // });
     }
   },
 
   updateMessageStateById: (id, message, state, setState): void => {
-    const newMessages = state?.message?.messages?.find(
-      (message) => message.id === id
-    );
+    const newMessages = state.find((message: IMessage) => message.id === id);
 
     if (newMessages) {
       newMessages.message = message;
     }
-
-    if (state && newMessages) {
-      // setState(structuredClone(state));
-      setState((prevState: any) => {
-        if (!prevState) {
-          return prevState; // або поверніть початковий стан, якщо це необхідно
-        }
-        return {
-          ...prevState,
-          message: {
-            ...prevState.message,
-          },
-        };
-      });
-    }
+    setState([...state]);
+    // if (state && newMessages) {
+    //   // setState(structuredClone(state));
+    //   setState((prevState: any) => {
+    //     if (!prevState) {
+    //       return prevState; // або поверніть початковий стан, якщо це необхідно
+    //     }
+    //     return {
+    //       ...prevState,
+    //       message: {
+    //         ...prevState.message,
+    //       },
+    //     };
+    //   });
+    // }
   },
   //   clearSetWrite: useCallback(
   //     (params, socket, setWrite): void => {
