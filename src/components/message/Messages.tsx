@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IState, IMessage } from "../interface";
 import Message from "./Message";
+import chatStore from "../../mobx/chatStore";
 import styles from "./Messages.module.scss";
 
 interface IMessageLocal {
-  state: IMessage[];
   name: string;
   deleteMessageById: (id: number) => void;
   updateMessageById: (id: number, message: string) => void;
 }
 
 const Messages: React.FC<IMessageLocal> = ({
-  state,
   name,
   deleteMessageById,
   updateMessageById,
@@ -24,12 +23,12 @@ const Messages: React.FC<IMessageLocal> = ({
     if (lastUserRef.current && blockLastUserRef) {
       lastUserRef.current.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
     }
-  }, [state]); // Сработает каждый раз, когда изменится список usersName
+  }, [chatStore.state]); // Сработает каждый раз, когда изменится список usersName
 
   return (
     <div key="messages">
-      {state.length > 0 &&
-        state.map((data: IMessage, i: number) => {
+      {chatStore.state.length > 0 &&
+        chatStore.state.map((data: IMessage, i: number) => {
           if (!data) {
             return;
           }
@@ -55,7 +54,7 @@ const Messages: React.FC<IMessageLocal> = ({
           return (
             <Message
               key={id} // Додаємо унікальний ключ
-              lastUserRef={i === state.length - 1 ? lastUserRef : null}
+              lastUserRef={i === chatStore.state.length - 1 ? lastUserRef : null}
               MyClassName={MyClassName}
               author={author}
               message={message}

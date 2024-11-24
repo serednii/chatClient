@@ -32,7 +32,7 @@ const Chat: React.FC = () => {
   const { search } = useLocation();
   const navigate = useNavigate();
   // const [message, setMessage] = useState<string>("");
-  const [users, setUsers] = useState<number>(0);
+  // const [users, setUsers] = useState<number>(0);
   const [usersName, setUsersName] = useState<IUsersName[]>([]);
   const [userWrite, setUserWrite] = useState<IUserWrite[]>([]);
   const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
@@ -220,7 +220,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     const handleRoom = ({ data: { users } }: any) => {
-      setUsers(users.length);
+      chatStore.setUsers(users.length);
       setUsersName(users);
     };
     chatStore.socket?.on("room", handleRoom);
@@ -262,7 +262,7 @@ const Chat: React.FC = () => {
 
   return (
     <div className={styles.wrap}>
-      <Header leftRoom={leftRoom} users={users} />
+      <Header leftRoom={leftRoom} />
 
       <main className={styles.main}>
         <section className={styles.messages}>

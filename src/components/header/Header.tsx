@@ -5,9 +5,8 @@ import styles from "./header.module.scss";
 
 interface IHeader {
   leftRoom: () => void;
-  users: number;
 }
-const Header: React.FC<IHeader> = ({ leftRoom, users }) => {
+const Header: React.FC<IHeader> = ({ leftRoom }) => {
   return (
     <header className={styles.header}>
       <h2 className={styles.title}>
@@ -20,7 +19,7 @@ const Header: React.FC<IHeader> = ({ leftRoom, users }) => {
           </div>
         )}
       </h2>
-      <div className={styles.users}>{users} users in this room</div>
+      <div className={styles.users}>{chatStore.users} users in this room</div>
       <button className={styles.left} onClick={leftRoom}>
         Left the room
       </button>
