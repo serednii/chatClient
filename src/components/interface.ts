@@ -45,6 +45,7 @@ export interface IMessageStart {
     messages: IMessage[];
   };
 }
+
 export interface IMessageAdd {
   data: {
     room: string;

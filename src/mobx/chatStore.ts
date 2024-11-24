@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable } from "mobx";
+import { action, makeAutoObservable, observable } from "mobx";
 import { Socket } from "socket.io-client";
 import { IMessage, IParams, IUsersName } from "../components/interface";
 
@@ -8,18 +8,36 @@ class ChatStore {
   socket: Socket | null;
   params: IParams;
   state: IMessage[];
-  // const [usersName, setUsersName] = useState<IUsersName[]>([]);
   usersName: IUsersName[];
   users: number;
   message: string;
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {
+      usersName:false,
+      socket: false,
+      params: false,
+      state: false,
+      setUsersName: action,
+      setUsers: action,
+      setMessage: action,
+      setWrite: action,
+      setDeleteMessage: action,
+      setSocket: action,
+      setParams: action,
+      setState: action,
+      addMessage: action,
+      deleteMessageById: action,
+      updateMessageById: action,
+    });
+
     this.isWrite = false;
     this.isDeleteMessage = false;
     this.socket = null;
     this.params = { room: "", name: "" };
-    this.state = observable.array([]); // Ініціалізація як спостережуваного масиву
+    // this.state = observable.array([]); // Ініціалізація як спостережуваного масиву
+    this.state = []; // Ініціалізація як спостережуваного масиву
+
     this.message = "";
     this.users = 0;
     this.usersName = [];
@@ -54,11 +72,12 @@ class ChatStore {
   }
 
   setState(state: IMessage[]) {
-    this.state = [...state]; // Метод `replace` доступний для observable.array
+    this.state = [...state];
   }
 
   addMessage(message: IMessage) {
     this.state.push(message); // Додавання елемента в масив
+    // this.setState(this.state);
   }
 
   deleteMessageById(id: number) {
@@ -72,6 +91,7 @@ class ChatStore {
     if (newMessages) {
       newMessages.message = message;
     }
+    // this.state = [...this.state];
   }
 }
 

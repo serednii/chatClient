@@ -35,7 +35,7 @@ const Chat: React.FC = () => {
   const [userWrite, setUserWrite] = useState<IUserWrite[]>([]);
   const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
 
-  console.log(authStore.isAuth);
+  // console.log("state", chatStore.state);
   const hasJoined = useRef(false);
 
   useWebSocket();

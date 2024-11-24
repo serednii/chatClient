@@ -29,6 +29,7 @@ const Messages: React.FC<IMessageLocal> = ({
     <div key="messages">
       {chatStore.state.length > 0 &&
         chatStore.state.map((data: IMessage, i: number) => {
+          console.log(data.author);
           if (!data) {
             return;
           }
@@ -54,7 +55,9 @@ const Messages: React.FC<IMessageLocal> = ({
           return (
             <Message
               key={id} // Додаємо унікальний ключ
-              lastUserRef={i === chatStore.state.length - 1 ? lastUserRef : null}
+              lastUserRef={
+                i === chatStore.state.length - 1 ? lastUserRef : null
+              }
               MyClassName={MyClassName}
               author={author}
               message={message}
