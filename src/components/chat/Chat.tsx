@@ -31,7 +31,7 @@ const Chat: React.FC = () => {
   console.log("RENDER CHAT");
   const { search } = useLocation();
   const navigate = useNavigate();
-  const [message, setMessage] = useState<string>("");
+  // const [message, setMessage] = useState<string>("");
   const [users, setUsers] = useState<number>(0);
   const [usersName, setUsersName] = useState<IUsersName[]>([]);
   const [userWrite, setUserWrite] = useState<IUserWrite[]>([]);
@@ -257,7 +257,8 @@ const Chat: React.FC = () => {
     chatStore.socket?.disconnect();
   };
 
-  const onEmojiClick = ({ emoji }: any) => setMessage(`${message} ${emoji}`);
+  const onEmojiClick = ({ emoji }: any) =>
+    chatStore.setMessage(`${chatStore.message} ${emoji}`);
 
   return (
     <div className={styles.wrap}>
