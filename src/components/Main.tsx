@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AuthUser from "../AuthUser/components/AuthUser/AuthUser";
 import authStore from "../AuthUser/mobx/AuthStore";
 
@@ -8,6 +8,7 @@ import Input from "./Input";
 import { IParams } from "./interface";
 import { THandleChange } from "./type";
 import styles from "../styles/Main.module.scss";
+import { observer } from "mobx-react-lite";
 
 const Main = () => {
   // const location = useLocation();
@@ -68,4 +69,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default observer(Main);

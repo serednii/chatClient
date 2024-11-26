@@ -2,6 +2,7 @@ import React from "react";
 import { IParams } from "../interface";
 import chatStore from "../../mobx/chatStore";
 import styles from "./header.module.scss";
+import { observer } from "mobx-react-lite";
 
 interface IHeader {
   leftRoom: () => void;
@@ -27,4 +28,4 @@ const Header: React.FC<IHeader> = ({ leftRoom }) => {
   );
 };
 
-export default Header;
+export default observer(Header);

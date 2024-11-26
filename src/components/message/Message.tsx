@@ -7,6 +7,7 @@ import controllerMessages from "./controllerMessage";
 import FormMessage from "./FormMessage";
 import DateComponentMini from "../DateComponentMini";
 import styles from "./Messages.module.scss";
+import { observer } from "mobx-react-lite";
 
 const Message: React.FC<MessageProps> = ({
   author,
@@ -83,4 +84,4 @@ const Message: React.FC<MessageProps> = ({
   );
 };
 
-export default Message;
+export default observer(Message);

@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef } from "react";
 import controllerMessages from "./controllerMessage";
 import { IData } from "./interface";
@@ -90,4 +91,4 @@ const FormMessage: React.FC<IFormMessage> = ({
   );
 };
 
-export default FormMessage;
+export default observer(FormMessage);

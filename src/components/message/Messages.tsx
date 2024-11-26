@@ -3,6 +3,8 @@ import { IState, IMessage } from "../interface";
 import Message from "./Message";
 import chatStore from "../../mobx/chatStore";
 import styles from "./Messages.module.scss";
+import { observe } from "mobx";
+import { observer } from "mobx-react-lite";
 
 interface IMessageLocal {
   name: string;
@@ -41,7 +43,6 @@ const Messages: React.FC<IMessageLocal> = ({
             typeof name !== "string" ||
             typeof author !== "string" ||
             typeof message !== "string" ||
-            typeof id !== "number" ||
             typeof date !== "string"
           ) {
             return;
@@ -74,4 +75,4 @@ const Messages: React.FC<IMessageLocal> = ({
   );
 };
 
-export default Messages;
+export default observer(Messages);

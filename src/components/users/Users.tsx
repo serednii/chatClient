@@ -3,6 +3,7 @@ import TypingIndicator from "../TypingIndicator";
 import { IUsersName, IUserWrite } from "../interface";
 import chatStore from "../../mobx/chatStore";
 import styles from "./users.module.scss";
+import { observer } from "mobx-react-lite";
 
 interface IUsers {
   userWrite: IUserWrite[];
@@ -62,4 +63,4 @@ const Users = ({ userWrite, userStatus }: IUsers) => {
   );
 };
 
-export default Users;
+export default observer(Users);

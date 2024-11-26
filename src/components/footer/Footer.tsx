@@ -11,6 +11,7 @@ import {
   TDebounce,
 } from "../type";
 import styles from "./footer.module.scss";
+import { observer } from "mobx-react-lite";
 const icon = require("../../images/emoji.svg");
 
 const Footer: React.FC<any> = ({
@@ -90,4 +91,4 @@ const Footer: React.FC<any> = ({
   );
 };
 
-export default memo(Footer);
+export default memo(observer(Footer));

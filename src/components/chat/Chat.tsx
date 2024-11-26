@@ -6,7 +6,6 @@ import React, {
   useRef,
 } from "react";
 
-import io, { Socket } from "socket.io-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import Messages from "../message/Messages";
 import Users from "../users/Users";
@@ -14,11 +13,9 @@ import Footer from "../footer/Footer";
 import Header from "../header/Header";
 import useWebSocket from "../useWebsocket";
 import {
-  IMessage,
   IMessageAdd,
   IMessageStart,
   IParams,
-  IState,
   IUsersName,
   IUserWrite,
 } from "../interface";
@@ -26,12 +23,12 @@ import chatStore from "../../mobx/chatStore";
 import authStore from "../../AuthUser/mobx/AuthStore";
 
 import styles from "./Chat.module.scss";
+import { observer } from "mobx-react-lite";
 
 const Chat: React.FC = () => {
   console.log("RENDER CHAT");
   const { search } = useLocation();
   const navigate = useNavigate();
-  // const [usersName, setUsersName] = useState<IUsersName[]>([]);
   const [userWrite, setUserWrite] = useState<IUserWrite[]>([]);
   const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
 
@@ -291,4 +288,4 @@ const Chat: React.FC = () => {
   );
 };
 
-export default Chat;
+export default observer(Chat);
