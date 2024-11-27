@@ -32,26 +32,26 @@ const Chat: React.FC = () => {
   console.log("RENDER CHAT");
   const { search } = useLocation();
   const navigate = useNavigate();
-  const {
-    socket,
-    state,
-    // params,
-    isDeleteMessage,
-    message,
-    userWrite,
-    usersName,
-  } = chatStore;
-  const {
-    setMessage,
-    setUsersName,
-    setUsers,
-    addMessage,
-    setState,
-    // setParams,
-    setUserWrite,
-    addUserWrite,
-    // setUserStatus,
-  } = chatStore;
+  // const {
+  //   socket,
+  //   state,
+  //   // params,
+  //   isDeleteMessage,
+  //   message,
+  //   userWrite,
+  //   usersName,
+  // } = chatStore;
+  // const {
+  //   setMessage,
+  //   setUsersName,
+  //   setUsers,
+  //   addMessage,
+  //   setState,
+  //   // setParams,
+  //   setUserWrite,
+  //   addUserWrite,
+  //   // setUserStatus,
+  // } = chatStore;
 
   // console.log("state", chatStore.state);
   const hasJoined = useRef(false);
@@ -59,8 +59,8 @@ const Chat: React.FC = () => {
   useWebSocket();
 
   const deleteMessageById = (id: number): void => {
-    if (socket) {
-      socket.emit("deleteMessageById", {
+    if (chatStore.socket) {
+      chatStore.socket.emit("deleteMessageById", {
         id,
         room: chatStore.params.room,
       });
@@ -68,8 +68,8 @@ const Chat: React.FC = () => {
   };
 
   const updateMessageById = (id: number, message: string): void => {
-    if (socket) {
-      socket.emit("updateMessageById", {
+    if (chatStore.socket) {
+      chatStore.socket.emit("updateMessageById", {
         id,
         room: chatStore.params.room,
         message,
@@ -79,7 +79,7 @@ const Chat: React.FC = () => {
 
   const clearSetWrite = useCallback((): void => {
     setWrite(false);
-    socket?.emit("sendWrite", {
+    chatStore.socket?.emit("sendWrite", {
       isWrite: false,
       params: chatStore.params,
     });
@@ -89,11 +89,11 @@ const Chat: React.FC = () => {
     (message: string): void => {
       if (!message) return;
       setWrite(false);
-      socket?.emit("sendWrite", {
+      chatStore.socket?.emit("sendWrite", {
         isWrite: false,
         params: chatStore.params,
       });
-      socket?.emit("sendMessage", {
+      chatStore.socket?.emit("sendMessage", {
         message,
         params: chatStore.params,
       });
@@ -104,7 +104,7 @@ const Chat: React.FC = () => {
   const handleChangeChat = useCallback(() => {
     if (!chatStore.isWrite) {
       console.log('socket?.emit("sendWrite", { isWrite: true, params });');
-      socket?.emit("sendWrite", {
+      chatStore.socket?.emit("sendWrite", {
         isWrite: true,
         params: chatStore.params,
       });
@@ -150,14 +150,14 @@ const Chat: React.FC = () => {
     const handleMessageStart = ({ messages }: IMessageStart) => {
       console.log("messageStart----------------------------", messages);
       if (messages) {
-        setState(messages);
+        chatStore.setState(messages);
       }
     };
-    socket?.on("messageStart", handleMessageStart);
+    chatStore.socket?.on("messageStart", handleMessageStart);
     return () => {
-      socket?.off("messageStart", handleMessageStart);
+      chatStore.socket?.off("messageStart", handleMessageStart);
     };
-  }, [socket, state]);
+  }, [chatStore.socket, chatStore.state]);
 
   // useEffect(() => {
   //   const handleMessageAdd = ({ message }: IMessageAdd) => {
@@ -197,81 +197,84 @@ const Chat: React.FC = () => {
   //   socket?.listeners("messageWrite")?.length
   // );
 
-  // useEffect(() => {
-  //   const handleStatusMessageWrite = ({ data }: any) => {
-  //     const { isWrite, user } = data;
-  //     console.log(user.name);
-  //     if (user.name === params.name) {
-  //       return;
-  //     }
-  //     const isUser: IUserWrite | undefined = userWrite.find(
-  //       (_user: IUserWrite) => _user.name === user.name
-  //     );
+  useEffect(() => {
+    const handleStatusMessageWrite = ({ data }: any) => {
+      const { isWrite, user } = data;
+      console.log(user.name);
+      if (user.name === params.name) {
+        return;
+      }
+      const isUser: IUserWrite | undefined = chatStore.userWrite.find(
+        (_user: IUserWrite) => _user.name === user.name
+      );
 
-  //     //маємо добавити в масив нового користувача який набирає текст
-  //     if (isWrite) {
-  //       //Находимо користувача в масиві
-  //       //Добавляємо нового який набирає текст
-  //       if (!isUser) {
-  //         // console.log(userWrite);
-  //         addUserWrite({ name: user.name });
-  //       }
-  //     } else {
-  //       //тут видаляємо користувача який закінчив набирати текст
-  //       //Видаляємо користувача який набирає текст
-  //       if (!isUser) {
-  //         setUserWrite(
-  //           userWrite.filter((_user: IUserWrite) => _user.name !== user.name)
-  //         );
-  //       }
-  //     }
-  //   };
-  //   socket?.on("messageWrite", handleStatusMessageWrite);
-  //   return () => {
-  //     socket?.off("messageWrite", handleStatusMessageWrite);
-  //   };
-  // }, [socket]);
+      //маємо добавити в масив нового користувача який набирає текст
+      if (isWrite) {
+        //Находимо користувача в масиві
+        //Добавляємо нового який набирає текст
+        if (!isUser) {
+          // console.log(userWrite);
+          chatStore.addUserWrite({ name: user.name });
+        }
+      } else {
+        //тут видаляємо користувача який закінчив набирати текст
+        //Видаляємо користувача який набирає текст
+        if (!isUser) {
+          chatStore.setUserWrite(
+            chatStore.userWrite.filter(
+              (_user: IUserWrite) => _user.name !== user.name
+            )
+          );
+        }
+      }
+    };
+    chatStore.socket?.on("messageWrite", handleStatusMessageWrite);
+    return () => {
+      chatStore.socket?.off("messageWrite", handleStatusMessageWrite);
+    };
+  }, [chatStore.socket]);
 
-  // useEffect(() => {
-  //   const handleRoom = ({ data: { users } }: any) => {
-  //     setUsers(users.length);
-  //     setUsersName(users);
-  //   };
-  //   socket?.on("room", handleRoom);
-  //   return () => {
-  //     socket?.off("room", handleRoom);
-  //   };
-  // }, [socket]);
+  useEffect(() => {
+    const handleRoom = ({ data: { users } }: any) => {
+      chatStore.setUsers(users.length);
+      chatStore.setUsersName(users);
+    };
+    chatStore.socket?.on("room", handleRoom);
+    return () => {
+      chatStore.socket?.off("room", handleRoom);
+    };
+  }, [chatStore.socket]);
 
-  // useEffect(() => {
-  //   const handleDeleteMessageById = ({ id }: any) => {
-  //     deleteMessageById(id);
-  //   };
-  //   socket?.on("deleteMessageById", handleDeleteMessageById);
-  //   return () => {
-  //     socket?.off("deleteMessageById", handleDeleteMessageById);
-  //   };
-  // }, [socket, state]);
+  useEffect(() => {
+    const handleDeleteMessageById = ({ id }: any) => {
+      deleteMessageById(id);
+    };
+    chatStore.socket?.on("deleteMessageById", handleDeleteMessageById);
+    return () => {
+      chatStore.socket?.off("deleteMessageById", handleDeleteMessageById);
+    };
+  }, [chatStore.socket, chatStore.state]);
 
-  // useEffect(() => {
-  //   const handleUpdateMessageById = ({ id, message }: any) => {
-  //     if (state) {
-  //       updateMessageById(id, message);
-  //     }
-  //   };
-  //   socket?.on("updateMessageById", handleUpdateMessageById);
-  //   return () => {
-  //     socket?.off("updateMessageById", handleUpdateMessageById);
-  //   };
-  // }, [socket, state]);
+  useEffect(() => {
+    const handleUpdateMessageById = ({ id, message }: any) => {
+      if (chatStore.state) {
+        updateMessageById(id, message);
+      }
+    };
+    chatStore.socket?.on("updateMessageById", handleUpdateMessageById);
+    return () => {
+      chatStore.socket?.off("updateMessageById", handleUpdateMessageById);
+    };
+  }, [chatStore.socket, chatStore.state]);
 
   const leftRoom = (): void => {
-    socket?.emit("leftRoom", { params: params });
+    chatStore.socket?.emit("leftRoom", { params: params });
     navigate("/main");
-    socket?.disconnect();
+    chatStore.socket?.disconnect();
   };
 
-  const onEmojiClick = ({ emoji }: any) => setMessage(`${message} ${emoji}`);
+  const onEmojiClick = ({ emoji }: any) =>
+    chatStore.setMessage(`${chatStore.message} ${emoji}`);
 
   return (
     <div className={styles.wrap}>
@@ -279,7 +282,7 @@ const Chat: React.FC = () => {
 
       <main className={styles.main}>
         <section className={styles.messages}>
-          {state.length > 0 && (
+          {chatStore.state.length > 0 && (
             <Messages
               deleteMessageById={deleteMessageById}
               updateMessageById={updateMessageById}
@@ -289,8 +292,8 @@ const Chat: React.FC = () => {
         </section>
         <aside className={styles.users_list}>
           <Users
-            usersName={usersName}
-            userWrite={userWrite}
+            usersName={chatStore.usersName}
+            userWrite={chatStore.userWrite}
             userStatus={userStatus}
           />
         </aside>
