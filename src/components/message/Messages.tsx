@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IState, IMessage } from "../interface";
+import { IMessage } from "../interface";
 import Message from "./Message";
 import chatStore from "../../mobx/chatStore";
 import styles from "./Messages.module.scss";
-import { observe } from "mobx";
 import { observer } from "mobx-react-lite";
 
 interface IMessageLocal {
@@ -17,20 +16,19 @@ const Messages: React.FC<IMessageLocal> = ({
   deleteMessageById,
   updateMessageById,
 }) => {
-  // const { messages } = state.message;
   const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(true);
   const lastUserRef = useRef<HTMLDivElement | null>(null); // Реф на последний элемент
-
+  const { state } = chatStore;
   useEffect(() => {
     if (lastUserRef.current && blockLastUserRef) {
       lastUserRef.current.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
     }
-  }, [chatStore.state]); // Сработает каждый раз, когда изменится список usersName
+  }, [state]); // Сработает каждый раз, когда изменится список usersName
 
   return (
     <div key="messages">
-      {chatStore.state.length > 0 &&
-        chatStore.state.map((data: IMessage, i: number) => {
+      {state.length > 0 &&
+        state.map((data: IMessage, i: number) => {
           console.log(data.author);
           if (!data) {
             return;
@@ -50,15 +48,16 @@ const Messages: React.FC<IMessageLocal> = ({
 
           const itsMe =
             author.trim().toLowerCase() === name.trim().toLowerCase();
+
           const itsAdmin = author.trim().toLowerCase() === "admin";
+
           let MyClassName = itsMe ? styles.me : styles.user;
+
           MyClassName = itsAdmin ? styles.admin : MyClassName;
           return (
             <Message
               key={id} // Додаємо унікальний ключ
-              lastUserRef={
-                i === chatStore.state.length - 1 ? lastUserRef : null
-              }
+              lastUserRef={i === state.length - 1 ? lastUserRef : null}
               MyClassName={MyClassName}
               author={author}
               message={message}

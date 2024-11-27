@@ -8,15 +8,16 @@ import { observer } from "mobx-react-lite";
 interface IUsers {
   userWrite: IUserWrite[];
   userStatus: IUsersName[];
+  usersName: IUsersName[];
 }
 
-const Users = ({ userWrite, userStatus }: IUsers) => {
+const Users = ({ userWrite, userStatus, usersName }: IUsers) => {
   const [show, setShow] = useState(true);
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст
   //Сортуємо
-  const filterUsersName = chatStore.usersName
-    ? chatStore.usersName
+  const filterUsersName = usersName
+    ? usersName
         .filter((user: IUsersName) => {
           const findUser = userWrite.find(
             (_user: IUserWrite) => _user.name === user.name

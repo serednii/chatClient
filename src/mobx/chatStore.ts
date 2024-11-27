@@ -1,7 +1,12 @@
 import { action, makeAutoObservable, observable } from "mobx";
 import { Socket } from "socket.io-client";
-import { IMessage, IParams, IUsersName } from "../components/interface";
-
+import {
+  IMessage,
+  IParams,
+  IUsersName,
+  IUserWrite,
+} from "../components/interface";
+console.log("chatStore0000000000000000000");
 class ChatStore {
   isWrite: boolean;
   isDeleteMessage: boolean;
@@ -11,17 +16,20 @@ class ChatStore {
   usersName: IUsersName[];
   users: number;
   message: string;
+  // const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
+  userWrite: IUserWrite[];
+  // userStatus: IUsersName[];
 
   constructor() {
     makeAutoObservable(this, {
-      usersName:false,
-      socket: false,
-      params: false,
-      state: false,
+      // usersName:false,
+      // socket: false,
+      // params: false,
+      // state: false,
       setUsersName: action,
       setUsers: action,
       setMessage: action,
-      setWrite: action,
+      // setWrite: action,
       setDeleteMessage: action,
       setSocket: action,
       setParams: action,
@@ -30,17 +38,19 @@ class ChatStore {
       deleteMessageById: action,
       updateMessageById: action,
     });
-
     this.isWrite = false;
     this.isDeleteMessage = false;
     this.socket = null;
     this.params = { room: "", name: "" };
-    // this.state = observable.array([]); // Ініціалізація як спостережуваного масиву
-    this.state = []; // Ініціалізація як спостережуваного масиву
+    // const [params, setParams] = useState<IParams>({ room: "", name: "" });
 
+    this.state = []; // Ініціалізація як спостережуваного масиву
     this.message = "";
     this.users = 0;
     this.usersName = [];
+    this.userWrite = [];
+    // this.userStatus = [];
+    console.log(this.params);
   }
 
   setUsersName(usersName: IUsersName[]) {
@@ -55,9 +65,9 @@ class ChatStore {
     this.message = message;
   }
 
-  setWrite(value: boolean) {
-    this.isWrite = value;
-  }
+  // setWrite(value: boolean) {
+  //   this.isWrite = value;
+  // }
 
   setDeleteMessage(value: boolean) {
     this.isDeleteMessage = value;
@@ -67,17 +77,19 @@ class ChatStore {
     this.socket = socket;
   }
 
-  setParams(params: IParams) {
+  setParams(params: any) {
+    console.log(this.params);
+
+    console.log(params);
     this.params = params;
   }
 
   setState(state: IMessage[]) {
-    this.state = [...state];
+    this.state = state;
   }
 
   addMessage(message: IMessage) {
     this.state.push(message); // Додавання елемента в масив
-    // this.setState(this.state);
   }
 
   deleteMessageById(id: number) {
@@ -93,6 +105,18 @@ class ChatStore {
     }
     // this.state = [...this.state];
   }
+
+  setUserWrite(userWrite: IUserWrite[]) {
+    this.userWrite = userWrite;
+  }
+
+  addUserWrite(name: IUserWrite) {
+    this.userWrite.push(name);
+  }
+
+  // setUserStatus(userStatus: IUsersName[]) {
+  //   this.userStatus = userStatus;
+  // }
 }
 
 const chatStore = new ChatStore();

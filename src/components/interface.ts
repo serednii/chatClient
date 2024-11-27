@@ -40,17 +40,11 @@ interface IUser {
 }
 
 export interface IMessageStart {
-  data: {
-    room: string;
-    messages: IMessage[];
-  };
+  messages: IMessage[];
 }
 
 export interface IMessageAdd {
-  data: {
-    room: string;
-    message: IMessage;
-  };
+  message: IMessage;
 }
 
 export interface IMessageNext {
