@@ -25,7 +25,7 @@ import styles from "./Chat.module.scss";
 import { observer } from "mobx-react-lite";
 
 const Chat: React.FC = () => {
-  const [params, setParams] = useState<IParams>({ room: "", name: "" });
+  // const [params, setParams] = useState<IParams>({ room: "", name: "" });
   const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
   // const [isWrite, setWrite] = useState<boolean>(false);
 
@@ -136,7 +136,7 @@ const Chat: React.FC = () => {
       if (searchParams.name && searchParams.room) {
         console.log("chatStore:", chatStore);
         console.log("setParams function:", chatStore.setParams);
-        setParams(searchParams);
+        chatStore.setParams(searchParams);
         chatStore.socket.emit("join", searchParams);
         hasJoined.current = true; // Позначаємо, що користувач уже приєднався
       } else {
@@ -201,7 +201,7 @@ const Chat: React.FC = () => {
     const handleStatusMessageWrite = ({ data }: any) => {
       const { isWrite, user } = data;
       console.log(user.name);
-      if (user.name === params.name) {
+      if (user.name === chatStore.params.name) {
         return;
       }
       const isUser: IUserWrite | undefined = chatStore.userWrite.find(
@@ -268,7 +268,7 @@ const Chat: React.FC = () => {
   }, [chatStore.socket, chatStore.state]);
 
   const leftRoom = (): void => {
-    chatStore.socket?.emit("leftRoom", { params: params });
+    chatStore.socket?.emit("leftRoom", { params: chatStore.params });
     navigate("/main");
     chatStore.socket?.disconnect();
   };
@@ -286,7 +286,7 @@ const Chat: React.FC = () => {
             <Messages
               deleteMessageById={deleteMessageById}
               updateMessageById={updateMessageById}
-              name={params.name}
+              name={chatStore.params.name}
             />
           )}
         </section>
