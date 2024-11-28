@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { IMessage } from "../interface";
 import Message from "./Message";
 import chatStore from "../../mobx/chatStore";
@@ -18,17 +18,23 @@ const Messages: React.FC<IMessageLocal> = ({
 }) => {
   const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(true);
   const lastUserRef = useRef<HTMLDivElement | null>(null); // Реф на последний элемент
-  const { state } = chatStore;
-  useEffect(() => {
-    if (lastUserRef.current && blockLastUserRef) {
-      lastUserRef.current.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
-    }
-  }, [state]); // Сработает каждый раз, когда изменится список usersName
 
+  const isRef = useRef<any | null>(null);
+  // const { state } = chatStore;
+  // useEffect(() => {
+  if (lastUserRef.current && blockLastUserRef) {
+    // lastUserRef.current.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
+    lastUserRef.current.scrollIntoView(); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
+  }
+  // }, [chatStore.state]); // Сработает каждый раз, когда изменится список usersName
+
+  console.log(chatStore.state === isRef.current);
+
+  isRef.current = chatStore.state;
   return (
     <div key="messages">
-      {state.length > 0 &&
-        state.map((data: IMessage, i: number) => {
+      {chatStore.state.length > 0 &&
+        chatStore.state.map((data: IMessage, i: number) => {
           // console.log(data.author);
           if (!data) {
             return;
@@ -57,7 +63,9 @@ const Messages: React.FC<IMessageLocal> = ({
           return (
             <Message
               key={id} // Додаємо унікальний ключ
-              lastUserRef={i === state.length - 1 ? lastUserRef : null}
+              lastUserRef={
+                i === chatStore.state.length - 1 ? lastUserRef : null
+              }
               MyClassName={MyClassName}
               author={author}
               message={message}
@@ -74,4 +82,4 @@ const Messages: React.FC<IMessageLocal> = ({
   );
 };
 
-export default observer(Messages);
+export default memo(observer(Messages));

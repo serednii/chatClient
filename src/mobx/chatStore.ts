@@ -50,7 +50,6 @@ class ChatStore {
     this.usersName = [];
     this.userWrite = [];
     this.userStatus = [];
-    console.log(this.params);
   }
 
   setUsersName(usersName: IUsersName[]) {
@@ -78,9 +77,6 @@ class ChatStore {
   }
 
   setParams(params: any) {
-    console.log(this.params);
-
-    console.log(params);
     this.params = params;
   }
 
@@ -108,22 +104,16 @@ class ChatStore {
 
   setUserWrite(userWrite: IUserWrite[]) {
     this.userWrite = userWrite;
-    console.log(this.userWrite);
   }
 
   deleteUserWrite(deleteUserWrite: string) {
-    this.userWrite = this.userWrite.filter((user) => {
-      console.log(user);
-      console.log(deleteUserWrite);
-
-      return user.name !== deleteUserWrite;
-    });
-    console.log(this.userWrite);
+    this.userWrite = this.userWrite.filter(
+      (user) => user.name !== deleteUserWrite
+    );
   }
 
   addUserWrite(name: IUserWrite) {
     this.userWrite.push(name);
-    console.log(this.userWrite);
   }
 
   setUserStatus(userStatus: IUsersName[]) {

@@ -58,24 +58,32 @@ const Chat: React.FC = () => {
 
   useWebSocket();
 
-  const deleteMessageById = (id: number): void => {
-    if (chatStore.socket) {
-      chatStore.socket.emit("deleteMessageById", {
-        id,
-        room: chatStore.params.room,
-      });
-    }
-  };
+  const deleteMessageById = useCallback(
+    (id: number): void => {
+      // console.log("deleteMessageByIdServer", id);
+      if (chatStore.socket) {
+        chatStore.socket.emit("deleteMessageByIdServer", {
+          id,
+          room: chatStore.params.room,
+        });
+      }
+    },
+    [chatStore.socket, chatStore.params]
+  );
 
-  const updateMessageById = (id: number, message: string): void => {
-    if (chatStore.socket) {
-      chatStore.socket.emit("updateMessageById", {
-        id,
-        room: chatStore.params.room,
-        message,
-      });
-    }
-  };
+  const updateMessageById = useCallback(
+    (id: number, message: string): void => {
+      // console.log("updateMessageByIdServer", id, message);
+      if (chatStore.socket) {
+        chatStore.socket.emit("updateMessageByIdServer", {
+          id,
+          room: chatStore.params.room,
+          message,
+        });
+      }
+    },
+    [chatStore.socket, chatStore.params]
+  );
 
   const clearSetWrite = useCallback((): void => {
     chatStore.setWrite(false);
@@ -103,7 +111,7 @@ const Chat: React.FC = () => {
 
   const handleChangeChat = useCallback(() => {
     if (!chatStore.isWrite) {
-      console.log('socket?.emit("sendWrite", { isWrite: true, params });');
+      // console.log('socket?.emit("sendWrite", { isWrite: true, params });');
       chatStore.socket?.emit("sendWrite", {
         isWrite: true,
         params: chatStore.params,
@@ -119,8 +127,8 @@ const Chat: React.FC = () => {
       clearSetWrite();
     }
   }, [chatStore.isDeleteMessage]);
-  console.log("chatStore:", chatStore);
-  console.log("setParams function:", chatStore.setParams);
+  // console.log("chatStore:", chatStore);
+  // console.log("setParams function:", chatStore.setParams);
   // //При вході користувача  приймаємо імя і кімнату
   useEffect(() => {
     if (!chatStore.socket) return;
@@ -132,10 +140,7 @@ const Chat: React.FC = () => {
         name: searchParamsObj.name || "",
         room: searchParamsObj.room || "",
       };
-      console.log(searchParams);
       if (searchParams.name && searchParams.room) {
-        console.log("chatStore:", chatStore);
-        console.log("setParams function:", chatStore.setParams);
         chatStore.setParams(searchParams);
         chatStore.socket.emit("join", searchParams);
         hasJoined.current = true; // Позначаємо, що користувач уже приєднався
@@ -146,7 +151,6 @@ const Chat: React.FC = () => {
   }, [chatStore.socket, search]);
 
   useEffect(() => {
-    // console.log(socket);
     const handleMessageStart = ({ messages }: IMessageStart) => {
       console.log("messageStart----------------------------", messages);
       if (messages) {
@@ -161,7 +165,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     const handleMessageAdd = ({ message }: IMessageAdd) => {
-      console.log("data-=-=-=-=-/////////", message);
+      // console.log("data-=-=-=-=-/////////", message);
       if (message) {
         chatStore.addMessage(message);
       }
@@ -208,9 +212,9 @@ const Chat: React.FC = () => {
       //маємо добавити в масив нового користувача який набирає текст
       if (isWrite) {
         //Добавляємо нового який набирає текст
-        console.log("Добавляємо нового який набирає текст");
+        // console.log("Добавляємо нового який набирає текст");
         if (!isUser) {
-          console.log(chatStore.userWrite);
+          // console.log(chatStore.userWrite);
           chatStore.addUserWrite({ name: user.name });
         }
       } else {
@@ -238,24 +242,30 @@ const Chat: React.FC = () => {
   }, [chatStore.socket]);
 
   useEffect(() => {
-    const handleDeleteMessageById = ({ id }: any) => {
-      deleteMessageById(id);
+    const handleDeleteMessageByIdUser = ({ id }: any) => {
+      chatStore.deleteMessageById(id);
     };
-    chatStore.socket?.on("deleteMessageById", handleDeleteMessageById);
+    chatStore.socket?.on("deleteMessageByIdUser", handleDeleteMessageByIdUser);
     return () => {
-      chatStore.socket?.off("deleteMessageById", handleDeleteMessageById);
+      chatStore.socket?.off(
+        "deleteMessageByIdUser",
+        handleDeleteMessageByIdUser
+      );
     };
   }, [chatStore.socket, chatStore.state]);
 
   useEffect(() => {
-    const handleUpdateMessageById = ({ id, message }: any) => {
+    const handleUpdateMessageByIdUUser = ({ id, message }: any) => {
       if (chatStore.state) {
-        updateMessageById(id, message);
+        chatStore.updateMessageById(id, message);
       }
     };
-    chatStore.socket?.on("updateMessageById", handleUpdateMessageById);
+    chatStore.socket?.on("updateMessageByIdUser", handleUpdateMessageByIdUUser);
     return () => {
-      chatStore.socket?.off("updateMessageById", handleUpdateMessageById);
+      chatStore.socket?.off(
+        "updateMessageByIdUser",
+        handleUpdateMessageByIdUUser
+      );
     };
   }, [chatStore.socket, chatStore.state]);
 

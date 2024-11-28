@@ -34,7 +34,7 @@ interface IControllerMessages {
 const controllerMessages: IControllerMessages = {
   handleDeleteMessage: (divRef, deleteMessageById, setBlockLastUserRef) => {
     console.log("handleDeleteMessage");
-    chatStore.setDeleteMessage(true);
+    // chatStore.setDeleteMessage(true);
     if (divRef.current) {
       const dataIdStr = divRef.current.getAttribute("data-id");
       if (dataIdStr) {
@@ -43,7 +43,7 @@ const controllerMessages: IControllerMessages = {
         if (confirm("Ви впевнені, що хочете видалити повідомлення")) {
           deleteMessageById(dataId);
           setTimeout(() => {
-            chatStore.setDeleteMessage(false);
+            // chatStore.setDeleteMessage(false);
           }, 2000);
         }
       }
@@ -74,7 +74,7 @@ const controllerMessages: IControllerMessages = {
       setIsEditMessage(true);
       setBlockLastUserRef(false);
       setTimeout(() => {
-        chatStore.setDeleteMessage(false);
+        // chatStore.setDeleteMessage(false);
       }, 2000);
       setTimeout(() => setBlockLastUserRef(true), 3050);
     }
@@ -82,7 +82,7 @@ const controllerMessages: IControllerMessages = {
   handleClose: (event, setIsEditMessage) => {
     event.preventDefault();
     setIsEditMessage(false);
-    chatStore.setDeleteMessage(false);
+    // chatStore.setDeleteMessage(false);
   },
   handleSendMessage: (
     event,

@@ -5,14 +5,16 @@
   align-items: center;
   flex-direction: column;
   color: #fff;
-  padding-top: 65px;
+  // padding-top: 65px;
 }
 
-.main {
+main {
   // display: flex;
   width: 100%;
   // flex-grow: 1;
+  height: calc(100vh - 132px);
   position: relative;
+  // margin-bottom: 2px;
 }
 
 .users_list {
@@ -33,5 +35,6 @@
   background: rgb(35, 35, 35);
   padding: 4px;
   overflow-y: auto;
-  height: calc(100vh - 150px);
+  // height: calc(100vh - 150px);
+  height: inherit;
 }
