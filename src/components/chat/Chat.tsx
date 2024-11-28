@@ -26,7 +26,7 @@ import { observer } from "mobx-react-lite";
 
 const Chat: React.FC = () => {
   // const [params, setParams] = useState<IParams>({ room: "", name: "" });
-  const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
+  // const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
   // const [isWrite, setWrite] = useState<boolean>(false);
 
   console.log("RENDER CHAT");
@@ -174,7 +174,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     const handleStatusMessage = ({ data }: any) => {
-      setUserStatus(data?.roomUsers);
+      chatStore.setUserStatus(data?.roomUsers);
     };
     chatStore.socket?.on("messageStatus", handleStatusMessage);
     return () => {
@@ -192,39 +192,31 @@ const Chat: React.FC = () => {
   //   socket?.listeners("messageStatus")?.length
   // );
 
-  // console.log(
-  //   "Number of listeners for messageWrite:",
-  //   socket?.listeners("messageWrite")?.length
-  // );
-
   useEffect(() => {
     const handleStatusMessageWrite = ({ data }: any) => {
       const { isWrite, user } = data;
-      console.log(user.name);
+
+      //Якщо то ми набираємо текст то нічого не робимо
       if (user.name === chatStore.params.name) {
         return;
       }
+      //Находимо користувача в масиві
       const isUser: IUserWrite | undefined = chatStore.userWrite.find(
         (_user: IUserWrite) => _user.name === user.name
       );
 
       //маємо добавити в масив нового користувача який набирає текст
       if (isWrite) {
-        //Находимо користувача в масиві
         //Добавляємо нового який набирає текст
+        console.log("Добавляємо нового який набирає текст");
         if (!isUser) {
-          // console.log(userWrite);
+          console.log(chatStore.userWrite);
           chatStore.addUserWrite({ name: user.name });
         }
       } else {
-        //тут видаляємо користувача який закінчив набирати текст
         //Видаляємо користувача який набирає текст
-        if (!isUser) {
-          chatStore.setUserWrite(
-            chatStore.userWrite.filter(
-              (_user: IUserWrite) => _user.name !== user.name
-            )
-          );
+        if (isUser) {
+          chatStore.deleteUserWrite(user.name);
         }
       }
     };
@@ -294,7 +286,7 @@ const Chat: React.FC = () => {
           <Users
             usersName={chatStore.usersName}
             userWrite={chatStore.userWrite}
-            userStatus={userStatus}
+            userStatus={chatStore.userStatus}
           />
         </aside>
       </main>

@@ -108,16 +108,18 @@ class ChatStore {
 
   setUserWrite(userWrite: IUserWrite[]) {
     this.userWrite = userWrite;
+    console.log(this.userWrite);
   }
 
-  // deleteUserWrite(deleteUserWrite: IUserWrite) {
-  //   this.userWrite = this.userWrite.filter((user) => {
-  //     console.log(user);
-  //     console.log(deleteUserWrite);
+  deleteUserWrite(deleteUserWrite: string) {
+    this.userWrite = this.userWrite.filter((user) => {
+      console.log(user);
+      console.log(deleteUserWrite);
 
-  //     return user !== deleteUserWrite;
-  //   });
-  // }
+      return user.name !== deleteUserWrite;
+    });
+    console.log(this.userWrite);
+  }
 
   addUserWrite(name: IUserWrite) {
     this.userWrite.push(name);

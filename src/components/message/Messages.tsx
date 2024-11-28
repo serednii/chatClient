@@ -29,7 +29,7 @@ const Messages: React.FC<IMessageLocal> = ({
     <div key="messages">
       {state.length > 0 &&
         state.map((data: IMessage, i: number) => {
-          console.log(data.author);
+          // console.log(data.author);
           if (!data) {
             return;
           }
