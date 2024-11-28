@@ -18,7 +18,7 @@ class ChatStore {
   message: string;
   // const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
   userWrite: IUserWrite[];
-  // userStatus: IUsersName[];
+  userStatus: IUsersName[];
 
   constructor() {
     makeAutoObservable(this, {
@@ -29,7 +29,7 @@ class ChatStore {
       setUsersName: action,
       setUsers: action,
       setMessage: action,
-      // setWrite: action,
+      setWrite: action,
       setDeleteMessage: action,
       setSocket: action,
       setParams: action,
@@ -49,7 +49,7 @@ class ChatStore {
     this.users = 0;
     this.usersName = [];
     this.userWrite = [];
-    // this.userStatus = [];
+    this.userStatus = [];
     console.log(this.params);
   }
 
@@ -65,9 +65,9 @@ class ChatStore {
     this.message = message;
   }
 
-  // setWrite(value: boolean) {
-  //   this.isWrite = value;
-  // }
+  setWrite(value: boolean) {
+    this.isWrite = value;
+  }
 
   setDeleteMessage(value: boolean) {
     this.isDeleteMessage = value;
@@ -114,9 +114,9 @@ class ChatStore {
     this.userWrite.push(name);
   }
 
-  // setUserStatus(userStatus: IUsersName[]) {
-  //   this.userStatus = userStatus;
-  // }
+  setUserStatus(userStatus: IUsersName[]) {
+    this.userStatus = userStatus;
+  }
 }
 
 const chatStore = new ChatStore();

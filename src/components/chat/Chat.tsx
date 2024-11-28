@@ -27,7 +27,7 @@ import { observer } from "mobx-react-lite";
 const Chat: React.FC = () => {
   const [params, setParams] = useState<IParams>({ room: "", name: "" });
   const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
-  const [isWrite, setWrite] = useState<boolean>(false);
+  // const [isWrite, setWrite] = useState<boolean>(false);
 
   console.log("RENDER CHAT");
   const { search } = useLocation();
@@ -78,7 +78,7 @@ const Chat: React.FC = () => {
   };
 
   const clearSetWrite = useCallback((): void => {
-    setWrite(false);
+    chatStore.setWrite(false);
     chatStore.socket?.emit("sendWrite", {
       isWrite: false,
       params: chatStore.params,
@@ -88,7 +88,7 @@ const Chat: React.FC = () => {
   const handleSubmitChat = useCallback(
     (message: string): void => {
       if (!message) return;
-      setWrite(false);
+      chatStore.setWrite(false);
       chatStore.socket?.emit("sendWrite", {
         isWrite: false,
         params: chatStore.params,
@@ -108,7 +108,7 @@ const Chat: React.FC = () => {
         isWrite: true,
         params: chatStore.params,
       });
-      setWrite(true);
+      chatStore.setWrite(true);
     }
   }, [chatStore.socket, chatStore.params, chatStore.isWrite]);
 
@@ -159,28 +159,28 @@ const Chat: React.FC = () => {
     };
   }, [chatStore.socket, chatStore.state]);
 
-  // useEffect(() => {
-  //   const handleMessageAdd = ({ message }: IMessageAdd) => {
-  //     console.log("data-=-=-=-=-/////////", message);
-  //     if (message) {
-  //       addMessage(message);
-  //     }
-  //   };
-  //   socket?.on("messageAdd", handleMessageAdd);
-  //   return () => {
-  //     socket?.off("messageAdd", handleMessageAdd);
-  //   };
-  // }, [socket, state]);
+  useEffect(() => {
+    const handleMessageAdd = ({ message }: IMessageAdd) => {
+      console.log("data-=-=-=-=-/////////", message);
+      if (message) {
+        chatStore.addMessage(message);
+      }
+    };
+    chatStore.socket?.on("messageAdd", handleMessageAdd);
+    return () => {
+      chatStore.socket?.off("messageAdd", handleMessageAdd);
+    };
+  }, [chatStore.socket, chatStore.state]);
 
-  // useEffect(() => {
-  //   const handleStatusMessage = ({ data }: any) => {
-  //     setUserStatus(data?.roomUsers);
-  //   };
-  //   socket?.on("messageStatus", handleStatusMessage);
-  //   return () => {
-  //     socket?.off("messageStatus", handleStatusMessage);
-  //   };
-  // }, [socket]);
+  useEffect(() => {
+    const handleStatusMessage = ({ data }: any) => {
+      setUserStatus(data?.roomUsers);
+    };
+    chatStore.socket?.on("messageStatus", handleStatusMessage);
+    return () => {
+      chatStore.socket?.off("messageStatus", handleStatusMessage);
+    };
+  }, [chatStore.socket]);
 
   // console.log(
   //   "Number of listeners for message:",
