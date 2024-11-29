@@ -12,18 +12,21 @@ import {
 } from "../type";
 import styles from "./footer.module.scss";
 import { observer } from "mobx-react-lite";
-import { handleSubmitChat, onEmojiClick } from "./controllerFooter";
+import {
+  handleChangeChat,
+  handleSubmitChat,
+  onEmojiClick,
+} from "./controllerFooter";
+import { clearSetWrite } from "../chat/controllerChat";
 const icon = require("../../images/emoji.svg");
 
-const Footer: React.FC<any> = ({
-  handleChangeChat,
-  clearSetWrite,
-}) => {
+const Footer: React.FC = () => {
   const [isOpen, setOpen] = useState(false);
   const debouncedFunctionRef = useRef<TDebouncedFunction | null>(null);
   const getTimerRef = useRef<TGetTimer | null>(null);
   const [message, setMessage] = useState<string>("");
   console.log("RENDER FOOTER");
+
   const [debouncedFunction, getTimer]: TDebounce = debounce(
     (params: IParams) => {
       clearSetWrite(); // Ваш код

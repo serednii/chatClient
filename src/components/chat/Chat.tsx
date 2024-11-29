@@ -29,6 +29,8 @@ import {
   sendWriteToServer,
 } from "../socket/setDataSocket";
 import { clearSetWrite } from "./controllerChat";
+import { handleChangeChat } from "../footer/controllerFooter";
+import { useJoin } from "../socket/useSocketControllers";
 
 const Chat: React.FC = () => {
   // const [params, setParams] = useState<IParams>({ room: "", name: "" });
@@ -63,42 +65,7 @@ const Chat: React.FC = () => {
   const hasJoined = useRef(false);
 
   useWebSocket();
-
-  // const clearSetWrite = useCallback((): void => {
-  //   chatStore.setWrite(false);
-  //   sendWriteToServer({
-  //     isWrite: false,
-  //     params: chatStore.params,
-  //   });
-  // }, [chatStore.params]);
-
-  // const handleSubmitChat = useCallback(
-  //   (message: string): void => {
-  //     if (!message) return;
-  //     chatStore.setWrite(false);
-  //     sendWriteToServer({
-  //       isWrite: false,
-  //       params: chatStore.params,
-  //     });
-  //     sendMessageToServer({
-  //       message,
-  //       params: chatStore.params,
-  //     });
-  //   },
-  //   [chatStore.params]
-  // );
-
-  const handleChangeChat = useCallback(() => {
-    if (!chatStore.isWrite) {
-      // console.log('socket?.emit("sendWrite", { isWrite: true, params });');
-      sendWriteToServer({
-        isWrite: true,
-        params: chatStore.params,
-      });
-
-      chatStore.setWrite(true);
-    }
-  }, [chatStore.params, chatStore.isWrite]);
+  useJoin();
 
   useEffect(() => {
     if (chatStore.isDeleteMessage) {
@@ -109,25 +76,25 @@ const Chat: React.FC = () => {
   }, [chatStore.isDeleteMessage]);
 
   // //При вході користувача  приймаємо імя і кімнату
-  useEffect(() => {
-    if (!chatStore.socket) return;
+  // useEffect(() => {
+  //   if (!chatStore.socket) return;
 
-    if (!hasJoined.current) {
-      console.log("JOIN----------------------------", search);
-      const searchParamsObj = Object.fromEntries(new URLSearchParams(search));
-      const searchParams: IParams = {
-        name: searchParamsObj.name || "",
-        room: searchParamsObj.room || "",
-      };
-      if (searchParams.name && searchParams.room) {
-        chatStore.setParams(searchParams);
-        chatStore.socket.emit("join", searchParams);
-        hasJoined.current = true; // Позначаємо, що користувач уже приєднався
-      } else {
-        console.error("Missing required search parameters: name and/or room.");
-      }
-    }
-  }, [chatStore.socket, search]);
+  //   if (!hasJoined.current) {
+  //     console.log("JOIN----------------------------", search);
+  //     const searchParamsObj = Object.fromEntries(new URLSearchParams(search));
+  //     const searchParams: IParams = {
+  //       name: searchParamsObj.name || "",
+  //       room: searchParamsObj.room || "",
+  //     };
+  //     if (searchParams.name && searchParams.room) {
+  //       chatStore.setParams(searchParams);
+  //       chatStore.socket.emit("join", searchParams);
+  //       hasJoined.current = true; // Позначаємо, що користувач уже приєднався
+  //     } else {
+  //       console.error("Missing required search parameters: name and/or room.");
+  //     }
+  //   }
+  // }, [chatStore.socket, search]);
 
   useEffect(() => {
     const handleMessageStart = ({ messages }: IMessageStart) => {
@@ -255,10 +222,7 @@ const Chat: React.FC = () => {
         </aside>
       </main>
 
-      <Footer
-        clearSetWrite={clearSetWrite}
-        handleChangeChat={handleChangeChat}
-      />
+      <Footer />
     </div>
   );
 };

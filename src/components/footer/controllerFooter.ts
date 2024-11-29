@@ -17,5 +17,15 @@ export const handleSubmitChat = (message: string): void => {
   });
 };
 
+export const handleChangeChat = () => {
+  if (!chatStore.isWrite) {
+    sendWriteToServer({
+      isWrite: true,
+      params: chatStore.params,
+    });
+    chatStore.setWrite(true);
+  }
+};
+
 export const onEmojiClick = ({ emoji }: any) =>
   chatStore.setMessage(`${chatStore.message} ${emoji}`);
