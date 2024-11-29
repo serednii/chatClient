@@ -21,7 +21,7 @@ const AppRoutes = () => {
   useEffect(() => {
     if (location.pathname !== "/chat") {
       if (isAuth) {
-        navigate("/main");
+        navigate("./main");
       } else {
         navigate("./");
       }

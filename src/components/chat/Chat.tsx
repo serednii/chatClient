@@ -11,7 +11,7 @@ import Messages from "../message/Messages";
 import Users from "../users/Users";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
-import useWebSocket from "../useWebsocket";
+import useWebSocket from "../socket/useWebsocket";
 import {
   IMessageAdd,
   IMessageStart,
@@ -58,32 +58,32 @@ const Chat: React.FC = () => {
 
   useWebSocket();
 
-  const deleteMessageById = useCallback(
-    (id: number): void => {
-      // console.log("deleteMessageByIdServer", id);
-      if (chatStore.socket) {
-        chatStore.socket.emit("deleteMessageByIdServer", {
-          id,
-          room: chatStore.params.room,
-        });
-      }
-    },
-    [chatStore.socket, chatStore.params]
-  );
+  // const deleteMessageById = useCallback(
+  //   (id: number): void => {
+  //     // console.log("deleteMessageByIdServer", id);
+  //     if (chatStore.socket) {
+  //       chatStore.socket.emit("deleteMessageByIdServer", {
+  //         id,
+  //         room: chatStore.params.room,
+  //       });
+  //     }
+  //   },
+  //   [chatStore.socket, chatStore.params]
+  // );
 
-  const updateMessageById = useCallback(
-    (id: number, message: string): void => {
-      // console.log("updateMessageByIdServer", id, message);
-      if (chatStore.socket) {
-        chatStore.socket.emit("updateMessageByIdServer", {
-          id,
-          room: chatStore.params.room,
-          message,
-        });
-      }
-    },
-    [chatStore.socket, chatStore.params]
-  );
+  // const updateMessageById = useCallback(
+  //   (id: number, message: string): void => {
+  //     // console.log("updateMessageByIdServer", id, message);
+  //     if (chatStore.socket) {
+  //       chatStore.socket.emit("updateMessageByIdServer", {
+  //         id,
+  //         room: chatStore.params.room,
+  //         message,
+  //       });
+  //     }
+  //   },
+  //   [chatStore.socket, chatStore.params]
+  // );
 
   const clearSetWrite = useCallback((): void => {
     chatStore.setWrite(false);
@@ -286,8 +286,8 @@ const Chat: React.FC = () => {
         <section className={styles.messages}>
           {chatStore.state.length > 0 && (
             <Messages
-              deleteMessageById={deleteMessageById}
-              updateMessageById={updateMessageById}
+              // deleteMessageById={deleteMessageById}
+              // updateMessageById={updateMessageById}
               name={chatStore.params.name}
             />
           )}

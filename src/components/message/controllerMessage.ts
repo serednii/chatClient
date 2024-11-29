@@ -1,11 +1,12 @@
 import { MutableRefObject } from "react";
 import { IData } from "./interface";
 import chatStore from "../../mobx/chatStore";
+import { deleteMessageById, updateMessageById } from "../socket/setDataSocket";
 
 interface IControllerMessages {
   handleDeleteMessage: (
     divRef: MutableRefObject<HTMLDivElement | null>,
-    deleteMessageById: (id: number) => void,
+    // deleteMessageById: (id: number) => void,
     setBlockLastUserRef: (value: boolean) => void
   ) => void;
 
@@ -25,14 +26,14 @@ interface IControllerMessages {
   handleSendMessage: (
     event: React.MouseEvent<HTMLButtonElement>,
     setIsEditMessage: (value: boolean) => void,
-    updateMessageById: (id: number, message: string) => void,
+    // updateMessageById: (id: number, message: string) => void,
     data: IData,
     values: string
   ) => void;
 }
 
 const controllerMessages: IControllerMessages = {
-  handleDeleteMessage: (divRef, deleteMessageById, setBlockLastUserRef) => {
+  handleDeleteMessage: (divRef, setBlockLastUserRef) => {
     console.log("handleDeleteMessage");
     // chatStore.setDeleteMessage(true);
     if (divRef.current) {
@@ -87,7 +88,7 @@ const controllerMessages: IControllerMessages = {
   handleSendMessage: (
     event,
     setIsEditMessage,
-    updateMessageById,
+    // updateMessageById,
     data,
     values
   ) => {

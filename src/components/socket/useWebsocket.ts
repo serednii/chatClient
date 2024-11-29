@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
-import { URL_SERVER } from "../config";
-import chatStore from "../mobx/chatStore";
+import { URL_SERVER } from "../../config";
+import chatStore from "../../mobx/chatStore";
 
 interface IParams {
   room: string;
@@ -15,7 +15,6 @@ const useWebSocket = () => {
   // Оновлюємо реф params при кожній зміні
   useEffect(() => {
     paramsRef.current = chatStore.params;
-
     console.log("RENDER SOCKET", chatStore.params);
   }, [chatStore.params]);
 

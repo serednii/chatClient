@@ -9,8 +9,8 @@ export interface MessageProps {
   date: string;
   itsMe: boolean;
   setBlockLastUserRef: (value: boolean) => void;
-  deleteMessageById: (id: number) => void;
-  updateMessageById: (id: number, message: string) => void;
+  // deleteMessageById: (id: number) => void;
+  // updateMessageById: (id: number, message: string) => void;
 }
 
 export interface IData {

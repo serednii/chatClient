@@ -86,6 +86,7 @@ class ChatStore {
 
   addMessage(message: IMessage) {
     this.state.push(message); // Додавання елемента в масив
+    this.state = [...this.state];
   }
 
   deleteMessageById(id: number) {

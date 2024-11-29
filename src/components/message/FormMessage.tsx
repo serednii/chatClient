@@ -8,7 +8,7 @@ interface IFormMessage {
   values: string;
   setValues: (value: string) => void;
   setIsEditMessage: (value: boolean) => void;
-  updateMessageById: (id: number, message: string) => void;
+  // updateMessageById: (id: number, message: string) => void;
   data: IData;
 }
 
@@ -16,7 +16,7 @@ const FormMessage: React.FC<IFormMessage> = ({
   values,
   setValues,
   setIsEditMessage,
-  updateMessageById,
+  // updateMessageById,
   data,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null); // Створюємо реф для textarea
@@ -78,7 +78,7 @@ const FormMessage: React.FC<IFormMessage> = ({
           controllerMessages.handleSendMessage(
             event,
             setIsEditMessage,
-            updateMessageById,
+            // updateMessageById,
             data,
             values
           )

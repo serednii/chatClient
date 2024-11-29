@@ -17,9 +17,9 @@ const Message: React.FC<MessageProps> = ({
   date,
   MyClassName,
   itsMe,
-  deleteMessageById,
   setBlockLastUserRef,
-  updateMessageById,
+  // deleteMessageById,
+  // updateMessageById,
 }) => {
   const divRef = useRef<HTMLDivElement | null>(null);
   const [isEditMessage, setIsEditMessage] = useState(false);
@@ -45,7 +45,7 @@ const Message: React.FC<MessageProps> = ({
             values={values}
             setValues={setValues}
             setIsEditMessage={setIsEditMessage}
-            updateMessageById={updateMessageById}
+            // updateMessageById={updateMessageById}
             data={data}
           />
         )}
@@ -59,7 +59,7 @@ const Message: React.FC<MessageProps> = ({
                   onClick={() =>
                     controllerMessages.handleDeleteMessage(
                       divRef,
-                      deleteMessageById,
+                      // deleteMessageById,
                       setBlockLastUserRef
                     )
                   }
