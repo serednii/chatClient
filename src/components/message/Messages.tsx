@@ -6,15 +6,16 @@ import styles from "./Messages.module.scss";
 import { observer } from "mobx-react-lite";
 
 const Messages: React.FC = () => {
-  const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(true);
+  const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(false);
   const lastUserRef = useRef<HTMLDivElement | null>(null); // Реф на последний элемент
   const name = chatStore.params.name;
   const isRef = useRef<any | null>(null);
 
   useEffect(() => {
-    if (lastUserRef.current && blockLastUserRef) {
-      // lastUserRef.current.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
-      lastUserRef.current.scrollIntoView(); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
+    if (!blockLastUserRef) {
+      lastUserRef.current?.scrollIntoView(); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
+    } else {
+      lastUserRef.current?.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
     }
   }, [chatStore.state]); // Сработает каждый раз, когда изменится список usersName
 
@@ -29,9 +30,7 @@ const Messages: React.FC = () => {
           if (!data) {
             return;
           }
-
           const { author, message, id, date } = data;
-
           // Перевірка типів значень
           if (
             typeof name !== "string" ||
@@ -63,8 +62,6 @@ const Messages: React.FC = () => {
               id={id}
               itsMe={itsMe}
               date={date}
-              // deleteMessageById={deleteMessageById}
-              // updateMessageById={updateMessageById}
             />
           );
         })}

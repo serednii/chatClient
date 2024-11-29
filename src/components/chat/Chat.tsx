@@ -3,7 +3,6 @@ import Messages from "../message/Messages";
 import Users from "../users/Users";
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
-import useWebSocket from "../socket/useWebsocket";
 import chatStore from "../../mobx/chatStore";
 import styles from "./Chat.module.scss";
 import { observer } from "mobx-react-lite";
