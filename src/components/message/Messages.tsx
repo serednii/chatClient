@@ -5,45 +5,18 @@ import chatStore from "../../mobx/chatStore";
 import styles from "./Messages.module.scss";
 import { observer } from "mobx-react-lite";
 
-interface IMessageLocal {
-  name: string;
-  // deleteMessageById: (id: number) => void;
-  // updateMessageById: (id: number, message: string) => void;
-}
-
-const Messages: React.FC<IMessageLocal> = ({ name }) => {
+const Messages: React.FC = () => {
   const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(true);
   const lastUserRef = useRef<HTMLDivElement | null>(null); // Реф на последний элемент
-
+  const name = chatStore.params.name;
   const isRef = useRef<any | null>(null);
-  // const { state } = chatStore;
+
   useEffect(() => {
     if (lastUserRef.current && blockLastUserRef) {
       // lastUserRef.current.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
       lastUserRef.current.scrollIntoView(); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
     }
-
-    // if (lastUserRef.current && blockLastUserRef) {
-    //   lastUserRef.current.scrollIntoView({
-    //     behavior: "smooth",
-    //     block: "end", // Використовуємо параметр block для прокрутки до кінця елемента
-    //     inline: "nearest",
-    //   });
-    //   window.scrollBy(0, +45); // Додаємо додатковий відступ
-    // }
   }, [chatStore.state]); // Сработает каждый раз, когда изменится список usersName
-
-  // if (lastUserRef.current && blockLastUserRef) {
-  //   // Знаходимо відстань до елемента і додаємо відступ
-  //   const elementPosition =
-  //     lastUserRef.current.getBoundingClientRect().top + window.scrollY;
-  //   const offsetPosition = elementPosition - 45; // Додаємо 45px відступ
-
-  //   window.scrollTo({
-  //     top: offsetPosition,
-  //     behavior: "smooth",
-  //   });
-  // }
 
   console.log(chatStore.state === isRef.current);
 

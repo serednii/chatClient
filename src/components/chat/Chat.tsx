@@ -247,11 +247,7 @@ const Chat: React.FC = () => {
       <main className={styles.main}>
         <section className={styles.messages}>
           {chatStore.state.length > 0 && (
-            <Messages
-              // deleteMessageById={deleteMessageById}
-              // updateMessageById={updateMessageById}
-              name={chatStore.params.name}
-            />
+            <Messages/>
           )}
         </section>
         <aside className={styles.users_list}>

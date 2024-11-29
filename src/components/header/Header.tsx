@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  //Left the room
   const leftRoom = (): void => {
     sendLeftRoomToServer();
     navigate("./main");
