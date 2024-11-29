@@ -5,21 +5,15 @@ import chatStore from "../../mobx/chatStore";
 import styles from "./users.module.scss";
 import { observer } from "mobx-react-lite";
 
-interface IUsers {
-  userWrite: IUserWrite[];
-  userStatus: IUsersName[];
-  usersName: IUsersName[];
-}
-
-const Users = ({ userWrite, userStatus, usersName }: IUsers) => {
+const Users = () => {
   const [show, setShow] = useState(true);
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст
   //Сортуємо
-  const filterUsersName = usersName
-    ? usersName
+  const filterUsersName = chatStore.usersName
+    ? chatStore.usersName
         .filter((user: IUsersName) => {
-          const findUser = userWrite.find(
+          const findUser = chatStore.userWrite.find(
             (_user: IUserWrite) => _user.name === user.name
           );
           return user.name !== chatStore.params.name && !findUser;
@@ -27,7 +21,7 @@ const Users = ({ userWrite, userStatus, usersName }: IUsers) => {
         .sort((a: IUsersName, b: IUsersName) => a.name.localeCompare(b.name))
     : [];
 
-  const filterUserWrite = userWrite
+  const filterUserWrite = chatStore.userWrite
     .filter((user: IUserWrite) => user.name !== chatStore.params.name)
     .sort((a: IUserWrite, b: IUserWrite) => a.name.localeCompare(b.name));
 
@@ -42,13 +36,14 @@ const Users = ({ userWrite, userStatus, usersName }: IUsers) => {
 
       {show &&
         newListUser.map((user, index) => {
-          const findUser = userWrite?.find(
+          const findUser = chatStore.userWrite?.find(
             (_user: IUserWrite) => _user.name === user.name
           );
 
-          const classStatus = userStatus
-            ? userStatus.find((_user: IUsersName) => _user.name === user.name)
-                ?.status
+          const classStatus = chatStore.userStatus
+            ? chatStore.userStatus.find(
+                (_user: IUsersName) => _user.name === user.name
+              )?.status
             : "";
 
           return (

@@ -32,11 +32,7 @@ const Chat: React.FC = () => {
           {chatStore.state.length > 0 && <Messages />}
         </section>
         <aside className={styles.users_list}>
-          <Users
-            usersName={chatStore.usersName}
-            userWrite={chatStore.userWrite}
-            userStatus={chatStore.userStatus}
-          />
+          <Users />
         </aside>
       </main>
 
