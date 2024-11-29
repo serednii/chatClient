@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { URL_SERVER } from "../../config";
 import chatStore from "../../mobx/chatStore";
@@ -12,6 +12,9 @@ const useWebSocket = () => {
   const paramsRef = useRef<IParams>(chatStore.params);
   const reconnectIntervalRef = useRef<number>(1000);
   const isFirstConnect = useRef<boolean>(true);
+  const [socketConnectStatus, setSocketConnectStatus] =
+    useState("not_connected");
+
   // Оновлюємо реф params при кожній зміні
   useEffect(() => {
     paramsRef.current = chatStore.params;
@@ -55,12 +58,14 @@ const useWebSocket = () => {
     };
 
     const handleError = (error: any) => {
+      setSocketConnectStatus(`error connect socket ${error}`);
       console.error("WebSocket error observed:", error);
     };
 
     newSocket.on("connect", handleReconnect);
     newSocket.on("disconnect", handleDisconnect);
     newSocket.on("error", handleError);
+    setSocketConnectStatus(`connected`);
 
     return () => {
       newSocket.off("connect", handleReconnect);
@@ -70,7 +75,7 @@ const useWebSocket = () => {
     };
   }, [URL_SERVER, getParams]);
 
-  return {};
+  return { socketConnectStatus };
 };
 
 export default useWebSocket;
