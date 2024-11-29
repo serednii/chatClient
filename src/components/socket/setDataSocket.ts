@@ -37,3 +37,6 @@ export const sendLeftRoomToServer = () => {
   chatStore.socket?.emit("leftRoom", { params: chatStore.params });
   chatStore.socket?.disconnect();
 };
+
+export const sendJoinToServer = (searchParams: IParams) =>
+  chatStore.socket?.emit("join", searchParams);

@@ -75,7 +75,7 @@ const useWebSocket = () => {
     };
   }, [URL_SERVER, getParams]);
 
-  return { socketConnectStatus };
+  return {};
 };
 
 export default useWebSocket;

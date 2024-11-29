@@ -1,13 +1,20 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import chatStore from "../../mobx/chatStore";
-import { IParams } from "../interface";
+import { IMessageAdd, IMessageStart, IParams, IUserWrite } from "../interface";
+import { sendJoinToServer } from "./setDataSocket";
+import useWebSocket from "./useWebsocket";
 
-export const useJoin = () => {
+const useJoin = () => {
   const hasJoined = useRef(false);
   const { search } = useLocation();
+  const [joinStatus, setJoinStatus] = useState("not_joined");
+
   useEffect(() => {
-    if (!chatStore.socket) return;
+    if (!chatStore.socket) {
+      console.error("Socket is not defined");
+      return;
+    }
 
     if (!hasJoined.current) {
       console.log("JOIN----------------------------", search);
@@ -18,12 +25,160 @@ export const useJoin = () => {
       };
       if (searchParams.name && searchParams.room) {
         chatStore.setParams(searchParams);
-        chatStore.socket.emit("join", searchParams);
+        sendJoinToServer(searchParams);
         hasJoined.current = true; // Позначаємо, що користувач уже приєднався
+        setJoinStatus("joined");
       } else {
+        setJoinStatus("error");
         console.error("Missing required search parameters: name and/or room.");
       }
     }
   }, [chatStore.socket, search]);
+  return { joinStatus };
+};
+
+const useMessageStart = () => {
+  useEffect(() => {
+    const handleMessageStart = ({ messages }: IMessageStart) => {
+      console.log("messageStart----------------------------", messages);
+      if (messages) {
+        chatStore.setState(messages);
+      }
+    };
+    chatStore.socket?.on("messageStart", handleMessageStart);
+    return () => {
+      chatStore.socket?.off("messageStart", handleMessageStart);
+    };
+  }, [chatStore.socket, chatStore.state]);
   return {};
 };
+
+const useMessageAdd = () => {
+  useEffect(() => {
+    const handleMessageAdd = ({ message }: IMessageAdd) => {
+      // console.log("data-=-=-=-=-/////////", message);
+      if (message) {
+        chatStore.addMessage(message);
+      }
+    };
+    chatStore.socket?.on("messageAdd", handleMessageAdd);
+    return () => {
+      chatStore.socket?.off("messageAdd", handleMessageAdd);
+    };
+  }, [chatStore.socket, chatStore.state]);
+  return {};
+};
+
+const useMessagesStatus = () => {
+  useEffect(() => {
+    const handleStatusMessage = ({ data }: any) => {
+      chatStore.setUserStatus(data?.roomUsers);
+    };
+    chatStore.socket?.on("messageStatus", handleStatusMessage);
+    return () => {
+      chatStore.socket?.off("messageStatus", handleStatusMessage);
+    };
+  }, [chatStore.socket]);
+  return {};
+};
+
+const useMessageWrite = () => {
+  useEffect(() => {
+    const handleStatusMessageWrite = ({ data }: any) => {
+      const { isWrite, user } = data;
+
+      //Якщо то ми набираємо текст то нічого не робимо
+      if (user.name === chatStore.params.name) {
+        return;
+      }
+      //Находимо користувача в масиві
+      const isUser: IUserWrite | undefined = chatStore.userWrite.find(
+        (_user: IUserWrite) => _user.name === user.name
+      );
+
+      //маємо добавити в масив нового користувача який набирає текст
+      if (isWrite) {
+        //Добавляємо нового який набирає текст
+        // console.log("Добавляємо нового який набирає текст");
+        if (!isUser) {
+          // console.log(chatStore.userWrite);
+          chatStore.addUserWrite({ name: user.name });
+        }
+      } else {
+        //Видаляємо користувача який набирає текст
+        if (isUser) {
+          chatStore.deleteUserWrite(user.name);
+        }
+      }
+    };
+    chatStore.socket?.on("messageWrite", handleStatusMessageWrite);
+    return () => {
+      chatStore.socket?.off("messageWrite", handleStatusMessageWrite);
+    };
+  }, [chatStore.socket]);
+  return {};
+};
+
+const useMessageRoom = () => {
+  useEffect(() => {
+    const handleRoom = ({ data: { users } }: any) => {
+      chatStore.setUsers(users.length);
+      chatStore.setUsersName(users);
+    };
+    chatStore.socket?.on("room", handleRoom);
+    return () => {
+      chatStore.socket?.off("room", handleRoom);
+    };
+  }, [chatStore.socket]);
+  return {};
+};
+
+const useDeleteMessageByIdUser = () => {
+  useEffect(() => {
+    const handleDeleteMessageByIdUser = ({ id }: any) => {
+      chatStore.deleteMessageById(id);
+    };
+    chatStore.socket?.on("deleteMessageByIdUser", handleDeleteMessageByIdUser);
+    return () => {
+      chatStore.socket?.off(
+        "deleteMessageByIdUser",
+        handleDeleteMessageByIdUser
+      );
+    };
+  }, [chatStore.socket, chatStore.state]);
+  return {};
+};
+
+const useUpdateMessageByIdUser = () => {
+  useEffect(() => {
+    const handleUpdateMessageByIdUUser = ({ id, message }: any) => {
+      if (chatStore.state) {
+        chatStore.updateMessageById(id, message);
+      }
+    };
+    chatStore.socket?.on("updateMessageByIdUser", handleUpdateMessageByIdUUser);
+    return () => {
+      chatStore.socket?.off(
+        "updateMessageByIdUser",
+        handleUpdateMessageByIdUUser
+      );
+    };
+  }, [chatStore.socket, chatStore.state]);
+  return {};
+};
+
+const useConnectHooks = () => {
+  useWebSocket();
+  //При вході користувача  приймаємо імя і кімнату
+  useJoin();
+  useMessageStart();
+  useMessageAdd();
+  useMessagesStatus();
+  useMessageWrite();
+  useMessageRoom();
+  useDeleteMessageByIdUser();
+  useUpdateMessageByIdUser();
+  return {};
+};
+
+export default useConnectHooks;
