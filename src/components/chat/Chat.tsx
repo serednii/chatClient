@@ -23,6 +23,10 @@ import chatStore from "../../mobx/chatStore";
 // import authStore from "../../AuthUser/mobx/AuthStore";
 import styles from "./Chat.module.scss";
 import { observer } from "mobx-react-lite";
+import {
+  sendMessageToServer,
+  sendWriteToServer,
+} from "../socket/setDataSocket";
 
 const Chat: React.FC = () => {
   // const [params, setParams] = useState<IParams>({ room: "", name: "" });
@@ -58,64 +62,38 @@ const Chat: React.FC = () => {
 
   useWebSocket();
 
-  // const deleteMessageById = useCallback(
-  //   (id: number): void => {
-  //     // console.log("deleteMessageByIdServer", id);
-  //     if (chatStore.socket) {
-  //       chatStore.socket.emit("deleteMessageByIdServer", {
-  //         id,
-  //         room: chatStore.params.room,
-  //       });
-  //     }
-  //   },
-  //   [chatStore.socket, chatStore.params]
-  // );
-
-  // const updateMessageById = useCallback(
-  //   (id: number, message: string): void => {
-  //     // console.log("updateMessageByIdServer", id, message);
-  //     if (chatStore.socket) {
-  //       chatStore.socket.emit("updateMessageByIdServer", {
-  //         id,
-  //         room: chatStore.params.room,
-  //         message,
-  //       });
-  //     }
-  //   },
-  //   [chatStore.socket, chatStore.params]
-  // );
-
   const clearSetWrite = useCallback((): void => {
     chatStore.setWrite(false);
-    chatStore.socket?.emit("sendWrite", {
+    sendWriteToServer({
       isWrite: false,
       params: chatStore.params,
     });
-  }, [chatStore.socket, chatStore.params]);
+  }, [chatStore.params]);
 
   const handleSubmitChat = useCallback(
     (message: string): void => {
       if (!message) return;
       chatStore.setWrite(false);
-      chatStore.socket?.emit("sendWrite", {
+      sendWriteToServer({
         isWrite: false,
         params: chatStore.params,
       });
-      chatStore.socket?.emit("sendMessage", {
+      sendMessageToServer({
         message,
         params: chatStore.params,
       });
     },
-    [chatStore.socket, chatStore.params]
+    [chatStore.params]
   );
 
   const handleChangeChat = useCallback(() => {
     if (!chatStore.isWrite) {
       // console.log('socket?.emit("sendWrite", { isWrite: true, params });');
-      chatStore.socket?.emit("sendWrite", {
-        isWrite: true,
+      sendWriteToServer({
+        isWrite: false,
         params: chatStore.params,
       });
+
       chatStore.setWrite(true);
     }
   }, [chatStore.socket, chatStore.params, chatStore.isWrite]);
