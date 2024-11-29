@@ -28,6 +28,7 @@ import {
   sendMessageToServer,
   sendWriteToServer,
 } from "../socket/setDataSocket";
+import { clearSetWrite } from "./controllerChat";
 
 const Chat: React.FC = () => {
   // const [params, setParams] = useState<IParams>({ room: "", name: "" });
@@ -63,29 +64,29 @@ const Chat: React.FC = () => {
 
   useWebSocket();
 
-  const clearSetWrite = useCallback((): void => {
-    chatStore.setWrite(false);
-    sendWriteToServer({
-      isWrite: false,
-      params: chatStore.params,
-    });
-  }, [chatStore.params]);
+  // const clearSetWrite = useCallback((): void => {
+  //   chatStore.setWrite(false);
+  //   sendWriteToServer({
+  //     isWrite: false,
+  //     params: chatStore.params,
+  //   });
+  // }, [chatStore.params]);
 
-  const handleSubmitChat = useCallback(
-    (message: string): void => {
-      if (!message) return;
-      chatStore.setWrite(false);
-      sendWriteToServer({
-        isWrite: false,
-        params: chatStore.params,
-      });
-      sendMessageToServer({
-        message,
-        params: chatStore.params,
-      });
-    },
-    [chatStore.params]
-  );
+  // const handleSubmitChat = useCallback(
+  //   (message: string): void => {
+  //     if (!message) return;
+  //     chatStore.setWrite(false);
+  //     sendWriteToServer({
+  //       isWrite: false,
+  //       params: chatStore.params,
+  //     });
+  //     sendMessageToServer({
+  //       message,
+  //       params: chatStore.params,
+  //     });
+  //   },
+  //   [chatStore.params]
+  // );
 
   const handleChangeChat = useCallback(() => {
     if (!chatStore.isWrite) {
@@ -237,18 +238,13 @@ const Chat: React.FC = () => {
     };
   }, [chatStore.socket, chatStore.state]);
 
-  const onEmojiClick = ({ emoji }: any) =>
-    chatStore.setMessage(`${chatStore.message} ${emoji}`);
-
   return (
     <div className={styles.wrap}>
       <Header />
 
       <main className={styles.main}>
         <section className={styles.messages}>
-          {chatStore.state.length > 0 && (
-            <Messages/>
-          )}
+          {chatStore.state.length > 0 && <Messages />}
         </section>
         <aside className={styles.users_list}>
           <Users
@@ -260,8 +256,6 @@ const Chat: React.FC = () => {
       </main>
 
       <Footer
-        handleSubmitChat={handleSubmitChat}
-        onEmojiClick={onEmojiClick}
         clearSetWrite={clearSetWrite}
         handleChangeChat={handleChangeChat}
       />

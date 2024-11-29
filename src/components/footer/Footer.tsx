@@ -12,12 +12,11 @@ import {
 } from "../type";
 import styles from "./footer.module.scss";
 import { observer } from "mobx-react-lite";
+import { handleSubmitChat, onEmojiClick } from "./controllerFooter";
 const icon = require("../../images/emoji.svg");
 
 const Footer: React.FC<any> = ({
-  handleSubmitChat,
   handleChangeChat,
-  onEmojiClick,
   clearSetWrite,
 }) => {
   const [isOpen, setOpen] = useState(false);
