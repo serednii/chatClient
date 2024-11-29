@@ -1,13 +1,18 @@
-import React from "react";
+import React, { memo } from "react";
 import { IParams } from "../interface";
 import chatStore from "../../mobx/chatStore";
 import styles from "./header.module.scss";
 import { observer } from "mobx-react-lite";
+import { sendLeftRoomToServer } from "../socket/setDataSocket";
+import { useNavigate } from "react-router-dom";
 
-interface IHeader {
-  leftRoom: () => void;
-}
-const Header: React.FC<IHeader> = ({ leftRoom }) => {
+const Header: React.FC = () => {
+  const navigate = useNavigate();
+  const leftRoom = (): void => {
+    sendLeftRoomToServer();
+    navigate("./main");
+  };
+
   return (
     <header className={styles.header}>
       <h2 className={styles.title}>
@@ -28,4 +33,4 @@ const Header: React.FC<IHeader> = ({ leftRoom }) => {
   );
 };
 
-export default observer(Header);
+export default memo(observer(Header));

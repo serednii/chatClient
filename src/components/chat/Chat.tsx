@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Messages from "../message/Messages";
 import Users from "../users/Users";
 import Footer from "../footer/Footer";
@@ -24,6 +24,7 @@ import chatStore from "../../mobx/chatStore";
 import styles from "./Chat.module.scss";
 import { observer } from "mobx-react-lite";
 import {
+  sendLeftRoomToServer,
   sendMessageToServer,
   sendWriteToServer,
 } from "../socket/setDataSocket";
@@ -35,7 +36,7 @@ const Chat: React.FC = () => {
 
   console.log("RENDER CHAT");
   const { search } = useLocation();
-  const navigate = useNavigate();
+
   // const {
   //   socket,
   //   state,
@@ -90,13 +91,13 @@ const Chat: React.FC = () => {
     if (!chatStore.isWrite) {
       // console.log('socket?.emit("sendWrite", { isWrite: true, params });');
       sendWriteToServer({
-        isWrite: false,
+        isWrite: true,
         params: chatStore.params,
       });
 
       chatStore.setWrite(true);
     }
-  }, [chatStore.socket, chatStore.params, chatStore.isWrite]);
+  }, [chatStore.params, chatStore.isWrite]);
 
   useEffect(() => {
     if (chatStore.isDeleteMessage) {
@@ -105,8 +106,7 @@ const Chat: React.FC = () => {
       clearSetWrite();
     }
   }, [chatStore.isDeleteMessage]);
-  // console.log("chatStore:", chatStore);
-  // console.log("setParams function:", chatStore.setParams);
+
   // //При вході користувача  приймаємо імя і кімнату
   useEffect(() => {
     if (!chatStore.socket) return;
@@ -163,16 +163,6 @@ const Chat: React.FC = () => {
       chatStore.socket?.off("messageStatus", handleStatusMessage);
     };
   }, [chatStore.socket]);
-
-  // console.log(
-  //   "Number of listeners for message:",
-  //   socket?.listeners("message")?.length
-  // );
-
-  // console.log(
-  //   "Number of listeners for messageStatus:",
-  //   socket?.listeners("messageStatus")?.length
-  // );
 
   useEffect(() => {
     const handleStatusMessageWrite = ({ data }: any) => {
@@ -247,18 +237,12 @@ const Chat: React.FC = () => {
     };
   }, [chatStore.socket, chatStore.state]);
 
-  const leftRoom = (): void => {
-    chatStore.socket?.emit("leftRoom", { params: chatStore.params });
-    navigate("/main");
-    chatStore.socket?.disconnect();
-  };
-
   const onEmojiClick = ({ emoji }: any) =>
     chatStore.setMessage(`${chatStore.message} ${emoji}`);
 
   return (
     <div className={styles.wrap}>
-      <Header leftRoom={leftRoom} />
+      <Header />
 
       <main className={styles.main}>
         <section className={styles.messages}>

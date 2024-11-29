@@ -30,6 +30,10 @@ export const sendWriteToServer = (data: ISendWrite) => {
   chatStore.socket?.emit("sendWrite", data);
 };
 
-export const sendMessageToServer = (data: ISendMessage) => {
+export const sendMessageToServer = (data: ISendMessage) =>
   chatStore.socket?.emit("sendMessage", data);
+
+export const sendLeftRoomToServer = () => {
+  chatStore.socket?.emit("leftRoom", { params: chatStore.params });
+  chatStore.socket?.disconnect();
 };
