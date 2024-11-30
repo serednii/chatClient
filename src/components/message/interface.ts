@@ -2,7 +2,7 @@ import { MutableRefObject } from "react";
 
 export interface MessageProps {
   id: number;
-  lastUserRef: MutableRefObject<HTMLDivElement | null> | null;
+  lastUserRef: MutableRefObject<HTMLLIElement | null> | null;
   MyClassName: string;
   author: string;
   message: string;

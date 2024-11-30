@@ -26,7 +26,7 @@ const Message: React.FC<MessageProps> = ({
   const [values, setValues] = useState<string>("");
   const [data, setData] = useState<IData>({ dataIdStr: "", dataMessage: "" });
   return (
-    <div
+    <li
       key={id}
       ref={lastUserRef}
       className={`${styles.message} ${MyClassName}`}
@@ -80,7 +80,7 @@ const Message: React.FC<MessageProps> = ({
           </div>
         )}
       </div>
-    </div>
+    </li>
   );
 };
 

@@ -4,6 +4,14 @@
   row-gap: 20px;
 }
 
+.messageList {
+  overflow-y: auto;
+  max-height: calc(100vh - 132px);
+  ;
+  /* Встановлює максимальну висоту для прокрутки */
+}
+
+
 .message {
   display: flex;
   flex-direction: column;

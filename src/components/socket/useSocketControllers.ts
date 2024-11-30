@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import chatStore from "../../mobx/chatStore";
-import { IMessageAdd, IMessageStart, IParams, IUserWrite } from "../interface";
+import {
+  IMessage,
+  IMessageAdd,
+  IMessageStart,
+  IParams,
+  IUserWrite,
+} from "../interface";
 import { sendJoinToServer } from "./setDataSocket";
 import useWebSocket from "./useWebsocket";
 
@@ -64,6 +70,23 @@ const useMessageAdd = () => {
     chatStore.socket?.on("messageAdd", handleMessageAdd);
     return () => {
       chatStore.socket?.off("messageAdd", handleMessageAdd);
+    };
+  }, [chatStore.socket, chatStore.state]);
+  return {};
+};
+
+const usePrevMessageAdd = () => {
+  useEffect(() => {
+    const handlePrevMessageAdd = (messages: IMessage[]) => {
+      console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
+      if (messages && messages.length !== 0) {
+        chatStore.addPrevMessages(messages);
+      }
+    };
+
+    chatStore.socket?.on("prevMessagesUser", handlePrevMessageAdd);
+    return () => {
+      chatStore.socket?.off("prevMessagesUser", handlePrevMessageAdd);
     };
   }, [chatStore.socket, chatStore.state]);
   return {};
@@ -178,6 +201,7 @@ const useConnectHooks = () => {
   useMessageRoom();
   useDeleteMessageByIdUser();
   useUpdateMessageByIdUser();
+  usePrevMessageAdd();
   return {};
 };
 

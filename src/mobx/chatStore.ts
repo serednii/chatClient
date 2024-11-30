@@ -16,40 +16,23 @@ class ChatStore {
   usersName: IUsersName[];
   users: number;
   message: string;
-  // const [userStatus, setUserStatus] = useState<IUsersName[]>([]);
   userWrite: IUserWrite[];
   userStatus: IUsersName[];
+  isLoadingPrevMessages: boolean;
 
   constructor() {
-    makeAutoObservable(this, {
-      // usersName:false,
-      // socket: false,
-      // params: false,
-      // state: false,
-      setUsersName: action,
-      setUsers: action,
-      setMessage: action,
-      setWrite: action,
-      setDeleteMessage: action,
-      setSocket: action,
-      setParams: action,
-      setState: action,
-      addMessage: action,
-      deleteMessageById: action,
-      updateMessageById: action,
-    });
+    makeAutoObservable(this);
     this.isWrite = false;
     this.isDeleteMessage = false;
     this.socket = null;
     this.params = { room: "", name: "" };
-    // const [params, setParams] = useState<IParams>({ room: "", name: "" });
-
     this.state = []; // Ініціалізація як спостережуваного масиву
     this.message = "";
     this.users = 0;
     this.usersName = [];
     this.userWrite = [];
     this.userStatus = [];
+    this.isLoadingPrevMessages = false;
   }
 
   setUsersName(usersName: IUsersName[]) {
@@ -85,8 +68,12 @@ class ChatStore {
   }
 
   addMessage(message: IMessage) {
-    this.state.push(message); // Додавання елемента в масив
-    this.state = [...this.state];
+    this.state.push(message);
+    this.state = [...this.state, message]; // Додавання елемента в масив
+  }
+
+  addPrevMessages(messages: IMessage[]) {
+    this.state = [...messages, ...this.state]; // Додаємо нові повідомлення і оновлюємо стан
   }
 
   deleteMessageById(id: number) {
@@ -119,6 +106,13 @@ class ChatStore {
 
   setUserStatus(userStatus: IUsersName[]) {
     this.userStatus = userStatus;
+  }
+
+  setLoadingPrevMessages() {
+    this.isLoadingPrevMessages = true;
+  }
+  resetLoadingPrevMessages() {
+    this.isLoadingPrevMessages = false;
   }
 }
 

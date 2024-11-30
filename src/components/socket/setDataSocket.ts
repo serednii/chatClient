@@ -11,6 +11,12 @@ interface ISendMessage {
   params: IParams;
 }
 
+interface ILastMessages {
+  room: string;
+  startID: number;
+  limit: number;
+}
+
 export const deleteMessageById = (id: number): void => {
   chatStore.socket?.emit("deleteMessageByIdServer", {
     id,
@@ -40,3 +46,6 @@ export const sendLeftRoomToServer = () => {
 
 export const sendJoinToServer = (searchParams: IParams) =>
   chatStore.socket?.emit("join", searchParams);
+
+export const sendLastMessagesServer = (getParams: ILastMessages) =>
+  chatStore.socket?.emit("getPrevMessagesServer", getParams);

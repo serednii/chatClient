@@ -1,57 +1,95 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState, useCallback } from "react";
 import { IMessage } from "../interface";
 import Message from "./Message";
 import chatStore from "../../mobx/chatStore";
 import styles from "./Messages.module.scss";
 import { observer } from "mobx-react-lite";
-
+import { sendLastMessagesServer } from "../socket/setDataSocket";
+interface ILastMessages {
+  room: string;
+  startID: number;
+  limit: number;
+}
 const Messages: React.FC = () => {
   const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(false);
-  const lastUserRef = useRef<HTMLDivElement | null>(null); // Реф на последний элемент
+  const lastUserRef = useRef<HTMLLIElement | null>(null);
+  const listRef = useRef<HTMLUListElement | null>(null);
   const name = chatStore.params.name;
   const isRef = useRef<any | null>(null);
 
-  useEffect(() => {
-    if (!blockLastUserRef) {
-      lastUserRef.current?.scrollIntoView(); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
-    } else {
-      lastUserRef.current?.scrollIntoView({ behavior: "smooth" }); // Прокрутка вниз  { behavior: "smooth" } - плавная прокрутка
-    }
-  }, [chatStore.state]); // Сработает каждый раз, когда изменится список usersName
+  console.log(chatStore.isLoadingPrevMessages);
 
-  console.log(chatStore.state === isRef.current);
+  const handleScroll = useCallback(() => {
+    console.log(chatStore.isLoadingPrevMessages);
+
+    if (listRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+      if (
+        scrollTop <= clientHeight * 0.25 &&
+        !chatStore.isLoadingPrevMessages
+      ) {
+        chatStore.setLoadingPrevMessages();
+        // room, startID, limit
+        sendLastMessagesServer({
+          room: chatStore.params.room,
+          startID: chatStore.state[0].id,
+          limit: 30,
+        });
+        console.log(
+          "Scrolled to top 25% of the list. Fetching more messages..."
+        );
+        // Додаємо логіку для завантаження нових повідомлень
+      }
+    }
+  }, [chatStore.isLoadingPrevMessages]);
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.addEventListener("scroll", handleScroll);
+      return () => listRef.current?.removeEventListener("scroll", handleScroll);
+    }
+  }, [handleScroll]);
+
+  useEffect(() => {
+    console.log("scrollIntoView", chatStore.isLoadingPrevMessages);
+    if (!chatStore.isLoadingPrevMessages) {
+      if (!blockLastUserRef) {
+        lastUserRef.current?.scrollIntoView(); // Прокрутка вниз
+      } else {
+        lastUserRef.current?.scrollIntoView({ behavior: "smooth" }); // Плавна прокрутка вниз
+      }
+    } else {
+      chatStore.resetLoadingPrevMessages();
+    }
+  }, [chatStore.state]);
 
   isRef.current = chatStore.state;
+
   return (
-    <div key="messages">
+    <ul key="messages" ref={listRef} className={styles.messageList}>
       {chatStore.state.length > 0 &&
         chatStore.state.map((data: IMessage, i: number) => {
-          // console.log(data.author);
-          if (!data) {
-            return;
-          }
+          if (!data) return null;
           const { author, message, id, date } = data;
-          // Перевірка типів значень
           if (
             typeof name !== "string" ||
             typeof author !== "string" ||
             typeof message !== "string" ||
             typeof date !== "string"
           ) {
-            return;
+            return null;
           }
 
           const itsMe =
             author.trim().toLowerCase() === name.trim().toLowerCase();
-
           const itsAdmin = author.trim().toLowerCase() === "admin";
 
           let MyClassName = itsMe ? styles.me : styles.user;
-
           MyClassName = itsAdmin ? styles.admin : MyClassName;
+
           return (
             <Message
-              key={id} // Додаємо унікальний ключ
+              key={id}
               lastUserRef={
                 i === chatStore.state.length - 1 ? lastUserRef : null
               }
@@ -65,7 +103,7 @@ const Messages: React.FC = () => {
             />
           );
         })}
-    </div>
+    </ul>
   );
 };
 
