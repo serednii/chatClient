@@ -137,6 +137,7 @@ const Messages: React.FC = () => {
 
   //Слідкування за новими повідомленнями які при перегляді будуть появлятися в зоні видимості
   useEffect(() => {
+    // if (!chatStore.isLoadingAddMessages.first) {
     let nextElement = arrayLastUserRef.current.shift() || null;
 
     const subscribe = () => {
@@ -181,6 +182,9 @@ const Messages: React.FC = () => {
     );
     //Додавання спостереження за елементом
     subscribe();
+    // } else {
+    //   chatStore.setLoadingAddMessages({ first: false });
+    // }
     //Очищення обсерверу при розмонтаженні компонента:
     return () => {
       if (observerRef.current) {
@@ -188,6 +192,7 @@ const Messages: React.FC = () => {
       }
     };
   }, [chatStore.state]);
+  // }, [chatStore.state, chatStore.isLoadingAddMessages.first]);
 
   // isRef.current = chatStore.state;
 
@@ -228,7 +233,7 @@ const Messages: React.FC = () => {
           MyClassName = itsAdmin ? styles.admin : MyClassName;
 
           //Якщо перший рендерр і не мої повідомлення
-          if (!chatStore.isLoadingAddMessages) {
+          if (!chatStore.isLoadingAddMessages.second) {
             // Якщо прилетіло нове повідомлення то блокуємо перепис масиву рефів
             if (isFirstRender.current === 0 && !isMyMessage) {
               if (lastMessagesId === id) {
@@ -252,7 +257,7 @@ const Messages: React.FC = () => {
           }
 
           if (i === chatStore.state.length - 1) {
-            chatStore.setLoadingAddMessages(false);
+            chatStore.setLoadingAddMessages({ second: false });
           }
 
           // if (isFirstRender.current === 0) {

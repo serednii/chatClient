@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import {
+  addLastIdMessageViewLocalStorage,
+  getLastIdMessageViewLocalStorage,
+} from "../../localStorage/localStorage";
 import chatStore from "../../mobx/chatStore";
 import {
   IMessage,
@@ -46,7 +50,11 @@ const useJoin = () => {
 const useMessageStart = () => {
   useEffect(() => {
     const handleMessageStart = ({ messages }: IMessageStart) => {
-      console.log("messageStart----------------------------", messages);
+      // console.log("messageStart----------------------------", messages);
+      const lastMessageId = messages?.at(-2)?.id;
+      // if (!getLastIdMessageViewLocalStorage()) {
+      //   addLastIdMessageViewLocalStorage(lastMessageId);
+      // }
       if (messages) {
         chatStore.setState(messages);
       }
@@ -62,9 +70,10 @@ const useMessageStart = () => {
 const useMessageAdd = () => {
   useEffect(() => {
     const handleMessageAdd = ({ message }: IMessageAdd) => {
-      // console.log("data-=-=-=-=-/////////", message);
+      // console.log("useMessageAdd-=-=-=-=-***************---------", message);
       if (message) {
         chatStore.addMessage(message);
+        chatStore.setLoadingAddMessages(true);
       }
     };
     chatStore.socket?.on("messageAdd", handleMessageAdd);
@@ -78,7 +87,7 @@ const useMessageAdd = () => {
 const usePrevMessageAdd = () => {
   useEffect(() => {
     const handlePrevMessageAdd = (messages: IMessage[]) => {
-      console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
+      // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
         chatStore.addPrevMessages(messages);
       }
