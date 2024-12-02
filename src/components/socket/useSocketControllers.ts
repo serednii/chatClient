@@ -73,7 +73,8 @@ const useMessageAdd = () => {
       // console.log("useMessageAdd-=-=-=-=-***************---------", message);
       if (message) {
         chatStore.addMessage(message);
-        chatStore.setLoadingAddMessages(true);
+        chatStore.setLoadingAddMessagesFirst(true);
+        chatStore.setLoadingAddMessagesSecond(true);
       }
     };
     chatStore.socket?.on("messageAdd", handleMessageAdd);
@@ -90,6 +91,10 @@ const usePrevMessageAdd = () => {
       // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
         chatStore.addPrevMessages(messages);
+        chatStore.setLoadingPrevMessagesScroll(true);
+        setTimeout(() => {
+          chatStore.setLoadingPrevMessagesLoading(false);
+        }, 250);
       }
     };
 
