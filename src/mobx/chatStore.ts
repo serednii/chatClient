@@ -85,8 +85,6 @@ class ChatStore {
     const newMessages = messages.filter(
       (m) => !this.state.find((e) => e.id === m.id)
     );
-    console.log("^^^^^^^^^^^^^^^^^^^", newMessages);
-
     this.state = [...newMessages, ...this.state]; // Додаємо нові повідомлення і оновлюємо стан
   }
 
