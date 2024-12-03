@@ -50,7 +50,7 @@ const useJoin = () => {
 const useMessageStart = () => {
   useEffect(() => {
     const handleMessageStart = ({ messages }: IMessageStart) => {
-      // console.log("messageStart----------------------------", messages);
+      console.log("messageStart----------------------------", messages);
       const lastMessageId = messages?.at(-2)?.id;
       // if (!getLastIdMessageViewLocalStorage()) {
       //   addLastIdMessageViewLocalStorage(lastMessageId);
@@ -90,17 +90,38 @@ const usePrevMessageAdd = () => {
     const handlePrevMessageAdd = (messages: IMessage[]) => {
       // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
-        chatStore.addPrevMessages(messages);
         chatStore.setLoadingPrevMessagesScroll(true);
+        chatStore.addPrevMessages(messages);
         setTimeout(() => {
           chatStore.setLoadingPrevMessagesLoading(false);
-        }, 250);
+        }, 350);
       }
     };
 
     chatStore.socket?.on("prevMessagesUser", handlePrevMessageAdd);
     return () => {
       chatStore.socket?.off("prevMessagesUser", handlePrevMessageAdd);
+    };
+  }, [chatStore.socket, chatStore.state]);
+  return {};
+};
+
+const useNextMessageAdd = () => {
+  useEffect(() => {
+    const handleNextMessageAdd = (messages: IMessage[]) => {
+      // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
+      if (messages && messages.length !== 0) {
+        chatStore.setLoadingNextMessagesScroll(true);
+        chatStore.addNextMessages(messages);
+        setTimeout(() => {
+          chatStore.setLoadingNextMessagesLoading(false);
+        }, 350);
+      }
+    };
+
+    chatStore.socket?.on("nextMessagesUser", handleNextMessageAdd);
+    return () => {
+      chatStore.socket?.off("nextMessagesUser", handleNextMessageAdd);
     };
   }, [chatStore.socket, chatStore.state]);
   return {};
@@ -210,6 +231,7 @@ const useConnectHooks = () => {
   useJoin();
   useMessageStart();
   useMessageAdd();
+  useNextMessageAdd();
   useMessagesStatus();
   useMessageWrite();
   useMessageRoom();

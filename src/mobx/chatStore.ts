@@ -22,7 +22,10 @@ class ChatStore {
   isLoadingPrevMessagesLoading: boolean;
   isLoadingAddMessagesFirst: boolean;
   isLoadingAddMessagesSecond: boolean;
-
+  isLoadingNextMessagesLoading: boolean;
+  isLoadingNextMessagesScroll: boolean;
+  lastNumberViewMessages: number;
+  isBlocked: boolean;
   constructor() {
     makeAutoObservable(this, {
       setLoadingAddMessagesFirst: action,
@@ -40,9 +43,13 @@ class ChatStore {
     this.userStatus = [];
     this.isLoadingPrevMessagesScroll = false;
     this.isLoadingPrevMessagesLoading = false;
+    this.isLoadingNextMessagesScroll = false;
+    this.isLoadingNextMessagesLoading = false;
 
     this.isLoadingAddMessagesFirst = false;
     this.isLoadingAddMessagesSecond = false;
+    this.lastNumberViewMessages = 1;
+    this.isBlocked = false;
   }
 
   setUsersName(usersName: IUsersName[]) {
@@ -80,12 +87,21 @@ class ChatStore {
   addMessage(message: IMessage) {
     this.state = [...this.state, message]; // Додавання елемента в масив
   }
-
-  addPrevMessages(messages: IMessage[]) {
-    const newMessages = messages.filter(
+  filterState(messages: IMessage[]): IMessage[] {
+    const newMessages: IMessage[] = messages.filter(
       (m) => !this.state.find((e) => e.id === m.id)
     );
+    return newMessages;
+  }
+
+  addPrevMessages(messages: IMessage[]) {
+    const newMessages: IMessage[] = this.filterState(messages);
     this.state = [...newMessages, ...this.state]; // Додаємо нові повідомлення і оновлюємо стан
+  }
+
+  addNextMessages(messages: IMessage[]) {
+    const newMessages: IMessage[] = this.filterState(messages);
+    this.state = [...this.state, ...newMessages]; // Додаємо нові повідомлення і оновлюємо стан
   }
 
   deleteMessageById(id: number) {
@@ -124,16 +140,30 @@ class ChatStore {
     this.isLoadingPrevMessagesScroll = value;
   }
 
+  setLoadingNextMessagesScroll(value: boolean) {
+    this.isLoadingNextMessagesScroll = value;
+  }
+
+  setLoadingNextMessagesLoading(value: boolean) {
+    this.isLoadingNextMessagesLoading = value;
+  }
   setLoadingPrevMessagesLoading(value: boolean) {
     this.isLoadingPrevMessagesLoading = value;
   }
-
   setLoadingAddMessagesFirst(value: boolean) {
     this.isLoadingAddMessagesFirst = value;
   }
 
   setLoadingAddMessagesSecond(value: boolean) {
     this.isLoadingAddMessagesSecond = value;
+  }
+
+  setLastNumberViewMessages(value: number) {
+    this.lastNumberViewMessages = value;
+  }
+
+  setBlocked(value: boolean) {
+    this.isBlocked = value;
   }
 }
 

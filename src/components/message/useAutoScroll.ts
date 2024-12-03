@@ -6,7 +6,10 @@ const useAutoScroll = (
   lastUserRef: React.MutableRefObject<HTMLLIElement | null>
 ) => {
   useEffect(() => {
-    if (!chatStore.isLoadingPrevMessagesScroll) {
+    if (
+      !chatStore.isLoadingPrevMessagesScroll &&
+      !chatStore.isLoadingNextMessagesScroll
+    ) {
       if (!blockLastUserRef) {
         lastUserRef.current?.scrollIntoView(false);
       } else {
@@ -17,6 +20,7 @@ const useAutoScroll = (
       }
     } else {
       chatStore.setLoadingPrevMessagesScroll(false);
+      chatStore.setLoadingNextMessagesScroll(false);
     }
   }, [
     chatStore.state,
@@ -24,6 +28,8 @@ const useAutoScroll = (
     lastUserRef.current,
     chatStore.isLoadingPrevMessagesScroll,
     chatStore.setLoadingPrevMessagesScroll,
+    chatStore.isLoadingNextMessagesScroll,
+    chatStore.setLoadingNextMessagesScroll,
   ]);
   return {};
 };

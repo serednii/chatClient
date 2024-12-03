@@ -9,7 +9,7 @@ const returnRef = (
   lastUserRef: React.MutableRefObject<HTMLLIElement | null>,
   subscribe: (nextElement: HTMLLIElement | null) => void
 ): void => {
-  console.log("CCCCCCCCCCCCCCCCCC", ref, lastUserRef.current);
+  // console.log("CCCCCCCCCCCCCCCCCC", ref, lastUserRef.current);
   if (!lastUserRef.current) {
     console.log("KKKKKKKKKKKKKKLKKK", ref);
 
@@ -19,21 +19,21 @@ const returnRef = (
   } else {
     if (isMyMessage) {
       //моє повідомлення
-      console.log("XXXXXXXXXXXXXXXX");
+      // console.log("XXXXXXXXXXXXXXXX");
       if (arrayLastUserRef.current.length === 0) {
-        console.log("LLLLLLLLLLLLLLLLL");
+        // console.log("LLLLLLLLLLLLLLLLL");
 
         //і всі повідомлення переглянуті
         lastUserRef.current = ref; //Добаляємо його в скрол
-        console.log(lastUserRef.current);
+        // console.log(lastUserRef.current);
         const idString: string | null = ref?.getAttribute("data-id") || null;
         if (idString) {
           const idNumber = parseInt(idString);
-          console.log("12121212212", idNumber);
-          idNumber && addLastIdMessageViewLocalStorage(idNumber);
+          // console.log("12121212212", idNumber);
+          // idNumber && addLastIdMessageViewLocalStorage(idNumber);
         }
       } else {
-        console.log("NNNNNNNNNNNNNNNNNNNN");
+        // console.log("NNNNNNNNNNNNNNNNNNNN");
 
         arrayLastUserRef.current.push(ref); //добавляємо в масив для перегляду
         subscribe(
@@ -41,7 +41,7 @@ const returnRef = (
         );
       }
     } else {
-      console.log("ZZZZZZZZZZZZZZZZZZZZZZ");
+      // console.log("ZZZZZZZZZZZZZZZZZZZZZZ");
       //чуже повідомлення то добавляємо в масив
       arrayLastUserRef.current.push(ref);
       subscribe(arrayLastUserRef.current[arrayLastUserRef.current.length - 1]);

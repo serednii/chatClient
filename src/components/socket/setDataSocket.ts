@@ -17,6 +17,12 @@ interface ILastMessages {
   limit: number;
 }
 
+interface ILastIdViewMessage {
+  user: string;
+  room: string;
+  id: number;
+}
+
 export const deleteMessageById = (id: number): void => {
   chatStore.socket?.emit("deleteMessageByIdServer", {
     id,
@@ -47,5 +53,14 @@ export const sendLeftRoomToServer = () => {
 export const sendJoinToServer = (searchParams: IParams) =>
   chatStore.socket?.emit("join", searchParams);
 
-export const sendLastMessagesServer = (getParams: ILastMessages) =>
+export const sendPrevMessagesServer = (getParams: ILastMessages) =>
   chatStore.socket?.emit("getPrevMessagesServer", getParams);
+
+export const sendNextMessagesServer = (getParams: ILastMessages) => {
+  console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+  chatStore.setBlocked(true);
+  chatStore.socket?.emit("getNextMessagesServer", getParams);
+};
+
+export const sendLastViewMessagesServer = (getParams: ILastIdViewMessage) =>
+  chatStore.socket?.emit("updateLastIdViewMessageServer", getParams);
