@@ -94,7 +94,8 @@ const usePrevMessageAdd = () => {
         chatStore.addPrevMessages(messages);
         setTimeout(() => {
           chatStore.setLoadingPrevMessagesLoading(false);
-        }, 350);
+          chatStore.setLoadingPrevMessagesScroll(false);
+        }, 1050);
       }
     };
 
@@ -112,10 +113,12 @@ const useNextMessageAdd = () => {
       // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
         chatStore.setLoadingNextMessagesScroll(true);
+        chatStore.setLoadingDataFuncReturn(true);
         chatStore.addNextMessages(messages);
         setTimeout(() => {
           chatStore.setLoadingNextMessagesLoading(false);
-        }, 350);
+          chatStore.setLoadingNextMessagesScroll(false);
+        }, 1050);
       }
     };
 

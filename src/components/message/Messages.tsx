@@ -14,7 +14,7 @@ const Messages: React.FC = () => {
   console.log("RENDER MESSAGES");
   //Коли ми редагуємо повідомлення то не прокручувати
   const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(false);
-  const arrayLastUserRef = useRef<(HTMLLIElement | null)[]>([]);
+  // const arrayLastUserRef = useRef<(HTMLLIElement | null)[]>([]);
   const lastUserRef = useRef<HTMLLIElement | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);
   const isFirstRender = useRef<number>(-1);
@@ -28,11 +28,12 @@ const Messages: React.FC = () => {
     chatStore.params.name === chatStore.state.at(-1)?.author;
   isFirstRender.current++;
 
-  // if (isFirstRender.current === 0) {
-  lastUserRef.current = null;
-  arrayLastUserRef.current = [];
-  // }
-  console.log("SSSSSSS", arrayLastUserRef);
+  if (isFirstRender.current === 0) {
+    console.log(chatStore.arrayLastUserRef);
+    lastUserRef.current = null;
+    chatStore.setArrayLastUserRef([]);
+  }
+  console.log("CCCCCCCCCCCC", chatStore.arrayLastUserRef);
   const newState = chatStore.state.map((e) => e.id);
   console.log("SSSSSSS", newState);
 
@@ -53,12 +54,12 @@ const Messages: React.FC = () => {
   // }
 
   const { subscribe } = useIntersectionObserver(
-    arrayLastUserRef,
+    // arrayLastUserRef,
     lastUserRef,
     isFirstRender
   );
   //Автопідгрузка при скролі догори
-  useScrollLoadingMessage(listRef);
+  useScrollLoadingMessage(listRef, lastUserRef);
 
   //Автопрокручування до низу
   useAutoScroll(blockLastUserRef, lastUserRef);
@@ -69,12 +70,12 @@ const Messages: React.FC = () => {
         ref,
         startLastUserRef,
         isMyMessage,
-        arrayLastUserRef,
+        // arrayLastUserRef,
         lastUserRef,
         subscribe
       );
     },
-    [startLastUserRef, isMyMessage, arrayLastUserRef, lastUserRef, subscribe]
+    [startLastUserRef, isMyMessage, lastUserRef, subscribe]
   );
 
   useEffect(() => {
@@ -82,7 +83,8 @@ const Messages: React.FC = () => {
     chatStore.setLoadingAddMessagesSecond(false);
     // chatStore.setLoadingPrevMessagesLoading(false);
     // chatStore.setLoadingNextMessagesLoading(false);
-  }, [isEndMapRender.current]);
+    console.log("DDDDDDD", chatStore.arrayLastUserRef);
+  }, [isEndMapRender.current, chatStore.arrayLastUserRef]);
   // console.log("-----------------------", arrayLastUserRef.current);
 
   return (
@@ -115,7 +117,7 @@ const Messages: React.FC = () => {
           ) {
             // if (!chatStore.isLoadingAddMessagesSecond) {
 
-            if (lastMessagesId === id) {
+            if (lastMessagesId <= id) {
               //останнє повідомлення
               console.log("DDDDDDDDD");
               startLastUserRef = true;
@@ -125,9 +127,9 @@ const Messages: React.FC = () => {
             if (!chatStore.isLoadingAddMessagesSecond) {
               // Якщо прилетіло нове повідомлення то блокуємо перепис масиву рефів
               if (!isMyMessage) {
-                if (lastMessagesId === id) {
+                if (lastMessagesId <= id) {
                   // console.log("AAAAAAAAAAA");
-                  console.log(lastMessagesId, id);
+                  // console.log(lastMessagesId, id);
                   startLastUserRef = true;
                 }
               } else if (isMyMessage) {

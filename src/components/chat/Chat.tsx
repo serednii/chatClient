@@ -30,9 +30,7 @@ const Chat: React.FC = () => {
         <section className={styles.messages}>
           {chatStore.state.length > 0 && <Messages />}
         </section>
-        <aside className={styles.users_list}>
-          <Users />
-        </aside>
+        <aside className={styles.users_list}>{/* <Users /> */}</aside>
       </main>
 
       <Footer />

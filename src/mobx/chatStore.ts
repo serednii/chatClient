@@ -25,7 +25,11 @@ class ChatStore {
   isLoadingNextMessagesLoading: boolean;
   isLoadingNextMessagesScroll: boolean;
   lastNumberViewMessages: number;
+  isLoadingDataFuncReturn: boolean;
   isBlocked: boolean;
+  activeRef: HTMLLIElement | null;
+  arrayLastUserRef: (HTMLLIElement | null)[];
+
   constructor() {
     makeAutoObservable(this, {
       setLoadingAddMessagesFirst: action,
@@ -45,11 +49,13 @@ class ChatStore {
     this.isLoadingPrevMessagesLoading = false;
     this.isLoadingNextMessagesScroll = false;
     this.isLoadingNextMessagesLoading = false;
-
+    this.isLoadingDataFuncReturn = false;
     this.isLoadingAddMessagesFirst = false;
     this.isLoadingAddMessagesSecond = false;
     this.lastNumberViewMessages = 1;
     this.isBlocked = false;
+    this.activeRef = null;
+    this.arrayLastUserRef = [];
   }
 
   setUsersName(usersName: IUsersName[]) {
@@ -144,6 +150,10 @@ class ChatStore {
     this.isLoadingNextMessagesScroll = value;
   }
 
+  setLoadingDataFuncReturn(value: boolean) {
+    this.isLoadingDataFuncReturn = value;
+  }
+
   setLoadingNextMessagesLoading(value: boolean) {
     this.isLoadingNextMessagesLoading = value;
   }
@@ -164,6 +174,14 @@ class ChatStore {
 
   setBlocked(value: boolean) {
     this.isBlocked = value;
+  }
+
+  setActiveRef(value: HTMLLIElement | null) {
+    this.activeRef = value;
+  }
+
+  setArrayLastUserRef(value: (HTMLLIElement | null)[]) {
+    this.arrayLastUserRef = value;
   }
 }
 

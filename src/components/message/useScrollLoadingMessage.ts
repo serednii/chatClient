@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import chatStore from "../../mobx/chatStore";
+import infoStore from "../../mobx/infoStore";
 import { IMessage } from "../interface";
 import {
   sendNextMessagesServer,
@@ -17,7 +18,8 @@ function getNextUserId(state: IMessage[]): number | undefined {
 }
 
 const useScrollLoadingMessage = (
-  listRef: React.MutableRefObject<HTMLUListElement | null>
+  listRef: React.MutableRefObject<HTMLUListElement | null>,
+  lastUserRef: React.MutableRefObject<HTMLLIElement | null>
 ) => {
   const prevScrollTop = useRef<number>(0); // Зберігаємо попереднє значення scrollTop
   const handleScroll = useCallback(() => {
@@ -38,7 +40,7 @@ const useScrollLoadingMessage = (
       //Автопідгрузка при скролі догори
       if (
         scrollTop < prevScrollTop.current &&
-        scrollTop <= scrollHeight * 0.25 &&
+        scrollTop <= scrollHeight * 0.1 &&
         !chatStore.isLoadingPrevMessagesLoading
       ) {
         // Якщо прокручуємо вгору і досягли верхньої чверті екрана
@@ -51,6 +53,10 @@ const useScrollLoadingMessage = (
           startID: chatStore.state[0].id,
           limit: 30,
         });
+        infoStore.setUp(true);
+        // infoStore.setIdActive(null);
+        // lastUserRef.current = null;
+        // chatStore.setActiveRef(null);
         console.log("EEEEEEEEEEEEE", chatStore.isLoadingPrevMessagesLoading);
         console.log(
           "Scrolled to top 25% of the list. Fetching more messages..."
@@ -59,7 +65,7 @@ const useScrollLoadingMessage = (
       //Автопідгрузка при скролі в низ
       if (
         scrollTop > prevScrollTop.current &&
-        scrollTop + clientHeight >= scrollHeight * 0.9 &&
+        scrollTop + clientHeight >= scrollHeight * 0.95 &&
         !chatStore.isLoadingNextMessagesLoading
       ) {
         // Якщо прокручуємо вгору і досягли верхньої чверті екрана
@@ -77,13 +83,13 @@ const useScrollLoadingMessage = (
             startID: nextId,
             limit: 30,
           });
+        infoStore.setDown(true);
 
         console.log("EEEEEEEEEEEEE", chatStore.isLoadingNextMessagesLoading);
         console.log(
           "Scrolled to top 25% of the list. Fetching more messages..."
         );
       }
-
       prevScrollTop.current = scrollTop; // Оновлюємо значення scrollTop
     }
   }, [
@@ -91,6 +97,7 @@ const useScrollLoadingMessage = (
     chatStore.isLoadingNextMessagesLoading,
     listRef.current,
     chatStore.isBlocked,
+    chatStore.activeRef,
     chatStore.setLoadingPrevMessagesLoading,
     chatStore.setLoadingNextMessagesLoading,
   ]);

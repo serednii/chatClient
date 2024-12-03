@@ -3,13 +3,15 @@ import { addLastIdMessageViewLocalStorage } from "../../localStorage/localStorag
 import chatStore from "../../mobx/chatStore";
 import { sendLastViewMessagesServer } from "../socket/setDataSocket";
 import throttle from "lodash/throttle";
+import infoStore from "../../mobx/infoStore";
 
 const useIntersectionObserver = (
-  arrayLastUserRef: React.MutableRefObject<(HTMLLIElement | null)[]>,
+  // arrayLastUserRef: React.MutableRefObject<(HTMLLIElement | null)[]>,
   lastUserRef: React.MutableRefObject<HTMLLIElement | null>,
   isFirstRender: React.MutableRefObject<number>
 ) => {
   const observerRef = useRef<IntersectionObserver | null>(null);
+
   const handleScrollThrottle = throttle((idNumber) => {
     console.log("Scrolled:1111111111111111111111111111111111111111111111");
     chatStore.setLastNumberViewMessages(idNumber);
@@ -19,6 +21,7 @@ const useIntersectionObserver = (
       id: idNumber,
     });
   }, 550);
+
   // Ваші дії при прокрутці }, 200); // Виконується не частіше, ніж раз на 200 мілісекунд
   const subscribe = useCallback(
     (nextElement: HTMLLIElement | null) => {
@@ -35,7 +38,7 @@ const useIntersectionObserver = (
 
   //Слідкування за новими повідомленнями які при перегляді будуть появлятися в зоні видимості
   useEffect(() => {
-    let nextElement = arrayLastUserRef.current.shift() || null;
+    let nextElement = chatStore.arrayLastUserRef.shift() || null;
     // console.log("-----------------------------", nextElement);
     //Очищення попереднього обсерверу:
     unsubscribe();
@@ -51,11 +54,13 @@ const useIntersectionObserver = (
               // console.log("12121212212", idNumber);
               // idNumber && addLastIdMessageViewLocalStorage(idNumber);
               idNumber && handleScrollThrottle(idNumber);
+              infoStore.setIdActive(nextElement);
+              chatStore.setActiveRef(nextElement);
             }
 
             // Ваш виклик функції
             unsubscribe();
-            nextElement = arrayLastUserRef.current.shift() || null;
+            nextElement = chatStore.arrayLastUserRef.shift() || null;
             if (isFirstRender.current > 0) {
               lastUserRef.current = nextElement;
             }

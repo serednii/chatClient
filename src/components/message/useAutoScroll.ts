@@ -19,8 +19,8 @@ const useAutoScroll = (
         });
       }
     } else {
-      chatStore.setLoadingPrevMessagesScroll(false);
-      chatStore.setLoadingNextMessagesScroll(false);
+      // chatStore.setLoadingPrevMessagesScroll(false);
+      // chatStore.setLoadingNextMessagesScroll(false);
     }
   }, [
     chatStore.state,

@@ -1,26 +1,34 @@
 import { addLastIdMessageViewLocalStorage } from "../../localStorage/localStorage";
+import chatStore from "../../mobx/chatStore";
+import infoStore from "../../mobx/infoStore";
 
 //добавляємо еолементи які ще непередивлялися
 const returnRef = (
   ref: HTMLLIElement | null,
   startLastUserRef: boolean,
   isMyMessage: boolean,
-  arrayLastUserRef: React.MutableRefObject<(HTMLLIElement | null)[]>,
+  // arrayLastUserRef: React.MutableRefObject<(HTMLLIElement | null)[]>,
   lastUserRef: React.MutableRefObject<HTMLLIElement | null>,
   subscribe: (nextElement: HTMLLIElement | null) => void
 ): void => {
   // console.log("CCCCCCCCCCCCCCCCCC", ref, lastUserRef.current);
   if (!lastUserRef.current) {
-    console.log("KKKKKKKKKKKKKKLKKK", ref);
+    console.log("KKKKKKKKKKKKKKIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIKKK", ref);
 
     //Перший елемент записуємо в реф для переходу
     lastUserRef.current = ref;
+    infoStore.setIdActive(ref);
     startLastUserRef = false;
+  } else if (chatStore.isLoadingDataFuncReturn) {
+    console.log("YYYYYYYYYYYYYYYYYY", ref);
+    infoStore.setIdActive(ref);
+    lastUserRef.current = chatStore.activeRef;
+    chatStore.setLoadingDataFuncReturn(false);
   } else {
     if (isMyMessage) {
       //моє повідомлення
       // console.log("XXXXXXXXXXXXXXXX");
-      if (arrayLastUserRef.current.length === 0) {
+      if (chatStore.arrayLastUserRef.length === 0) {
         // console.log("LLLLLLLLLLLLLLLLL");
 
         //і всі повідомлення переглянуті
@@ -35,16 +43,18 @@ const returnRef = (
       } else {
         // console.log("NNNNNNNNNNNNNNNNNNNN");
 
-        arrayLastUserRef.current.push(ref); //добавляємо в масив для перегляду
+        chatStore.arrayLastUserRef.push(ref); //добавляємо в масив для перегляду
         subscribe(
-          arrayLastUserRef.current[arrayLastUserRef.current.length - 1]
+          chatStore.arrayLastUserRef[chatStore.arrayLastUserRef.length - 1]
         );
       }
     } else {
       // console.log("ZZZZZZZZZZZZZZZZZZZZZZ");
       //чуже повідомлення то добавляємо в масив
-      arrayLastUserRef.current.push(ref);
-      subscribe(arrayLastUserRef.current[arrayLastUserRef.current.length - 1]);
+      chatStore.arrayLastUserRef.push(ref);
+      subscribe(
+        chatStore.arrayLastUserRef[chatStore.arrayLastUserRef.length - 1]
+      );
     }
   }
 };
