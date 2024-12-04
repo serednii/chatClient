@@ -1,13 +1,26 @@
-import styles from "./ReadFullMessages.module.scss";
+import { observer } from "mobx-react-lite";
+import chatStore from "../../../mobx/chatStore";
+import { sendNextMessagesServer } from "../../socket/setDataSocket";
+import "./ReadFullMessages.scss";
 
-const ReadFullMessages = () => {
-  const handleClick = () => {};
+function ReadFullMessages() {
+  const handleClick = (event: any) => {
+    event.preventDefault();
+    chatStore.setState([]);
+    chatStore.setArrayLastUserRef([]);
+    sendNextMessagesServer({
+      name: chatStore.params.name,
+      room: chatStore.params.room,
+      startID: (chatStore.dataMessagesId?.lastMessageId || 0) - 50,
+      limit: 50,
+    });
+  };
 
   return (
-    <div className={styles.ReadFullMessages}>
+    <div className="btn btn-danger ReadFullMessages">
       <button onClick={handleClick}>Пропустити всі повідомлення</button>
     </div>
   );
-};
+}
 
-export default ReadFullMessages;
+export default observer(ReadFullMessages);

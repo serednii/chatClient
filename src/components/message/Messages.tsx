@@ -3,7 +3,6 @@ import { IMessage } from "../interface";
 import Message from "./Message";
 import chatStore from "../../mobx/chatStore";
 import { observer } from "mobx-react-lite";
-import { getLastIdMessageViewLocalStorage } from "../../localStorage/localStorage";
 import useIntersectionObserver from "./useIntersectionObserver";
 import useAutoScroll from "./useAutoScroll";
 import { returnRef } from "./utilMessage";
@@ -37,22 +36,6 @@ const Messages: React.FC = () => {
   const newState = chatStore.state.map((e) => e.id);
   // console.log("SSSSSSS", newState);
 
-  // let lastMessagesId: number | undefined = getLastIdMessageViewLocalStorage();
-  const lastMessagesId: number =
-    isFirstRender.current === 0
-      ? chatStore.state[0].id
-      : chatStore.lastNumberViewMessages;
-  // console.log("lastMessagesId", lastMessagesId);
-  // //Якщо останнього переглянутого елемента нема то переходимо до першого елемента
-  // if (!lastMessagesId) {
-  //   lastMessagesId = chatStore.state[0].id;
-  // }
-
-  // //Якщо lastMessagesId менший за першие повідомлення то ставимо перше повідомлення на яке треба переходити
-  // if (lastMessagesId < chatStore.state[0].id) {
-  //   lastMessagesId = chatStore.state[0].id;
-  // }
-
   const { subscribe } = useIntersectionObserver(
     // arrayLastUserRef,
     lastUserRef,
@@ -66,27 +49,14 @@ const Messages: React.FC = () => {
 
   const prevReturnRef = useCallback(
     (ref: HTMLLIElement | null) => {
-      returnRef(
-        ref,
-        startLastUserRef,
-        isMyMessage,
-        // arrayLastUserRef,
-        lastUserRef,
-        subscribe
-      );
+      returnRef(ref, isFirstRender.current, lastUserRef, subscribe);
     },
-    [startLastUserRef, isMyMessage, lastUserRef, subscribe]
+    [isMyMessage, lastUserRef, subscribe, isFirstRender.current]
   );
 
   useEffect(() => {
-    // console.log("isFirstRender{{{{{{{{{{{{{{{");
     chatStore.setLoadingPrevMessagesScroll(false);
-    // chatStore.setLoadingAddMessagesSecond(false);
-    // // chatStore.setLoadingPrevMessagesLoading(false);
-    // // chatStore.setLoadingNextMessagesLoading(false);
-    // console.log("DDDDDDD", chatStore.arrayLastUserRef);
   }, [isEndMapRender.current, chatStore.setLoadingPrevMessagesScroll]);
-  // console.log("-----------------------", arrayLastUserRef.current);
 
   return (
     <ul key="messages" ref={listRef} className={styles.messageList}>
@@ -125,43 +95,6 @@ const Messages: React.FC = () => {
               startLastUserRef = true;
             }
           }
-          // if (
-          //   isFirstRender.current === 0 ||
-          //   chatStore.isLoadingNextMessagesLoading
-          // ) {
-          //   // if (!chatStore.isLoadingAddMessagesSecond) {
-
-          //   if (lastMessagesId <= id) {
-          //     //останнє повідомлення
-          //     console.log("DDDDDDDDD");
-          //     startLastUserRef = true;
-          //   }
-          // } else {
-          //   //Якщо перший рендерр і не мої повідомлення
-          //   if (!chatStore.isLoadingAddMessagesSecond) {
-          //     // Якщо прилетіло нове повідомлення то блокуємо перепис масиву рефів
-          //     if (!isMyMessage) {
-          //       if (lastMessagesId <= id) {
-          //         // console.log("AAAAAAAAAAA");
-          //         // console.log(lastMessagesId, id);
-          //         startLastUserRef = true;
-          //       }
-          //     } else if (isMyMessage) {
-          //       //Якщо я пишу і то мої повідомлення
-          //       if (i === lengthState - 1) {
-          //         // console.log("BBBBBBBBBBB");
-          //         startLastUserRef = true;
-          //       }
-          //     }
-          //   } else {
-          //     //Коли приходить нове повідомлення то його добавляємо в масив arrayLastUserRef
-          //     if (i === lengthState - 1) {
-          //       //останнє повідомлення
-          //       // console.log("DDDDDDDDD");
-          //       startLastUserRef = true;
-          //     }
-          //   }
-          // }
 
           if (i === lengthState - 1) {
             isEndMapRender.current = !isEndMapRender.current;
@@ -187,15 +120,3 @@ const Messages: React.FC = () => {
 };
 
 export default memo(observer(Messages));
-
-// if (isFirstRender.current === 0 || chatStore.isLoadingAddMessagesSecond && isMyMessage) {
-//   if (i === chatStore.state.length - 1) {
-//     startLastUserRef = true;
-//   }
-// }else{
-//   if (lastMessagesId === id) {
-//     console.log("AAAAAAAAAAA");
-//     console.log(lastMessagesId, id);
-//     startLastUserRef = true;
-//   }
-// }

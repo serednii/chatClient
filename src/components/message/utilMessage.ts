@@ -5,14 +5,15 @@ import infoStore from "../../mobx/infoStore";
 //добавляємо еолементи які ще непередивлялися
 const returnRef = (
   ref: HTMLLIElement | null,
-  startLastUserRef: boolean,
-  isMyMessage: boolean,
-  // arrayLastUserRef: React.MutableRefObject<(HTMLLIElement | null)[]>,
+  isFirstRender: any,
   lastUserRef: React.MutableRefObject<HTMLLIElement | null>,
   subscribe: (nextElement: HTMLLIElement | null) => void
 ): void => {
   // console.log("CCCCCCCCCCCCCCCCCC", ref, lastUserRef.current);
   if (ref) {
+    // if (isFirstRender.current === 0) {
+    //   lastUserRef.current = ref;
+    // }
     if (chatStore.isLoadingAddMessagesFirst) {
       lastUserRef.current = ref;
       infoStore.setIdActive(ref);
