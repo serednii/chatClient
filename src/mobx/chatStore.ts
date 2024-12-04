@@ -116,23 +116,46 @@ class ChatStore {
 
     // this.state = [...this.state, message]; // Додавання елемента в масив
   }
-  filterState(messages: IMessage[]): IMessage[] {
+  filterUniqueMessages(messages: IMessage[]): IMessage[] {
     const newMessages: IMessage[] = messages.filter(
       (m) => !this.state.find((e) => e.id === m.id)
     );
     return newMessages;
   }
 
+  deleteMessagesRef(messages: IMessage[]) {
+    this.arrayLastUserRef = this.arrayLastUserRef.filter((m) => {
+      const idString: string | null | undefined = m?.getAttribute("data-id");
+      let idNumber: number = 0;
+      if (idString) {
+        idNumber = parseInt(idString);
+        return !messages.find((m) => m.id === idNumber);
+      }
+      return true;
+    });
+  }
+
   addPrevMessages(messages: IMessage[]) {
-    const newMessages: IMessage[] = this.filterState(messages);
-    this.state = [...newMessages, ...this.state]; // Додаємо нові повідомлення і оновлюємо стан
+    // const newMessages: IMessage[] = this.filterState(messages);
+    // this.state = [...newMessages, ...this.state]; // Додаємо нові повідомлення і оновлюємо стан
+
+    const newMessages: IMessage[] = this.filterUniqueMessages(messages);
+    const fullMessage: IMessage[] = [...newMessages, ...this.state];
+    if (fullMessage.length > 300) {
+      console.log("HHHHHHH", [...messages]);
+      this.state = fullMessage.slice(0, -50); //Видаляємо нові повідомлення
+
+      this.deleteMessagesRef(fullMessage.slice(-50));
+    } else {
+      this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
+    }
   }
 
   addNextMessages(messages: IMessage[]) {
-    const newMessages: IMessage[] = this.filterState(messages);
+    const newMessages: IMessage[] = this.filterUniqueMessages(messages);
     const fullMessage: IMessage[] = [...this.state, ...newMessages];
     if (fullMessage.length > 300) {
-      fullMessage.splice(0, 50);
+      fullMessage.splice(0, 50); //Видаляємо старі повідомлення
     }
     this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
   }

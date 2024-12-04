@@ -6,28 +6,7 @@ import {
   sendNextMessagesServer,
   sendPrevMessagesServer,
 } from "../socket/setDataSocket";
-
-function getNextUserId(state: IMessage[]): number | undefined {
-  const newState = [...state];
-  console.log("getNextUserId");
-  const lastElement: IMessage | undefined = newState.pop();
-  if (lastElement?.author === "Admin") {
-    return getNextUserId(newState);
-  } else {
-    return lastElement?.id;
-  }
-}
-
-function getPrevUserId(state: IMessage[]): number | undefined {
-  const newState = [...state];
-  console.log("getNextUserId");
-  const lastElement: IMessage | undefined = newState.shift();
-  if (lastElement?.author === "Admin") {
-    return getPrevUserId(newState);
-  } else {
-    return lastElement?.id;
-  }
-}
+import { getNextUserId, getPrevUserId } from "../Util";
 
 const useScrollLoadingMessage = (
   listRef: React.MutableRefObject<HTMLUListElement | null>,
@@ -58,6 +37,10 @@ const useScrollLoadingMessage = (
         // Якщо прокручуємо вгору і досягли верхньої чверті екрана
         // chatStore.setLoadingPrevMessages();
         console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+        const firstId = getPrevUserId(chatStore.state);
+        if (firstId === chatStore.dataMessagesId?.firstMessageId) {
+          return;
+        }
         chatStore.setLoadingPrevMessagesLoading(true);
         const prev: number | undefined = getPrevUserId(chatStore.state);
         sendPrevMessagesServer({
@@ -86,6 +69,11 @@ const useScrollLoadingMessage = (
         console.log(
           "KKKKKKKKKKKKKKKKKKKKKKKKKKK************************************************"
         );
+
+        const lastId = getNextUserId(chatStore.state);
+        if (lastId === chatStore.dataMessagesId?.lastMessageId) {
+          return;
+        }
         chatStore.setLoadingNextMessagesLoading(true);
 
         const nextId: number | undefined = getNextUserId(chatStore.state);

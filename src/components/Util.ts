@@ -1,4 +1,4 @@
-import { IParams } from "./interface";
+import { IMessage, IParams } from "./interface";
 
 // type DebouncedReturn<T extends (...args: any[]) => any> = {
 //   debouncedFunction: (...args: Parameters<T>) => void;
@@ -20,4 +20,26 @@ export const debounce = <T extends (...args: IParams[]) => any>(
   const getTimer = (): NodeJS.Timeout | undefined => timeout;
   // Повертаємо масив
   return [debouncedFunction, getTimer];
+};
+
+export const getNextUserId = (state: IMessage[]): number | undefined => {
+  const newState = [...state];
+  console.log("getNextUserId");
+  const lastElement: IMessage | undefined = newState.pop();
+  if (lastElement?.author === "Admin") {
+    return getNextUserId(newState);
+  } else {
+    return lastElement?.id;
+  }
+};
+
+export const getPrevUserId = (state: IMessage[]): number | undefined => {
+  const newState = [...state];
+  console.log("getNextUserId");
+  const lastElement: IMessage | undefined = newState.shift();
+  if (lastElement?.author === "Admin") {
+    return getPrevUserId(newState);
+  } else {
+    return lastElement?.id;
+  }
 };

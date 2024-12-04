@@ -10,6 +10,7 @@ import { observer } from "mobx-react-lite";
 import { clearSetWrite } from "./controllerChat";
 import { handleChangeChat } from "../footer/controllerFooter";
 import useConnectHooks from "../socket/useSocketControllers";
+import ReadFullMessages from "./ReadFullMessages/ReadFullMessages";
 
 const Chat: React.FC = () => {
   console.log("RENDER CHAT");
@@ -30,7 +31,12 @@ const Chat: React.FC = () => {
         <section className={styles.messages}>
           {chatStore.state.length > 0 && <Messages />}
         </section>
-        <aside className={styles.users_list}>{/* <Users /> */}</aside>
+        <aside className={styles.users_list}>
+          <Users />
+        </aside>
+        <aside className={styles.users_list}>
+          <ReadFullMessages />
+        </aside>
       </main>
 
       <Footer />

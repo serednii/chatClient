@@ -14,6 +14,7 @@ import {
   IParams,
   IUserWrite,
 } from "../interface";
+import { getNextUserId } from "../Util";
 import { sendJoinToServer } from "./setDataSocket";
 import useWebSocket from "./useWebsocket";
 
@@ -52,19 +53,13 @@ const useJoin = () => {
 const useMessageStart = () => {
   useEffect(() => {
     const handleMessageStart = ({ messages, data }: IMessageStart) => {
-      console.log("messageStart----------------------------", messages);
-      const lastMessageId = messages?.at(-2)?.id;
-      // if (!getLastIdMessageViewLocalStorage()) {
-      //   addLastIdMessageViewLocalStorage(lastMessageId);
-      // }
+      // console.log("messageStart----------------------------", messages);
 
       if (messages && data) {
         chatStore.setState(messages);
-        const startId =
-          messages.at(-1) &&
-          messages[messages.length - 1].id -
-            (data.lastMessageId - data.viewMessageId);
-        chatStore.setAddedMessageToLastUserRef(startId || messages[0].id);
+        chatStore.setDataMessagesId(data);
+        // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", data);
+        chatStore.setAddedMessageToLastUserRef(data.viewMessageId);
       }
     };
     chatStore.socket?.on("messageStart", handleMessageStart);
@@ -79,15 +74,13 @@ const useMessageAdd = () => {
   useEffect(() => {
     const handleMessageAdd = ({ message, data }: IMessageAdd) => {
       // console.log("useMessageAdd-=-=-=-=-***************---------", message);
-      if (message) {
+      if (message && data) {
+        chatStore.setDataMessagesId(data);
         chatStore.addMessage(message);
         if (message.author === chatStore.params.name) {
           chatStore.setLoadingAddMessagesFirst(true);
         }
         // chatStore.setLoadingAddMessagesSecond(true);
-      }
-      if (data) {
-        chatStore.setDataMessagesId(data);
       }
     };
     chatStore.socket?.on("messageAdd", handleMessageAdd);
@@ -126,7 +119,8 @@ const useNextMessageAdd = () => {
       // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
         chatStore.addNextMessages(messages);
-        chatStore.setAddedMessageToLastUserRef(messages[0].id);
+        // chatStore.setAddedMessageToLastUserRef(messages[0].id);
+        chatStore.setAddedMessageToLastUserRef(data.viewMessageId);
         // chatStore.setLoadingNextMessagesScroll(true);
         // chatStore.setLoadingDataFuncReturn(true);
         // setTimeout(() => {

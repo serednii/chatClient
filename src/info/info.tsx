@@ -20,8 +20,10 @@ const Info = () => {
 
   const state = [...chatStore.state];
   const clearState = state.filter((e) => e?.author !== "Admin");
-  const start = clearState[0]?.id;
-  const end = clearState.at(-1)?.id;
+  const start: number = clearState[0]?.id;
+  const end: number = clearState.at(-1)?.id || 0;
+  const fullMessages: number = start && end && end - start;
+  const fullMessagesRef = chatStore.arrayLastUserRef.length;
   const arrayRefId: (string | undefined | null)[] =
     chatStore.arrayLastUserRef.map((e) => e?.getAttribute("data-id"));
 
@@ -34,9 +36,16 @@ const Info = () => {
       <div>
         {start} -- {end}
       </div>
+      <div>{fullMessages}</div>
+      <div>{fullMessagesRef}</div>
+
       {arrayRefId &&
         arrayRefId.map((e) => {
-          return <div>{e}</div>;
+          return (
+            <div style={{ backgroundColor: "yellow", marginBottom: "2px" }}>
+              {e}
+            </div>
+          );
         })}
     </div>
   );

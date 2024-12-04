@@ -33,16 +33,16 @@ const Messages: React.FC = () => {
     lastUserRef.current = null;
     chatStore.setArrayLastUserRef([]);
   }
-  console.log("CCCCCCCCCCCC", chatStore.arrayLastUserRef);
+  // console.log("CCCCCCCCCCCC", chatStore.arrayLastUserRef);
   const newState = chatStore.state.map((e) => e.id);
-  console.log("SSSSSSS", newState);
+  // console.log("SSSSSSS", newState);
 
   // let lastMessagesId: number | undefined = getLastIdMessageViewLocalStorage();
   const lastMessagesId: number =
     isFirstRender.current === 0
       ? chatStore.state[0].id
       : chatStore.lastNumberViewMessages;
-  console.log("lastMessagesId", lastMessagesId);
+  // console.log("lastMessagesId", lastMessagesId);
   // //Якщо останнього переглянутого елемента нема то переходимо до першого елемента
   // if (!lastMessagesId) {
   //   lastMessagesId = chatStore.state[0].id;
@@ -79,7 +79,7 @@ const Messages: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log("isFirstRender{{{{{{{{{{{{{{{");
+    // console.log("isFirstRender{{{{{{{{{{{{{{{");
     chatStore.setLoadingPrevMessagesScroll(false);
     // chatStore.setLoadingAddMessagesSecond(false);
     // // chatStore.setLoadingPrevMessagesLoading(false);
