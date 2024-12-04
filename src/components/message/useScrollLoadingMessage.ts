@@ -31,12 +31,12 @@ const useScrollLoadingMessage = (
       //Автопідгрузка при скролі догори
       if (
         scrollTop < prevScrollTop.current &&
-        scrollTop <= scrollHeight * 0.1
-        // &&        !chatStore.isLoadingPrevMessagesLoading
+        scrollTop <= scrollHeight * 0.1 &&
+        !chatStore.isLoadingPrevMessagesLoading
       ) {
         // Якщо прокручуємо вгору і досягли верхньої чверті екрана
         // chatStore.setLoadingPrevMessages();
-        console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+        // console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         const firstId = getPrevUserId(chatStore.state);
         if (firstId === chatStore.dataMessagesId?.firstMessageId) {
           return;
@@ -53,22 +53,22 @@ const useScrollLoadingMessage = (
         // infoStore.setIdActive(null);
         // lastUserRef.current = null;
         // chatStore.setActiveRef(null);
-        console.log("EEEEEEEEEEEEE", chatStore.isLoadingPrevMessagesLoading);
-        console.log(
-          "Scrolled to top 25% of the list. Fetching more messages..."
-        );
+        // console.log("EEEEEEEEEEEEE", chatStore.isLoadingPrevMessagesLoading);
+        // console.log(
+        //   "Scrolled to top 25% of the list. Fetching more messages..."
+        // );
       }
       //Автопідгрузка при скролі в низ
       if (
         scrollTop > prevScrollTop.current &&
-        scrollTop + clientHeight >= scrollHeight * 0.9
-        // &&        !chatStore.isLoadingNextMessagesLoading
+        scrollTop + clientHeight >= scrollHeight * 0.9 &&
+        !chatStore.isLoadingNextMessagesLoading
       ) {
         // Якщо прокручуємо вгору і досягли верхньої чверті екрана
 
-        console.log(
-          "KKKKKKKKKKKKKKKKKKKKKKKKKKK************************************************"
-        );
+        // console.log(
+        //   "KKKKKKKKKKKKKKKKKKKKKKKKKKK************************************************"
+        // );
 
         const lastId = getNextUserId(chatStore.state);
         if (lastId === chatStore.dataMessagesId?.lastMessageId) {
@@ -87,10 +87,10 @@ const useScrollLoadingMessage = (
           });
         infoStore.setDown(true);
 
-        console.log("EEEEEEEEEEEEE", chatStore.isLoadingNextMessagesLoading);
-        console.log(
-          "Scrolled to top 25% of the list. Fetching more messages..."
-        );
+        // console.log("EEEEEEEEEEEEE", chatStore.isLoadingNextMessagesLoading);
+        // console.log(
+        //   "Scrolled to top 25% of the list. Fetching more messages..."
+        // );
       }
       prevScrollTop.current = scrollTop; // Оновлюємо значення scrollTop
     }
@@ -106,15 +106,15 @@ const useScrollLoadingMessage = (
 
   //Автопідгрузка при скролі
   useEffect(() => {
-    console.log("UUUUUUUUUUUUUU");
+    // console.log("UUUUUUUUUUUUUU");
     const idTimeOut = setTimeout(() => {
       if (listRef.current) {
-        console.log("FFFFFFFFFFFFFFFFFF", listRef.current);
+        // console.log("FFFFFFFFFFFFFFFFFF", listRef.current);
         listRef.current.addEventListener("scroll", handleScroll);
       }
     }, 500);
     return () => {
-      console.log("SSSSSSSSSSSSSSSSSSSS");
+      // console.log("SSSSSSSSSSSSSSSSSSSS");
       clearTimeout(idTimeOut);
       listRef.current?.removeEventListener("scroll", handleScroll);
     };

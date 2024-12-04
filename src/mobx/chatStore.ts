@@ -43,6 +43,7 @@ class ChatStore {
     makeAutoObservable(this, {
       setLoadingAddMessagesFirst: action,
       setLoadingAddMessagesSecond: action,
+      setArrayLastUserRef: action,
     });
     this.isWrite = false;
     this.isDeleteMessage = false;
@@ -107,14 +108,12 @@ class ChatStore {
     this.state = state;
   }
 
-  addMessage(message: IMessage) {
+  addMessageState(message: IMessage) {
     const fullMessage: IMessage[] = [...this.state, message];
     if (fullMessage.length > 300) {
       fullMessage.splice(0, 50);
     }
     this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
-
-    // this.state = [...this.state, message]; // Додавання елемента в масив
   }
   filterUniqueMessages(messages: IMessage[]): IMessage[] {
     const newMessages: IMessage[] = messages.filter(
@@ -152,6 +151,7 @@ class ChatStore {
   }
 
   addNextMessages(messages: IMessage[]) {
+    console.log("MMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
     const newMessages: IMessage[] = this.filterUniqueMessages(messages);
     const fullMessage: IMessage[] = [...this.state, ...newMessages];
     if (fullMessage.length > 300) {
@@ -232,6 +232,17 @@ class ChatStore {
 
   setArrayLastUserRef(value: (HTMLLIElement | null)[]) {
     this.arrayLastUserRef = value;
+  }
+
+  addArrayLastUserRef(value: HTMLLIElement | null) {
+    if (this.arrayLastUserRef.find((e) => e === value)) {
+      return;
+    }
+    this.arrayLastUserRef.push(value);
+  }
+
+  deleteFirstElementArrayLastUserRef() {
+    return this.arrayLastUserRef.shift();
   }
 }
 

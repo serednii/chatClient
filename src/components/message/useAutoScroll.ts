@@ -8,10 +8,6 @@ const useAutoScroll = (
   lastUserRef: React.MutableRefObject<HTMLLIElement | null>
 ) => {
   useEffect(() => {
-    // if (
-    //   !chatStore.isLoadingPrevMessagesScroll &&
-    //   !chatStore.isLoadingNextMessagesScroll
-    // ) {
     if (!blockLastUserRef) {
       lastUserRef.current?.scrollIntoView(false);
     } else {
@@ -20,20 +16,12 @@ const useAutoScroll = (
         block: "end",
       });
     }
-    // } else {
-    //   // chatStore.setLoadingPrevMessagesScroll(false);
-    //   // chatStore.setLoadingNextMessagesScroll(false);
-    // }
     lastUserRef.current = null;
     infoStore.setIdActive(null);
   }, [
-    chatStore.state,
+    // chatStore.state,
     blockLastUserRef,
     lastUserRef.current,
-    chatStore.isLoadingPrevMessagesScroll,
-    chatStore.setLoadingPrevMessagesScroll,
-    chatStore.isLoadingNextMessagesScroll,
-    chatStore.setLoadingNextMessagesScroll,
   ]);
   return {};
 };

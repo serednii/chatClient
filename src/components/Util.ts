@@ -24,7 +24,7 @@ export const debounce = <T extends (...args: IParams[]) => any>(
 
 export const getNextUserId = (state: IMessage[]): number | undefined => {
   const newState = [...state];
-  console.log("getNextUserId");
+  // console.log("getNextUserId");
   const lastElement: IMessage | undefined = newState.pop();
   if (lastElement?.author === "Admin") {
     return getNextUserId(newState);
@@ -35,7 +35,7 @@ export const getNextUserId = (state: IMessage[]): number | undefined => {
 
 export const getPrevUserId = (state: IMessage[]): number | undefined => {
   const newState = [...state];
-  console.log("getNextUserId");
+  // console.log("getNextUserId");
   const lastElement: IMessage | undefined = newState.shift();
   if (lastElement?.author === "Admin") {
     return getPrevUserId(newState);

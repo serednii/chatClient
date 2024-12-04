@@ -40,7 +40,7 @@ const Chat: React.FC = () => {
           <Users />
         </aside>
         <aside className={styles.users_list}>
-          {isReadFullMessages && <ReadFullMessages />}
+          {/* {isReadFullMessages && <ReadFullMessages />} */}
         </aside>
       </main>
 

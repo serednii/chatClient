@@ -75,11 +75,9 @@ const useMessageAdd = () => {
     const handleMessageAdd = ({ message, data }: IMessageAdd) => {
       // console.log("useMessageAdd-=-=-=-=-***************---------", message);
       if (message && data) {
+        chatStore.addMessageState(message);
         chatStore.setDataMessagesId(data);
-        chatStore.addMessage(message);
-        if (message.author === chatStore.params.name) {
-          chatStore.setLoadingAddMessagesFirst(true);
-        }
+        chatStore.setLoadingAddMessagesFirst(true);
         // chatStore.setLoadingAddMessagesSecond(true);
       }
     };
@@ -98,10 +96,10 @@ const usePrevMessageAdd = () => {
       if (messages && messages.length !== 0) {
         // chatStore.setLoadingPrevMessagesScroll(true);
         chatStore.addPrevMessages(messages);
-        // setTimeout(() => {
-        //   chatStore.setLoadingPrevMessagesLoading(false);
-        //   chatStore.setLoadingPrevMessagesScroll(false);
-        // }, 1050);
+        setTimeout(() => {
+          chatStore.setLoadingPrevMessagesLoading(false);
+          // chatStore.setLoadingPrevMessagesScroll(false);
+        }, 1000);
       }
     };
 
@@ -116,17 +114,13 @@ const usePrevMessageAdd = () => {
 const useNextMessageAdd = () => {
   useEffect(() => {
     const handleNextMessageAdd = ({ messages, data }: IMessageStart) => {
-      // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
+      console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
         chatStore.addNextMessages(messages);
-        // chatStore.setAddedMessageToLastUserRef(messages[0].id);
         chatStore.setAddedMessageToLastUserRef(data.viewMessageId);
-        // chatStore.setLoadingNextMessagesScroll(true);
-        // chatStore.setLoadingDataFuncReturn(true);
-        // setTimeout(() => {
-        //   chatStore.setLoadingNextMessagesLoading(false);
-        //   chatStore.setLoadingNextMessagesScroll(false);
-        // }, 1050);
+        setTimeout(() => {
+          chatStore.setLoadingNextMessagesLoading(false);
+        }, 1000);
       }
     };
 
@@ -134,7 +128,7 @@ const useNextMessageAdd = () => {
     return () => {
       chatStore.socket?.off("nextMessagesUser", handleNextMessageAdd);
     };
-  }, [chatStore.socket, chatStore.state]);
+  }, [chatStore.socket]);
   return {};
 };
 

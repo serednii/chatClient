@@ -38,7 +38,8 @@ const useIntersectionObserver = (
 
   //Слідкування за новими повідомленнями які при перегляді будуть появлятися в зоні видимості
   useEffect(() => {
-    let nextElement = chatStore.arrayLastUserRef.shift() || null;
+    let nextElement = chatStore.deleteFirstElementArrayLastUserRef() || null;
+
     // console.log("-----------------------------", nextElement);
     //Очищення попереднього обсерверу:
     unsubscribe();
@@ -60,7 +61,8 @@ const useIntersectionObserver = (
 
             // Ваш виклик функції
             unsubscribe();
-            nextElement = chatStore.arrayLastUserRef.shift() || null;
+            nextElement =
+              chatStore.deleteFirstElementArrayLastUserRef() || null;
             // if (isFirstRender.current > 0) {
             //   lastUserRef.current = nextElement;
             // }

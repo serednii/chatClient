@@ -18,7 +18,7 @@ const Messages: React.FC = () => {
   const listRef = useRef<HTMLUListElement | null>(null);
   const isFirstRender = useRef<number>(-1);
   const isEndMapRender = useRef<boolean>(false);
-
+  const lastElement = useRef<boolean>(false);
   //Перший елемент з якого починаються непереглянуті повідомлення
   let startLastUserRef: boolean = false;
   const lengthState: number | undefined = chatStore?.state?.length;
@@ -49,14 +49,19 @@ const Messages: React.FC = () => {
 
   const prevReturnRef = useCallback(
     (ref: HTMLLIElement | null) => {
-      returnRef(ref, isFirstRender.current, lastUserRef, subscribe);
+      returnRef(ref, lastElement, lastUserRef, subscribe);
     },
-    [isMyMessage, lastUserRef, subscribe, isFirstRender.current]
+    [isMyMessage, lastUserRef, subscribe, lastElement.current]
   );
 
   useEffect(() => {
-    chatStore.setLoadingPrevMessagesScroll(false);
-  }, [isEndMapRender.current, chatStore.setLoadingPrevMessagesScroll]);
+    // chatStore.setLoadingPrevMessagesScroll(false);
+    chatStore.setAddedMessageToLastUserRef(null);
+  }, [
+    isEndMapRender.current,
+    chatStore.setAddedMessageToLastUserRef,
+    // chatStore.setLoadingPrevMessagesScroll,
+  ]);
 
   return (
     <ul key="messages" ref={listRef} className={styles.messageList}>
@@ -84,8 +89,14 @@ const Messages: React.FC = () => {
 
           //Якщо підгрузилися нові непрочитанні повідомлення
           if (chatStore.isAddedMessageToLastUserRef) {
-            if (chatStore.isAddedMessageToLastUserRef <= data.id)
+            if (chatStore.isAddedMessageToLastUserRef < data.id) {
               startLastUserRef = true;
+            }
+
+            if (i === lengthState - 1) {
+              lastElement.current = true;
+              startLastUserRef = true;
+            }
           }
 
           //Якщо додалося нове повідомлення

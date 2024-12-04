@@ -27,8 +27,8 @@ const Info = () => {
   const end: number = clearState.at(-1)?.id || 0;
   const fullMessages: number = start && end && end - start;
   const fullMessagesRef = chatStore.arrayLastUserRef.length;
-  //   const arrayRefId: (string | undefined | null)[] =
-  //     chatStore.arrayLastUserRef.map((e) => e?.getAttribute("data-id"));
+  const arrayRefId: (string | undefined | null)[] =
+    chatStore.arrayLastUserRef.map((e) => e?.getAttribute("data-id"));
 
   return (
     <div className={styles.info}>
@@ -43,7 +43,7 @@ const Info = () => {
       </div>
       <div key="fullMessages">{fullMessages}</div>
       <div key="fullMessagesRef">{fullMessagesRef}</div>
-      {/* {arrayRefId &&
+      {arrayRefId &&
         arrayRefId.map((e) => (
           <div
             style={{ backgroundColor: "yellow", marginBottom: "2px" }}
@@ -51,7 +51,7 @@ const Info = () => {
           >
             {e}
           </div>
-        ))} */}
+        ))}
     </div>
   );
 };
