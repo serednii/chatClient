@@ -12,6 +12,7 @@ interface ISendMessage {
 }
 
 interface ILastMessages {
+  name:string;
   room: string;
   startID: number;
   limit: number;

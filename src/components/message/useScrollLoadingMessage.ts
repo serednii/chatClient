@@ -8,10 +8,22 @@ import {
 } from "../socket/setDataSocket";
 
 function getNextUserId(state: IMessage[]): number | undefined {
+  const newState = [...state];
   console.log("getNextUserId");
-  const lastElement: IMessage | undefined = state.pop();
+  const lastElement: IMessage | undefined = newState.pop();
   if (lastElement?.author === "Admin") {
-    return getNextUserId(state);
+    return getNextUserId(newState);
+  } else {
+    return lastElement?.id;
+  }
+}
+
+function getPrevUserId(state: IMessage[]): number | undefined {
+  const newState = [...state];
+  console.log("getNextUserId");
+  const lastElement: IMessage | undefined = newState.shift();
+  if (lastElement?.author === "Admin") {
+    return getPrevUserId(newState);
   } else {
     return lastElement?.id;
   }
@@ -40,17 +52,18 @@ const useScrollLoadingMessage = (
       //Автопідгрузка при скролі догори
       if (
         scrollTop < prevScrollTop.current &&
-        scrollTop <= scrollHeight * 0.1 &&
-        !chatStore.isLoadingPrevMessagesLoading
+        scrollTop <= scrollHeight * 0.1
+        // &&        !chatStore.isLoadingPrevMessagesLoading
       ) {
         // Якщо прокручуємо вгору і досягли верхньої чверті екрана
         // chatStore.setLoadingPrevMessages();
         console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         chatStore.setLoadingPrevMessagesLoading(true);
-
+        const prev: number | undefined = getPrevUserId(chatStore.state);
         sendPrevMessagesServer({
+          name: chatStore.params.name,
           room: chatStore.params.room,
-          startID: chatStore.state[0].id,
+          startID: prev || 1,
           limit: 30,
         });
         infoStore.setUp(true);
@@ -65,8 +78,8 @@ const useScrollLoadingMessage = (
       //Автопідгрузка при скролі в низ
       if (
         scrollTop > prevScrollTop.current &&
-        scrollTop + clientHeight >= scrollHeight * 0.95 &&
-        !chatStore.isLoadingNextMessagesLoading
+        scrollTop + clientHeight >= scrollHeight * 0.9
+        // &&        !chatStore.isLoadingNextMessagesLoading
       ) {
         // Якщо прокручуємо вгору і досягли верхньої чверті екрана
 
@@ -75,10 +88,11 @@ const useScrollLoadingMessage = (
         );
         chatStore.setLoadingNextMessagesLoading(true);
 
-        const nextId: number | undefined = getNextUserId([...chatStore.state]);
+        const nextId: number | undefined = getNextUserId(chatStore.state);
         // console.log("UUUUUUUUUUUUUU", nextId);
         nextId &&
           sendNextMessagesServer({
+            name: chatStore.params.name,
             room: chatStore.params.room,
             startID: nextId,
             limit: 30,

@@ -80,11 +80,12 @@ const Messages: React.FC = () => {
 
   useEffect(() => {
     console.log("isFirstRender{{{{{{{{{{{{{{{");
-    chatStore.setLoadingAddMessagesSecond(false);
-    // chatStore.setLoadingPrevMessagesLoading(false);
-    // chatStore.setLoadingNextMessagesLoading(false);
-    console.log("DDDDDDD", chatStore.arrayLastUserRef);
-  }, [isEndMapRender.current, chatStore.arrayLastUserRef]);
+    chatStore.setLoadingPrevMessagesScroll(false);
+    // chatStore.setLoadingAddMessagesSecond(false);
+    // // chatStore.setLoadingPrevMessagesLoading(false);
+    // // chatStore.setLoadingNextMessagesLoading(false);
+    // console.log("DDDDDDD", chatStore.arrayLastUserRef);
+  }, [isEndMapRender.current, chatStore.setLoadingPrevMessagesScroll]);
   // console.log("-----------------------", arrayLastUserRef.current);
 
   return (
@@ -111,43 +112,56 @@ const Messages: React.FC = () => {
           let MyClassName = itsMe ? styles.me : styles.user;
           MyClassName = itsAdmin ? styles.admin : MyClassName;
 
-          if (
-            isFirstRender.current === 0 ||
-            chatStore.isLoadingNextMessagesLoading
-          ) {
-            // if (!chatStore.isLoadingAddMessagesSecond) {
+          //Якщо підгрузилися нові непрочитанні повідомлення
+          if (chatStore.isAddedMessageToLastUserRef) {
+            if (chatStore.isAddedMessageToLastUserRef <= data.id)
+              startLastUserRef = true;
+          }
 
-            if (lastMessagesId <= id) {
-              //останнє повідомлення
-              console.log("DDDDDDDDD");
+          //Якщо додалося нове повідомлення
+          if (chatStore.isLoadingAddMessagesFirst) {
+            if (i === lengthState - 1) {
+              console.log("BBBBBBBBBBB");
               startLastUserRef = true;
             }
-          } else {
-            //Якщо перший рендерр і не мої повідомлення
-            if (!chatStore.isLoadingAddMessagesSecond) {
-              // Якщо прилетіло нове повідомлення то блокуємо перепис масиву рефів
-              if (!isMyMessage) {
-                if (lastMessagesId <= id) {
-                  // console.log("AAAAAAAAAAA");
-                  // console.log(lastMessagesId, id);
-                  startLastUserRef = true;
-                }
-              } else if (isMyMessage) {
-                //Якщо я пишу і то мої повідомлення
-                if (i === lengthState - 1) {
-                  // console.log("BBBBBBBBBBB");
-                  startLastUserRef = true;
-                }
-              }
-            } else {
-              //Коли приходить нове повідомлення то його добавляємо в масив arrayLastUserRef
-              if (i === lengthState - 1) {
-                //останнє повідомлення
-                // console.log("DDDDDDDDD");
-                startLastUserRef = true;
-              }
-            }
           }
+          // if (
+          //   isFirstRender.current === 0 ||
+          //   chatStore.isLoadingNextMessagesLoading
+          // ) {
+          //   // if (!chatStore.isLoadingAddMessagesSecond) {
+
+          //   if (lastMessagesId <= id) {
+          //     //останнє повідомлення
+          //     console.log("DDDDDDDDD");
+          //     startLastUserRef = true;
+          //   }
+          // } else {
+          //   //Якщо перший рендерр і не мої повідомлення
+          //   if (!chatStore.isLoadingAddMessagesSecond) {
+          //     // Якщо прилетіло нове повідомлення то блокуємо перепис масиву рефів
+          //     if (!isMyMessage) {
+          //       if (lastMessagesId <= id) {
+          //         // console.log("AAAAAAAAAAA");
+          //         // console.log(lastMessagesId, id);
+          //         startLastUserRef = true;
+          //       }
+          //     } else if (isMyMessage) {
+          //       //Якщо я пишу і то мої повідомлення
+          //       if (i === lengthState - 1) {
+          //         // console.log("BBBBBBBBBBB");
+          //         startLastUserRef = true;
+          //       }
+          //     }
+          //   } else {
+          //     //Коли приходить нове повідомлення то його добавляємо в масив arrayLastUserRef
+          //     if (i === lengthState - 1) {
+          //       //останнє повідомлення
+          //       // console.log("DDDDDDDDD");
+          //       startLastUserRef = true;
+          //     }
+          //   }
+          // }
 
           if (i === lengthState - 1) {
             isEndMapRender.current = !isEndMapRender.current;

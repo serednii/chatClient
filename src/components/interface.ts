@@ -39,12 +39,19 @@ interface IUser {
   id: number;
 }
 
+interface IData {
+  viewMessageId: number;
+  firstMessageId: number;
+  lastMessageId: number;
+}
 export interface IMessageStart {
   messages: IMessage[];
+  data: IData;
 }
 
 export interface IMessageAdd {
   message: IMessage;
+  data: IData;
 }
 
 export interface IMessageNext {

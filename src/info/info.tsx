@@ -28,16 +28,16 @@ const Info = () => {
   return (
     <div className={styles.info}>
       <FaArrowAltCircleUp color={infoStore.isUp ? "red" : "black"} size={30} />
+      <br />
+      <FaArrowCircleDown color={infoStore.isDown ? "red" : "black"} size={30} />
       <div style={{ fontSize: "20px", color: "red" }}>{id}</div>
+      <div>
+        {start} -- {end}
+      </div>
       {arrayRefId &&
         arrayRefId.map((e) => {
           return <div>{e}</div>;
         })}
-      <div>
-        {start} -- {end}
-      </div>
-
-      <FaArrowCircleDown color={infoStore.isDown ? "red" : "black"} size={30} />
     </div>
   );
 };

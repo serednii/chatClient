@@ -6,6 +6,13 @@ import {
   IUsersName,
   IUserWrite,
 } from "../components/interface";
+
+interface IData {
+  viewMessageId: number;
+  firstMessageId: number;
+  lastMessageId: number;
+}
+
 console.log("chatStore0000000000000000000");
 class ChatStore {
   isWrite: boolean;
@@ -29,6 +36,8 @@ class ChatStore {
   isBlocked: boolean;
   activeRef: HTMLLIElement | null;
   arrayLastUserRef: (HTMLLIElement | null)[];
+  isAddedMessageToLastUserRef: number | null;
+  dataMessagesId: IData | null | undefined;
 
   constructor() {
     makeAutoObservable(this, {
@@ -56,8 +65,16 @@ class ChatStore {
     this.isBlocked = false;
     this.activeRef = null;
     this.arrayLastUserRef = [];
+    this.isAddedMessageToLastUserRef = null;
+    this.dataMessagesId = null;
+  }
+  setDataMessagesId(data: IData | null | undefined) {
+    this.dataMessagesId = data;
   }
 
+  setAddedMessageToLastUserRef(value: number | null) {
+    this.isAddedMessageToLastUserRef = value;
+  }
   setUsersName(usersName: IUsersName[]) {
     this.usersName = [...usersName];
   }
@@ -91,7 +108,13 @@ class ChatStore {
   }
 
   addMessage(message: IMessage) {
-    this.state = [...this.state, message]; // Додавання елемента в масив
+    const fullMessage: IMessage[] = [...this.state, message];
+    if (fullMessage.length > 300) {
+      fullMessage.splice(0, 50);
+    }
+    this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
+
+    // this.state = [...this.state, message]; // Додавання елемента в масив
   }
   filterState(messages: IMessage[]): IMessage[] {
     const newMessages: IMessage[] = messages.filter(
@@ -107,7 +130,11 @@ class ChatStore {
 
   addNextMessages(messages: IMessage[]) {
     const newMessages: IMessage[] = this.filterState(messages);
-    this.state = [...this.state, ...newMessages]; // Додаємо нові повідомлення і оновлюємо стан
+    const fullMessage: IMessage[] = [...this.state, ...newMessages];
+    if (fullMessage.length > 300) {
+      fullMessage.splice(0, 50);
+    }
+    this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
   }
 
   deleteMessageById(id: number) {

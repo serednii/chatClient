@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { CardHeader } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import {
   addLastIdMessageViewLocalStorage,
   getLastIdMessageViewLocalStorage,
 } from "../../localStorage/localStorage";
 import chatStore from "../../mobx/chatStore";
+import infoStore from "../../mobx/infoStore";
 import {
   IMessage,
   IMessageAdd,
@@ -49,14 +51,20 @@ const useJoin = () => {
 
 const useMessageStart = () => {
   useEffect(() => {
-    const handleMessageStart = ({ messages }: IMessageStart) => {
+    const handleMessageStart = ({ messages, data }: IMessageStart) => {
       console.log("messageStart----------------------------", messages);
       const lastMessageId = messages?.at(-2)?.id;
       // if (!getLastIdMessageViewLocalStorage()) {
       //   addLastIdMessageViewLocalStorage(lastMessageId);
       // }
-      if (messages) {
+
+      if (messages && data) {
         chatStore.setState(messages);
+        const startId =
+          messages.at(-1) &&
+          messages[messages.length - 1].id -
+            (data.lastMessageId - data.viewMessageId);
+        chatStore.setAddedMessageToLastUserRef(startId || messages[0].id);
       }
     };
     chatStore.socket?.on("messageStart", handleMessageStart);
@@ -69,12 +77,17 @@ const useMessageStart = () => {
 
 const useMessageAdd = () => {
   useEffect(() => {
-    const handleMessageAdd = ({ message }: IMessageAdd) => {
+    const handleMessageAdd = ({ message, data }: IMessageAdd) => {
       // console.log("useMessageAdd-=-=-=-=-***************---------", message);
       if (message) {
         chatStore.addMessage(message);
-        chatStore.setLoadingAddMessagesFirst(true);
-        chatStore.setLoadingAddMessagesSecond(true);
+        if (message.author === chatStore.params.name) {
+          chatStore.setLoadingAddMessagesFirst(true);
+        }
+        // chatStore.setLoadingAddMessagesSecond(true);
+      }
+      if (data) {
+        chatStore.setDataMessagesId(data);
       }
     };
     chatStore.socket?.on("messageAdd", handleMessageAdd);
@@ -87,15 +100,15 @@ const useMessageAdd = () => {
 
 const usePrevMessageAdd = () => {
   useEffect(() => {
-    const handlePrevMessageAdd = (messages: IMessage[]) => {
+    const handlePrevMessageAdd = ({ messages, data }: IMessageStart) => {
       // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
-        chatStore.setLoadingPrevMessagesScroll(true);
+        // chatStore.setLoadingPrevMessagesScroll(true);
         chatStore.addPrevMessages(messages);
-        setTimeout(() => {
-          chatStore.setLoadingPrevMessagesLoading(false);
-          chatStore.setLoadingPrevMessagesScroll(false);
-        }, 1050);
+        // setTimeout(() => {
+        //   chatStore.setLoadingPrevMessagesLoading(false);
+        //   chatStore.setLoadingPrevMessagesScroll(false);
+        // }, 1050);
       }
     };
 
@@ -109,16 +122,17 @@ const usePrevMessageAdd = () => {
 
 const useNextMessageAdd = () => {
   useEffect(() => {
-    const handleNextMessageAdd = (messages: IMessage[]) => {
+    const handleNextMessageAdd = ({ messages, data }: IMessageStart) => {
       // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
-        chatStore.setLoadingNextMessagesScroll(true);
-        chatStore.setLoadingDataFuncReturn(true);
         chatStore.addNextMessages(messages);
-        setTimeout(() => {
-          chatStore.setLoadingNextMessagesLoading(false);
-          chatStore.setLoadingNextMessagesScroll(false);
-        }, 1050);
+        chatStore.setAddedMessageToLastUserRef(messages[0].id);
+        // chatStore.setLoadingNextMessagesScroll(true);
+        // chatStore.setLoadingDataFuncReturn(true);
+        // setTimeout(() => {
+        //   chatStore.setLoadingNextMessagesLoading(false);
+        //   chatStore.setLoadingNextMessagesScroll(false);
+        // }, 1050);
       }
     };
 

@@ -54,16 +54,16 @@ const useIntersectionObserver = (
               // console.log("12121212212", idNumber);
               // idNumber && addLastIdMessageViewLocalStorage(idNumber);
               idNumber && handleScrollThrottle(idNumber);
-              infoStore.setIdActive(nextElement);
-              chatStore.setActiveRef(nextElement);
+              // infoStore.setIdActive(nextElement);
+              // chatStore.setActiveRef(nextElement);
             }
 
             // Ваш виклик функції
             unsubscribe();
             nextElement = chatStore.arrayLastUserRef.shift() || null;
-            if (isFirstRender.current > 0) {
-              lastUserRef.current = nextElement;
-            }
+            // if (isFirstRender.current > 0) {
+            //   lastUserRef.current = nextElement;
+            // }
             subscribe(nextElement);
             // console.log("arrayLastUserRef", arrayLastUserRef);
             // console.log("lastUserRef.current", lastUserRef.current);
