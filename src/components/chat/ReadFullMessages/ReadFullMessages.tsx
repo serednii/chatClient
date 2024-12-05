@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import chatStore from "../../../mobx/chatStore";
 import { sendNextMessagesServer } from "../../socket/setDataSocket";
-import "./ReadFullMessages.scss";
+import "./ReadFullMessages";
 
 function ReadFullMessages() {
   const handleClick = (event: any) => {

@@ -8,7 +8,17 @@ import useAutoScroll from "./useAutoScroll";
 import { returnRef } from "./utilMessage";
 import styles from "./Messages.module.scss";
 import useScrollLoadingMessage from "./useScrollLoadingMessage";
+function areDifferentDays(prevDate: string, todayDate: string) {
+  const prev = new Date(prevDate);
+  const today = new Date(todayDate);
 
+  // Порівнюємо тільки рік, місяць і день
+  return (
+    prev.getFullYear() !== today.getFullYear() ||
+    prev.getMonth() !== today.getMonth() ||
+    prev.getDate() !== today.getDate()
+  );
+}
 const Messages: React.FC = () => {
   console.log("RENDER MESSAGES");
   //Коли ми редагуємо повідомлення то не прокручувати
@@ -19,6 +29,9 @@ const Messages: React.FC = () => {
   const isFirstRender = useRef<number>(-1);
   const isEndMapRender = useRef<boolean>(false);
   const lastElement = useRef<boolean>(false);
+
+  const prevDate = useRef<string>("");
+
   //Перший елемент з якого починаються непереглянуті повідомлення
   let startLastUserRef: boolean = false;
   const lengthState: number | undefined = chatStore?.state?.length;
@@ -69,6 +82,11 @@ const Messages: React.FC = () => {
         chatStore.state.map((data: IMessage, i: number) => {
           if (!data) return null;
           const { author, message, id, date } = data;
+
+          const isPrevDey = areDifferentDays(prevDate.current, date);
+          console.log(isPrevDey, prevDate.current, date); // Виведе: true
+
+          prevDate.current = date;
 
           if (
             typeof name !== "string" ||
@@ -123,6 +141,7 @@ const Messages: React.FC = () => {
               id={id}
               itsMe={itsMe}
               date={date}
+              isPrevDey={isPrevDey}
             />
           );
         })}

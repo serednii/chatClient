@@ -5,7 +5,7 @@ import Info from "./info/info";
 
 const App = () => (
   <div className="container">
-    <Info />
+    {/* <Info /> */}
     <AppRoutes />
   </div>
 );

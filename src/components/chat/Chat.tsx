@@ -27,7 +27,7 @@ const Chat: React.FC = () => {
   useEffect(() => {
     const lastId = getNextUserId(chatStore.state);
     setReadFullMessages(lastId !== chatStore.dataMessagesId?.lastMessageId);
-  }, [chatStore.state, chatStore.dataMessagesId?.lastMessageId]);
+  }, [chatStore.state, chatStore.dataMessagesId]);
 
   return (
     <div className={styles.wrap}>
