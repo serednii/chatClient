@@ -15,7 +15,7 @@ import { getNextUserId } from "../Util";
 
 const Chat: React.FC = () => {
   const [isReadFullMessages, setReadFullMessages] = useState(false);
-  console.log("RENDER CHAT");
+  // console.log("RENDER CHAT");
   useConnectHooks();
   useEffect(() => {
     if (chatStore.isDeleteMessage) {

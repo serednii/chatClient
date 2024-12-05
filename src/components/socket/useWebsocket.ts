@@ -18,7 +18,7 @@ const useWebSocket = () => {
   // Оновлюємо реф params при кожній зміні
   useEffect(() => {
     paramsRef.current = chatStore.params;
-    console.log("RENDER SOCKET", chatStore.params);
+    // console.log("RENDER SOCKET", chatStore.params);
   }, [chatStore.params]);
 
   const getParams = useCallback(() => paramsRef.current, []);
@@ -35,14 +35,14 @@ const useWebSocket = () => {
     chatStore.setSocket(newSocket);
 
     const handleReconnect = () => {
-      console.log("WebSocket connection reestablished");
+      // console.log("WebSocket connection reestablished");
 
       //При першому підключенні пропускаємо відправку join
       if (isFirstConnect.current) {
-        console.log("First WebSocket connection established");
+        // console.log("First WebSocket connection established");
         isFirstConnect.current = false; // Встановлюємо реф у false після першого підключення
       } else {
-        console.log("WebSocket connection reestablished");
+        // console.log("WebSocket connection reestablished");
         newSocket.emit("join", getParams());
       }
 
@@ -50,7 +50,7 @@ const useWebSocket = () => {
     };
 
     const handleDisconnect = () => {
-      console.log("WebSocket connection lost, attempting to reconnect...");
+      // console.log("WebSocket connection lost, attempting to reconnect...");
       reconnectIntervalRef.current = Math.min(
         reconnectIntervalRef.current * 2,
         30000

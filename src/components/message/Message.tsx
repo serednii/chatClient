@@ -8,11 +8,9 @@ import FormMessage from "./FormMessage";
 import DateDayComponent from "../DateDayComponent";
 import styles from "./Messages.module.scss";
 import { observer } from "mobx-react-lite";
-import { MutableRefObject } from "react";
 
 interface MessageProps {
   id: number;
-  // lastUserRef: MutableRefObject<HTMLLIElement | null> | null;
   startLastUserRef: boolean;
   MyClassName: string;
   author: string;
@@ -23,11 +21,6 @@ interface MessageProps {
   setBlockLastUserRef: (value: boolean) => void;
   isPrevDey: boolean;
 }
-
-// // Приклади використання
-// const prevDate = "2024-12-01T07:23:44.000Z";
-// const todayDate = "2024-12-02T07:23:46.000Z";
-// console.log(areDifferentDays(prevDate, todayDate)); // Виведе: true
 
 const Message: React.FC<MessageProps> = ({
   author,
@@ -54,7 +47,7 @@ const Message: React.FC<MessageProps> = ({
     }
   }, [startLastUserRef, lastUserRef, returnRef]);
 
-  console.log(date);
+  // console.log(date);
   return (
     <li
       data-id={id}
@@ -72,7 +65,6 @@ const Message: React.FC<MessageProps> = ({
         <div className={styles.message__inner_top}>
           <span className={styles.message__inner_user}>{author}</span>
           <div className={styles.message__top_date}>
-            {/* <DateDayComponent date={date} /> */}
             <DateHourComponent date={date} />
           </div>
         </div>
@@ -95,7 +87,6 @@ const Message: React.FC<MessageProps> = ({
                   onClick={() =>
                     controllerMessages.handleDeleteMessage(
                       divRef,
-                      // deleteMessageById,
                       setBlockLastUserRef
                     )
                   }

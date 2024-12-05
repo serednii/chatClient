@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 
-import chatStore from "../../mobx/chatStore";
 import infoStore from "../../mobx/infoStore";
 
 const useAutoScroll = (

@@ -13,7 +13,7 @@ const useIntersectionObserver = (
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const handleScrollThrottle = throttle((idNumber) => {
-    console.log("Scrolled:1111111111111111111111111111111111111111111111");
+    // console.log("Scrolled:1111111111111111111111111111111111111111111111");
     chatStore.setLastNumberViewMessages(idNumber);
     sendLastViewMessagesServer({
       user: chatStore.params.name,

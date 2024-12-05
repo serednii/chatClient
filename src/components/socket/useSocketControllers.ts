@@ -30,7 +30,7 @@ const useJoin = () => {
     }
 
     if (!hasJoined.current) {
-      console.log("JOIN----------------------------", search);
+      // console.log("JOIN----------------------------", search);
       const searchParamsObj = Object.fromEntries(new URLSearchParams(search));
       const searchParams: IParams = {
         name: searchParamsObj.name || "",
@@ -114,7 +114,7 @@ const usePrevMessageAdd = () => {
 const useNextMessageAdd = () => {
   useEffect(() => {
     const handleNextMessageAdd = ({ messages, data }: IMessageStart) => {
-      console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
+      // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
         chatStore.addNextMessages(messages);
         chatStore.setAddedMessageToLastUserRef(data.viewMessageId);

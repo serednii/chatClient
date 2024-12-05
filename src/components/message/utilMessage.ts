@@ -31,7 +31,7 @@ const returnRef = (
       if (lastElement.current) {
         //переходимо на останнє повідомлення
         lastUserRef.current = ref;
-        console.log("LLLLLLLLLLLLLLLLLLLLLLLL", { ...lastUserRef });
+        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", { ...lastUserRef });
         infoStore.setIdActive(ref);
         lastElement.current = false;
       } else {

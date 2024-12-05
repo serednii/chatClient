@@ -12,7 +12,7 @@ interface ISendMessage {
 }
 
 interface ILastMessages {
-  name:string;
+  name: string;
   room: string;
   startID: number;
   limit: number;
@@ -58,7 +58,6 @@ export const sendPrevMessagesServer = (getParams: ILastMessages) =>
   chatStore.socket?.emit("getPrevMessagesServer", getParams);
 
 export const sendNextMessagesServer = (getParams: ILastMessages) => {
-  console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
   chatStore.setBlocked(true);
   chatStore.socket?.emit("getNextMessagesServer", getParams);
 };

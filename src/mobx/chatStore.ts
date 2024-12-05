@@ -13,7 +13,6 @@ interface IData {
   lastMessageId: number;
 }
 
-console.log("chatStore0000000000000000000");
 class ChatStore {
   isWrite: boolean;
   isDeleteMessage: boolean;
@@ -135,9 +134,6 @@ class ChatStore {
   }
 
   addPrevMessages(messages: IMessage[]) {
-    // const newMessages: IMessage[] = this.filterState(messages);
-    // this.state = [...newMessages, ...this.state]; // Додаємо нові повідомлення і оновлюємо стан
-
     const newMessages: IMessage[] = this.filterUniqueMessages(messages);
     const fullMessage: IMessage[] = [...newMessages, ...this.state];
     if (fullMessage.length > 300) {
@@ -151,7 +147,6 @@ class ChatStore {
   }
 
   addNextMessages(messages: IMessage[]) {
-    console.log("MMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
     const newMessages: IMessage[] = this.filterUniqueMessages(messages);
     const fullMessage: IMessage[] = [...this.state, ...newMessages];
     if (fullMessage.length > 300) {
@@ -171,7 +166,6 @@ class ChatStore {
     if (newMessages) {
       newMessages.message = message;
     }
-    // this.state = [...this.state];
   }
 
   setUserWrite(userWrite: IUserWrite[]) {

@@ -11,11 +11,11 @@ import Chat from "./chat/Chat";
 import AuthForms from "../AuthUser/components/AuthForms/AuthForms";
 
 const AppRoutes = () => {
-  console.log("AppRoutes RENDER");
-  console.log(authStore.isAuth);
+  // console.log("AppRoutes RENDER");
+  // console.log(authStore.isAuth);
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
+  // console.log(location);
   const isAuth = authStore.isAuth; // Припустимо, що це змінна з вашого стану
 
   useEffect(() => {

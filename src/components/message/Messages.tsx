@@ -20,7 +20,7 @@ function areDifferentDays(prevDate: string, todayDate: string) {
   );
 }
 const Messages: React.FC = () => {
-  console.log("RENDER MESSAGES");
+  // console.log("RENDER MESSAGES");
   //Коли ми редагуємо повідомлення то не прокручувати
   const [blockLastUserRef, setBlockLastUserRef] = useState<boolean>(false);
   // const arrayLastUserRef = useRef<(HTMLLIElement | null)[]>([]);
@@ -41,7 +41,7 @@ const Messages: React.FC = () => {
   isFirstRender.current++;
 
   if (isFirstRender.current === 0) {
-    console.log(chatStore.arrayLastUserRef);
+    // console.log(chatStore.arrayLastUserRef);
     lastUserRef.current = null;
     chatStore.setArrayLastUserRef([]);
   }
@@ -84,7 +84,7 @@ const Messages: React.FC = () => {
           const { author, message, id, date } = data;
 
           const isPrevDey = areDifferentDays(prevDate.current, date);
-          console.log(isPrevDey, prevDate.current, date); // Виведе: true
+          // console.log(isPrevDey, prevDate.current, date); // Виведе: true
 
           prevDate.current = date;
 
@@ -120,7 +120,7 @@ const Messages: React.FC = () => {
           //Якщо додалося нове повідомлення
           if (chatStore.isLoadingAddMessagesFirst) {
             if (i === lengthState - 1) {
-              console.log("BBBBBBBBBBB");
+              // console.log("BBBBBBBBBBB");
               startLastUserRef = true;
             }
           }
