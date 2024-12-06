@@ -41,6 +41,13 @@ const Info = () => {
       <div key="start">
         {start} -- {end}
       </div>
+      <div>viewMessageId {chatStore.dataMessagesId?.viewMessageId}</div>
+      <div>lastMessageId {chatStore.dataMessagesId?.lastMessageId}</div>
+      <div>firstMessageId {chatStore.dataMessagesId?.firstMessageId}</div>
+      <div>
+        unreadMessagesCount {chatStore.dataMessagesId?.unreadMessagesCount || 0}
+      </div>
+
       <div key="fullMessages">{fullMessages}</div>
       <div key="fullMessagesRef">{fullMessagesRef}</div>
       {arrayRefId &&

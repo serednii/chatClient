@@ -5,13 +5,8 @@ import {
   IParams,
   IUsersName,
   IUserWrite,
+  IData,
 } from "../components/interface";
-
-interface IData {
-  viewMessageId: number;
-  firstMessageId: number;
-  lastMessageId: number;
-}
 
 class ChatStore {
   isWrite: boolean;
@@ -68,13 +63,16 @@ class ChatStore {
     this.isAddedMessageToLastUserRef = null;
     this.dataMessagesId = null;
   }
+
   setDataMessagesId(data: IData | null | undefined) {
+    console.log("DDDDDDD", data);
     this.dataMessagesId = data;
   }
 
   setAddedMessageToLastUserRef(value: number | null) {
     this.isAddedMessageToLastUserRef = value;
   }
+
   setUsersName(usersName: IUsersName[]) {
     this.usersName = [...usersName];
   }

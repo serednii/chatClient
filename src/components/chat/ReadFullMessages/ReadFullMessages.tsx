@@ -11,7 +11,7 @@ function ReadFullMessages() {
     sendNextMessagesServer({
       name: chatStore.params.name,
       room: chatStore.params.room,
-      startID: (chatStore.dataMessagesId?.lastMessageId || 0) - 50,
+      startID: chatStore.dataMessagesId?.lastMessageId || 0,
       limit: 50,
     });
   };

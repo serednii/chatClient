@@ -80,7 +80,7 @@ const Message: React.FC<MessageProps> = ({
 
         {!isEditMessage && (
           <div data-id={id} ref={divRef} className={styles.message__text}>
-            {message}
+            {message + " " + id}
             {itsMe && (
               <div className={styles.message__text_buttons}>
                 <AiTwotoneDelete

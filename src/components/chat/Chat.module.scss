@@ -34,3 +34,11 @@ main {
   padding: 4px;
   height: inherit;
 }
+
+.InfoNewMessage_wrapper {
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  left: 350px;
+
+}

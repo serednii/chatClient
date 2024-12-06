@@ -47,7 +47,7 @@ const useScrollLoadingMessage = (
           name: chatStore.params.name,
           room: chatStore.params.room,
           startID: prev || 1,
-          limit: 30,
+          limit: 50,
         });
         infoStore.setUp(true);
         // infoStore.setIdActive(null);
@@ -70,20 +70,22 @@ const useScrollLoadingMessage = (
         //   "KKKKKKKKKKKKKKKKKKKKKKKKKKK************************************************"
         // );
 
-        const lastId = getNextUserId(chatStore.state);
-        if (lastId === chatStore.dataMessagesId?.lastMessageId) {
+        const nextId: number | undefined = getNextUserId(chatStore.state);
+        //Якщо ми дойшли до кінця повідомлень
+        if (nextId === chatStore.dataMessagesId?.lastMessageId) {
           return;
         }
+
+        //Чекажмо загрузку і блокуємо подальший
         chatStore.setLoadingNextMessagesLoading(true);
 
-        const nextId: number | undefined = getNextUserId(chatStore.state);
         // console.log("UUUUUUUUUUUUUU", nextId);
         nextId &&
           sendNextMessagesServer({
             name: chatStore.params.name,
             room: chatStore.params.room,
             startID: nextId,
-            limit: 30,
+            limit: 50,
           });
         infoStore.setDown(true);
 

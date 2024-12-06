@@ -38,10 +38,11 @@ export const updateMessageById = (id: number, message: string): void => {
     message,
   });
 };
-
+//відправляємо повідомлення що закінчили ввід щод знфти точки
 export const sendWriteToServer = (data: ISendWrite) => {
   chatStore.socket?.emit("sendWrite", data);
 };
+//відправляємо повідомлення
 
 export const sendMessageToServer = (data: ISendMessage) =>
   chatStore.socket?.emit("sendMessage", data);

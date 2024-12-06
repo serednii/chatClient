@@ -18,16 +18,16 @@ const returnRef = (
         chatStore.state[chatStore.state.length - 1].author !==
         chatStore.params.name
       ) {
-        chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
+        // chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
         subscribe(
-          chatStore.arrayLastUserRef[chatStore.arrayLastUserRef.length - 1]
+          ref
+          // chatStore.arrayLastUserRef[chatStore.arrayLastUserRef.length - 1]
         );
       } else {
         lastUserRef.current = ref;
         infoStore.setIdActive(ref);
       }
     } else {
-      //
       if (lastElement.current) {
         //переходимо на останнє повідомлення
         lastUserRef.current = ref;
@@ -35,9 +35,10 @@ const returnRef = (
         infoStore.setIdActive(ref);
         lastElement.current = false;
       } else {
-        chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
+        // chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
         subscribe(
-          chatStore.arrayLastUserRef[chatStore.arrayLastUserRef.length - 1]
+          ref
+          // chatStore.arrayLastUserRef[chatStore.arrayLastUserRef.length - 1]
         );
       }
     }

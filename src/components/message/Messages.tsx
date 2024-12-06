@@ -58,7 +58,7 @@ const Messages: React.FC = () => {
   useScrollLoadingMessage(listRef, lastUserRef);
 
   //Автопрокручування до низу
-  useAutoScroll(blockLastUserRef, lastUserRef);
+  useAutoScroll(lastUserRef);
 
   const prevReturnRef = useCallback(
     (ref: HTMLLIElement | null) => {

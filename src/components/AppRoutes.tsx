@@ -33,8 +33,8 @@ const AppRoutes = () => {
       {/* {!authStore.isAuth && <AuthForms />}
       {authStore.isAuth && ( */}
       <Routes>
-        <Route path="/" element={<AuthForms />} />
-        <Route path="/main" element={<Main />} />
+        {/* <Route path="/" element={<AuthForms />} /> */}
+        <Route path="/" element={<Main />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/about" element={<About />} />
         <Route path="*" element={<NotFound />} />

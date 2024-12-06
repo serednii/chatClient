@@ -15,11 +15,21 @@ const useIntersectionObserver = (
   const handleScrollThrottle = throttle((idNumber) => {
     // console.log("Scrolled:1111111111111111111111111111111111111111111111");
     chatStore.setLastNumberViewMessages(idNumber);
-    sendLastViewMessagesServer({
-      user: chatStore.params.name,
-      room: chatStore.params.room,
-      id: idNumber,
-    });
+
+    console.log(chatStore.dataMessagesId?.viewMessageId, idNumber);
+
+    if (
+      chatStore.dataMessagesId &&
+      chatStore.dataMessagesId.viewMessageId < idNumber
+    ) {
+      sendLastViewMessagesServer({
+        user: chatStore.params.name,
+        room: chatStore.params.room,
+        id: idNumber,
+      });
+    }
+    chatStore.dataMessagesId &&
+      (chatStore.dataMessagesId.viewMessageId = idNumber);
   }, 550);
 
   // Ваші дії при прокрутці }, 200); // Виконується не частіше, ніж раз на 200 мілісекунд
@@ -60,13 +70,15 @@ const useIntersectionObserver = (
             }
 
             // Ваш виклик функції
-            unsubscribe();
-            nextElement =
-              chatStore.deleteFirstElementArrayLastUserRef() || null;
+
+            // unsubscribe();
+            // nextElement =
+            //   chatStore.deleteFirstElementArrayLastUserRef() || null;
+            //   subscribe(nextElement);
+
             // if (isFirstRender.current > 0) {
             //   lastUserRef.current = nextElement;
             // }
-            subscribe(nextElement);
             // console.log("arrayLastUserRef", arrayLastUserRef);
             // console.log("lastUserRef.current", lastUserRef.current);
           }

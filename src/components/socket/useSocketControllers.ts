@@ -8,8 +8,10 @@ import {
 import chatStore from "../../mobx/chatStore";
 import infoStore from "../../mobx/infoStore";
 import {
+  IData,
   IMessage,
   IMessageAdd,
+  IMessagesAdd,
   IMessageStart,
   IParams,
   IUserWrite,
@@ -53,7 +55,7 @@ const useJoin = () => {
 const useMessageStart = () => {
   useEffect(() => {
     const handleMessageStart = ({ messages, data }: IMessageStart) => {
-      // console.log("messageStart----------------------------", messages);
+      console.log("messageStart----------------------------", messages);
 
       if (messages && data) {
         chatStore.setState(messages);
@@ -73,10 +75,28 @@ const useMessageStart = () => {
 const useMessageAdd = () => {
   useEffect(() => {
     const handleMessageAdd = ({ message, data }: IMessageAdd) => {
-      // console.log("useMessageAdd-=-=-=-=-***************---------", message);
+      console.log(
+        "useMessageAdd-=-=-=-=-***************---------",
+        message,
+        data
+      );
       if (message && data) {
         chatStore.addMessageState(message);
-        chatStore.setDataMessagesId(data);
+        // data.viewMessageId = chatStore.dataMessagesId?.viewMessageId || 1;
+        // if (message.author === chatStore.params.name) {
+        //   if (chatStore.arrayLastUserRef.length === 0) {
+        //     data.viewMessageId = data.lastMessageId;
+        //     data.unreadMessagesCount =
+        //       chatStore.dataMessagesId?.unreadMessagesCount || 1;
+        //   } else {
+        //     data.viewMessageId = chatStore.dataMessagesId?.viewMessageId || 1;
+        //   }
+        //   chatStore.setDataMessagesId(data);
+        // } else {
+        //   data.unreadMessagesCount =
+        //     chatStore.dataMessagesId?.unreadMessagesCount || 1;
+        //   chatStore.setDataMessagesId(data);
+        // }
         chatStore.setLoadingAddMessagesFirst(true);
         // chatStore.setLoadingAddMessagesSecond(true);
       }
@@ -89,9 +109,29 @@ const useMessageAdd = () => {
   return {};
 };
 
+const useUpdateDataIdUser = () => {
+  useEffect(() => {
+    const handleUpdateDataIdUser = (data: IData) => {
+      if (data) {
+        console.log("XXXXXXXXXX", data);
+        chatStore.setDataMessagesId(data);
+      }
+    };
+
+    chatStore.socket?.on("updateDataIdUser", handleUpdateDataIdUser);
+    return () => {
+      chatStore.socket?.off("updateDataIdUser", handleUpdateDataIdUser);
+    };
+  }, [chatStore.socket, chatStore.setDataMessagesId]);
+  return {};
+};
+
 const usePrevMessageAdd = () => {
   useEffect(() => {
-    const handlePrevMessageAdd = ({ messages, data }: IMessageStart) => {
+    const handlePrevMessageAdd = ({ messages, data }: IMessagesAdd) => {
+      if (data) {
+        data.viewMessageId = chatStore.dataMessagesId?.viewMessageId || 1;
+      }
       // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
         // chatStore.setLoadingPrevMessagesScroll(true);
@@ -113,11 +153,14 @@ const usePrevMessageAdd = () => {
 
 const useNextMessageAdd = () => {
   useEffect(() => {
-    const handleNextMessageAdd = ({ messages, data }: IMessageStart) => {
+    const handleNextMessageAdd = ({ messages, data }: IMessagesAdd) => {
       // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
-        chatStore.addNextMessages(messages);
-        chatStore.setAddedMessageToLastUserRef(data.viewMessageId);
+        chatStore.addNextMessages(messages); //тут ми міняємо  chatStore.state
+        chatStore.setAddedMessageToLastUserRef(
+          chatStore.dataMessagesId?.viewMessageId || 1
+        ); //тут ми читаємо chatStore.state то буде вже обновлений чи старий
+        // chatStore.setAddedMessageToLastUserRef(data.viewMessageId);
         setTimeout(() => {
           chatStore.setLoadingNextMessagesLoading(false);
         }, 1000);
@@ -243,6 +286,7 @@ const useConnectHooks = () => {
   useDeleteMessageByIdUser();
   useUpdateMessageByIdUser();
   usePrevMessageAdd();
+  useUpdateDataIdUser();
   return {};
 };
 
