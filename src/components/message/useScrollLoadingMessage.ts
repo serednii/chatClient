@@ -28,6 +28,8 @@ const useScrollLoadingMessage = (
       //   // chatStore.isLoadingPrevMessagesLoading,
       //   chatStore.isLoadingNextMessagesLoading
       // );
+      console.log(chatStore.isLoadingNextMessagesLoading);
+
       //Автопідгрузка при скролі догори
       if (
         scrollTop < prevScrollTop.current &&
@@ -50,13 +52,6 @@ const useScrollLoadingMessage = (
           limit: 50,
         });
         infoStore.setUp(true);
-        // infoStore.setIdActive(null);
-        // lastUserRef.current = null;
-        // chatStore.setActiveRef(null);
-        // console.log("EEEEEEEEEEEEE", chatStore.isLoadingPrevMessagesLoading);
-        // console.log(
-        //   "Scrolled to top 25% of the list. Fetching more messages..."
-        // );
       }
       //Автопідгрузка при скролі в низ
       if (

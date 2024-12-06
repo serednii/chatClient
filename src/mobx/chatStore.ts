@@ -19,24 +19,24 @@ class ChatStore {
   message: string;
   userWrite: IUserWrite[];
   userStatus: IUsersName[];
-  isLoadingPrevMessagesScroll: boolean;
+  isLoadingMessage: boolean;
   isLoadingPrevMessagesLoading: boolean;
-  isLoadingAddMessagesFirst: boolean;
-  isLoadingAddMessagesSecond: boolean;
   isLoadingNextMessagesLoading: boolean;
   isLoadingNextMessagesScroll: boolean;
   lastNumberViewMessages: number;
-  isLoadingDataFuncReturn: boolean;
   isBlocked: boolean;
   activeRef: HTMLLIElement | null;
   arrayLastUserRef: (HTMLLIElement | null)[];
-  isAddedMessageToLastUserRef: number | null;
+  isLoadingMessagesStartId: number | null;
   dataMessagesId: IData | null | undefined;
+  // isLoadingPrevMessagesScroll: boolean;
+  // isLoadingAddMessagesSecond: boolean;
+  isLoadingPrevNextMessages: boolean;
 
   constructor() {
     makeAutoObservable(this, {
-      setLoadingAddMessagesFirst: action,
-      setLoadingAddMessagesSecond: action,
+      setLoadingMessage: action,
+      // setLoadingAddMessagesSecond: action,
       setArrayLastUserRef: action,
     });
     this.isWrite = false;
@@ -49,19 +49,19 @@ class ChatStore {
     this.usersName = [];
     this.userWrite = [];
     this.userStatus = [];
-    this.isLoadingPrevMessagesScroll = false;
     this.isLoadingPrevMessagesLoading = false;
     this.isLoadingNextMessagesScroll = false;
     this.isLoadingNextMessagesLoading = false;
-    this.isLoadingDataFuncReturn = false;
-    this.isLoadingAddMessagesFirst = false;
-    this.isLoadingAddMessagesSecond = false;
+    this.isLoadingMessage = false;
     this.lastNumberViewMessages = 1;
     this.isBlocked = false;
     this.activeRef = null;
     this.arrayLastUserRef = [];
-    this.isAddedMessageToLastUserRef = null;
+    this.isLoadingMessagesStartId = null;
     this.dataMessagesId = null;
+    // this.isLoadingPrevMessagesScroll = false;
+    // this.isLoadingAddMessagesSecond = false;
+    this.isLoadingPrevNextMessages = false;
   }
 
   setDataMessagesId(data: IData | null | undefined) {
@@ -69,8 +69,8 @@ class ChatStore {
     this.dataMessagesId = data;
   }
 
-  setAddedMessageToLastUserRef(value: number | null) {
-    this.isAddedMessageToLastUserRef = value;
+  setLoadingMessagesStartId(value: number | null) {
+    this.isLoadingMessagesStartId = value;
   }
 
   setUsersName(usersName: IUsersName[]) {
@@ -153,6 +153,10 @@ class ChatStore {
     this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
   }
 
+  addMessages(messages: IMessage[]) {
+    this.state = messages; // Додаємо нові повідомлення і оновлюємо стан
+  }
+
   deleteMessageById(id: number) {
     this.state = this.state.filter((message) => message.id !== id);
   }
@@ -184,17 +188,17 @@ class ChatStore {
     this.userStatus = userStatus;
   }
 
-  setLoadingPrevMessagesScroll(value: boolean) {
-    this.isLoadingPrevMessagesScroll = value;
-  }
+  // setLoadingPrevMessagesScroll(value: boolean) {
+  //   this.isLoadingPrevMessagesScroll = value;
+  // }
 
   setLoadingNextMessagesScroll(value: boolean) {
     this.isLoadingNextMessagesScroll = value;
   }
 
-  setLoadingDataFuncReturn(value: boolean) {
-    this.isLoadingDataFuncReturn = value;
-  }
+  // setLoadingDataFuncReturn(value: boolean) {
+  //   this.isLoadingDataFuncReturn = value;
+  // }
 
   setLoadingNextMessagesLoading(value: boolean) {
     this.isLoadingNextMessagesLoading = value;
@@ -202,12 +206,12 @@ class ChatStore {
   setLoadingPrevMessagesLoading(value: boolean) {
     this.isLoadingPrevMessagesLoading = value;
   }
-  setLoadingAddMessagesFirst(value: boolean) {
-    this.isLoadingAddMessagesFirst = value;
+  setLoadingMessage(value: boolean) {
+    this.isLoadingMessage = value;
   }
 
-  setLoadingAddMessagesSecond(value: boolean) {
-    this.isLoadingAddMessagesSecond = value;
+  setLoadingPrevNextMessages(value: boolean) {
+    this.isLoadingPrevNextMessages = value;
   }
 
   setLastNumberViewMessages(value: number) {

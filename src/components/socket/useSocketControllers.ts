@@ -61,7 +61,7 @@ const useMessageStart = () => {
         chatStore.setState(messages);
         chatStore.setDataMessagesId(data);
         // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", data);
-        chatStore.setAddedMessageToLastUserRef(data.viewMessageId);
+        chatStore.setLoadingMessagesStartId(data.viewMessageId);
       }
     };
     chatStore.socket?.on("messageStart", handleMessageStart);
@@ -97,7 +97,7 @@ const useMessageAdd = () => {
         //     chatStore.dataMessagesId?.unreadMessagesCount || 1;
         //   chatStore.setDataMessagesId(data);
         // }
-        chatStore.setLoadingAddMessagesFirst(true);
+        chatStore.setLoadingMessage(true);
         // chatStore.setLoadingAddMessagesSecond(true);
       }
     };
@@ -154,13 +154,13 @@ const usePrevMessageAdd = () => {
 const useNextMessageAdd = () => {
   useEffect(() => {
     const handleNextMessageAdd = ({ messages, data }: IMessagesAdd) => {
-      // console.log("handlePrevMessageAdd-----ZZZZZZZZZZ------", messages);
+      console.log("handleMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
-        chatStore.addNextMessages(messages); //тут ми міняємо  chatStore.state
-        chatStore.setAddedMessageToLastUserRef(
-          chatStore.dataMessagesId?.viewMessageId || 1
-        ); //тут ми читаємо chatStore.state то буде вже обновлений чи старий
-        // chatStore.setAddedMessageToLastUserRef(data.viewMessageId);
+        chatStore.addNextMessages(messages);
+        // chatStore.setLoadingMessagesStartId(
+        //   chatStore.dataMessagesId?.viewMessageId || 1
+        // );
+        chatStore.setLoadingMessagesStartId(data.viewMessageId);
         setTimeout(() => {
           chatStore.setLoadingNextMessagesLoading(false);
         }, 1000);
@@ -170,6 +170,27 @@ const useNextMessageAdd = () => {
     chatStore.socket?.on("nextMessagesUser", handleNextMessageAdd);
     return () => {
       chatStore.socket?.off("nextMessagesUser", handleNextMessageAdd);
+    };
+  }, [chatStore.socket]);
+  return {};
+};
+
+const useNextPrevMessageAdd = () => {
+  useEffect(() => {
+    const handleNextPrevMessageAdd = ({ messages, data }: IMessagesAdd) => {
+      console.log("handleMessageAdd-----ZZZZZZZZZZ------", messages);
+      if (messages && messages.length !== 0) {
+        chatStore.addMessages(messages);
+        chatStore.setLoadingPrevNextMessages(true);
+        setTimeout(() => {
+          chatStore.setLoadingPrevNextMessages(false);
+        }, 1000);
+      }
+    };
+
+    chatStore.socket?.on("nextPrevMessagesUser", handleNextPrevMessageAdd);
+    return () => {
+      chatStore.socket?.off("nextPrevMessagesUser", handleNextPrevMessageAdd);
     };
   }, [chatStore.socket]);
   return {};
@@ -279,13 +300,14 @@ const useConnectHooks = () => {
   useJoin();
   useMessageStart();
   useMessageAdd();
-  useNextMessageAdd();
   useMessagesStatus();
   useMessageWrite();
   useMessageRoom();
   useDeleteMessageByIdUser();
   useUpdateMessageByIdUser();
   usePrevMessageAdd();
+  useNextMessageAdd();
+  useNextPrevMessageAdd();
   useUpdateDataIdUser();
   return {};
 };

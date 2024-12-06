@@ -47,13 +47,9 @@ const Messages: React.FC = () => {
   }
   // console.log("CCCCCCCCCCCC", chatStore.arrayLastUserRef);
   const newState = chatStore.state.map((e) => e.id);
-  // console.log("SSSSSSS", newState);
+  console.log("SSSSSSS", newState);
 
-  const { subscribe } = useIntersectionObserver(
-    // arrayLastUserRef,
-    lastUserRef,
-    isFirstRender
-  );
+  const { subscribe } = useIntersectionObserver();
   //Автопідгрузка при скролі догори
   useScrollLoadingMessage(listRef, lastUserRef);
 
@@ -69,10 +65,10 @@ const Messages: React.FC = () => {
 
   useEffect(() => {
     // chatStore.setLoadingPrevMessagesScroll(false);
-    chatStore.setAddedMessageToLastUserRef(null);
+    chatStore.setLoadingMessagesStartId(null);
   }, [
     isEndMapRender.current,
-    chatStore.setAddedMessageToLastUserRef,
+    chatStore.setLoadingMessagesStartId,
     // chatStore.setLoadingPrevMessagesScroll,
   ]);
 
@@ -105,25 +101,39 @@ const Messages: React.FC = () => {
           let MyClassName = itsMe ? styles.me : styles.user;
           MyClassName = itsAdmin ? styles.admin : MyClassName;
 
-          //Якщо підгрузилися нові непрочитанні повідомлення
-          if (chatStore.isAddedMessageToLastUserRef) {
-            if (chatStore.isAddedMessageToLastUserRef < data.id) {
+          //Якщо підгрузилися нові непрочитанні повідомлення також при старті
+          if (chatStore.isLoadingMessagesStartId) {
+            if (chatStore.isLoadingMessagesStartId < data.id) {
               startLastUserRef = true;
             }
-
             if (i === lengthState - 1) {
               lastElement.current = true;
               startLastUserRef = true;
             }
           }
 
-          //Якщо додалося нове повідомлення
-          if (chatStore.isLoadingAddMessagesFirst) {
+          //Якщо додалося нове одне повідомлення
+          if (chatStore.isLoadingMessage) {
             if (i === lengthState - 1) {
               // console.log("BBBBBBBBBBB");
               startLastUserRef = true;
             }
           }
+
+          if (chatStore.isLoadingPrevNextMessages) {
+            if (i === lengthState - 1) {
+              // console.log("BBBBBBBBBBB");
+              startLastUserRef = true;
+            }
+          }
+          
+          // if (chatStore.isLoadingNextMessagesScroll) {
+          //   if (i === lengthState - 1) {
+          //     lastElement.current = true;
+          //     // console.log("BBBBBBBBBBB");
+          //     startLastUserRef = true;
+          //   }
+          // }
 
           if (i === lengthState - 1) {
             isEndMapRender.current = !isEndMapRender.current;

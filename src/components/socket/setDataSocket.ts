@@ -62,6 +62,10 @@ export const sendNextMessagesServer = (getParams: ILastMessages) => {
   chatStore.setBlocked(true);
   chatStore.socket?.emit("getNextMessagesServer", getParams);
 };
+export const sendNextPrevMessagesServer = (getParams: ILastMessages) => {
+  chatStore.setBlocked(true);
+  chatStore.socket?.emit("getNextPrevMessagesServer", getParams);
+};
 
 export const sendLastViewMessagesServer = (getParams: ILastIdViewMessage) =>
   chatStore.socket?.emit("updateLastIdViewMessageServer", getParams);

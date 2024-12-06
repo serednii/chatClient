@@ -54,8 +54,9 @@ const Chat: React.FC = () => {
           {/* {chatStore.arrayLastUserRef.length > 0 && <ReadFullMessages />} */}
         </aside>
         <aside className={styles.InfoNewMessage_wrapper}>
-          {chatStore.dataMessagesId?.unreadMessagesCount ||
-            (0 > 0 && <InfoNewMessage />)}
+          {chatStore.dataMessagesId?.unreadMessagesCount === 0 || (
+            <InfoNewMessage />
+          )}
         </aside>
       </main>
 
