@@ -61,10 +61,12 @@ const useMessageStart = () => {
         chatStore.setState(messages);
         chatStore.setDataMessagesId(data);
         // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", data);
-        chatStore.setLoadingMessagesStartId(data.viewMessageId);
+        chatStore.setLoadingMessagesStartId(true);
       }
     };
+
     chatStore.socket?.on("messageStart", handleMessageStart);
+
     return () => {
       chatStore.socket?.off("messageStart", handleMessageStart);
     };
@@ -82,21 +84,21 @@ const useMessageAdd = () => {
       );
       if (message && data) {
         chatStore.addMessageState(message);
-        // data.viewMessageId = chatStore.dataMessagesId?.viewMessageId || 1;
-        // if (message.author === chatStore.params.name) {
-        //   if (chatStore.arrayLastUserRef.length === 0) {
-        //     data.viewMessageId = data.lastMessageId;
-        //     data.unreadMessagesCount =
-        //       chatStore.dataMessagesId?.unreadMessagesCount || 1;
-        //   } else {
-        //     data.viewMessageId = chatStore.dataMessagesId?.viewMessageId || 1;
-        //   }
-        //   chatStore.setDataMessagesId(data);
-        // } else {
-        //   data.unreadMessagesCount =
-        //     chatStore.dataMessagesId?.unreadMessagesCount || 1;
-        //   chatStore.setDataMessagesId(data);
-        // }
+        data.viewMessageId = chatStore.dataMessagesId?.viewMessageId || 1;
+        if (message.author === chatStore.params.name) {
+          if (chatStore.arrayLastUserRef.length === 0) {
+            data.viewMessageId = data.lastMessageId;
+            data.unreadMessagesCount =
+              chatStore.dataMessagesId?.unreadMessagesCount || 1;
+          } else {
+            data.viewMessageId = chatStore.dataMessagesId?.viewMessageId || 1;
+          }
+          chatStore.setDataMessagesId(data);
+        } else {
+          data.unreadMessagesCount =
+            chatStore.dataMessagesId?.unreadMessagesCount || 1;
+          chatStore.setDataMessagesId(data);
+        }
         chatStore.setLoadingMessage(true);
         // chatStore.setLoadingAddMessagesSecond(true);
       }
@@ -106,23 +108,6 @@ const useMessageAdd = () => {
       chatStore.socket?.off("messageAdd", handleMessageAdd);
     };
   }, [chatStore.socket, chatStore.state]);
-  return {};
-};
-
-const useUpdateDataIdUser = () => {
-  useEffect(() => {
-    const handleUpdateDataIdUser = (data: IData) => {
-      if (data) {
-        console.log("XXXXXXXXXX", data);
-        chatStore.setDataMessagesId(data);
-      }
-    };
-
-    chatStore.socket?.on("updateDataIdUser", handleUpdateDataIdUser);
-    return () => {
-      chatStore.socket?.off("updateDataIdUser", handleUpdateDataIdUser);
-    };
-  }, [chatStore.socket, chatStore.setDataMessagesId]);
   return {};
 };
 
@@ -157,12 +142,9 @@ const useNextMessageAdd = () => {
       console.log("handleMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
         chatStore.addNextMessages(messages);
-        // chatStore.setLoadingMessagesStartId(
-        //   chatStore.dataMessagesId?.viewMessageId || 1
-        // );
-        chatStore.setLoadingMessagesStartId(data.viewMessageId);
+        chatStore.setLoadingNextMessages(true);
         setTimeout(() => {
-          chatStore.setLoadingNextMessagesLoading(false);
+          chatStore.setLoadingNextMessages(false);
         }, 1000);
       }
     };
@@ -180,11 +162,11 @@ const useNextPrevMessageAdd = () => {
     const handleNextPrevMessageAdd = ({ messages, data }: IMessagesAdd) => {
       console.log("handleMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
-        chatStore.addMessages(messages);
+        chatStore.addNextMessages(messages);
         chatStore.setLoadingPrevNextMessages(true);
         setTimeout(() => {
           chatStore.setLoadingPrevNextMessages(false);
-        }, 1000);
+        }, 2000);
       }
     };
 
@@ -243,6 +225,23 @@ const useMessageWrite = () => {
       chatStore.socket?.off("messageWrite", handleStatusMessageWrite);
     };
   }, [chatStore.socket]);
+  return {};
+};
+
+const useUpdateDataIdUser = () => {
+  useEffect(() => {
+    const handleUpdateDataIdUser = (data: IData) => {
+      if (data) {
+        console.log("XXXXXXXXXX", data);
+        chatStore.setDataMessagesId(data);
+      }
+    };
+
+    chatStore.socket?.on("updateDataIdUser", handleUpdateDataIdUser);
+    return () => {
+      chatStore.socket?.off("updateDataIdUser", handleUpdateDataIdUser);
+    };
+  }, [chatStore.socket, chatStore.setDataMessagesId]);
   return {};
 };
 

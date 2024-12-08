@@ -18,6 +18,12 @@ interface ILastMessages {
   limit: number;
 }
 
+interface INum {
+  name: string;
+  room: string;
+  startID: number;
+}
+
 interface ILastIdViewMessage {
   user: string;
   room: string;
@@ -65,6 +71,11 @@ export const sendNextMessagesServer = (getParams: ILastMessages) => {
 export const sendNextPrevMessagesServer = (getParams: ILastMessages) => {
   chatStore.setBlocked(true);
   chatStore.socket?.emit("getNextPrevMessagesServer", getParams);
+};
+
+export const sendStartNum = (getParams: INum) => {
+  console.log(getParams);
+  chatStore.socket?.emit("sendStartNum", getParams);
 };
 
 export const sendLastViewMessagesServer = (getParams: ILastIdViewMessage) =>

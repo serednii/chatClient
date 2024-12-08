@@ -26,9 +26,9 @@ const useScrollLoadingMessage = (
       //   scrollHeight,
       //   clientHeight,
       //   // chatStore.isLoadingPrevMessagesLoading,
-      //   chatStore.isLoadingNextMessagesLoading
+      //   chatStore.isLoadingNextMessages
       // );
-      console.log(chatStore.isLoadingNextMessagesLoading);
+      // console.log(chatStore.isLoadingNextMessages);
 
       //Автопідгрузка при скролі догори
       if (
@@ -57,7 +57,7 @@ const useScrollLoadingMessage = (
       if (
         scrollTop > prevScrollTop.current &&
         scrollTop + clientHeight >= scrollHeight * 0.9 &&
-        !chatStore.isLoadingNextMessagesLoading
+        !chatStore.isLoadingNextMessages
       ) {
         // Якщо прокручуємо вгору і досягли верхньої чверті екрана
 
@@ -72,7 +72,7 @@ const useScrollLoadingMessage = (
         }
 
         //Чекажмо загрузку і блокуємо подальший
-        chatStore.setLoadingNextMessagesLoading(true);
+        chatStore.setLoadingNextMessages(true);
 
         // console.log("UUUUUUUUUUUUUU", nextId);
         nextId &&
@@ -84,7 +84,7 @@ const useScrollLoadingMessage = (
           });
         infoStore.setDown(true);
 
-        // console.log("EEEEEEEEEEEEE", chatStore.isLoadingNextMessagesLoading);
+        // console.log("EEEEEEEEEEEEE", chatStore.isLoadingNextMessages);
         // console.log(
         //   "Scrolled to top 25% of the list. Fetching more messages..."
         // );
@@ -93,12 +93,12 @@ const useScrollLoadingMessage = (
     }
   }, [
     chatStore.isLoadingPrevMessagesLoading,
-    chatStore.isLoadingNextMessagesLoading,
+    chatStore.isLoadingNextMessages,
     listRef.current,
     chatStore.isBlocked,
     chatStore.activeRef,
     chatStore.setLoadingPrevMessagesLoading,
-    chatStore.setLoadingNextMessagesLoading,
+    chatStore.setLoadingNextMessages,
   ]);
 
   //Автопідгрузка при скролі

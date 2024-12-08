@@ -21,21 +21,23 @@ class ChatStore {
   userStatus: IUsersName[];
   isLoadingMessage: boolean;
   isLoadingPrevMessagesLoading: boolean;
-  isLoadingNextMessagesLoading: boolean;
+  isLoadingNextMessages: boolean;
   isLoadingNextMessagesScroll: boolean;
   lastNumberViewMessages: number;
+  isLoadingMessagesNextId: number;
   isBlocked: boolean;
   activeRef: HTMLLIElement | null;
   arrayLastUserRef: (HTMLLIElement | null)[];
-  isLoadingMessagesStartId: number | null;
+  isLoadingMessagesStartId: boolean;
   dataMessagesId: IData | null | undefined;
-  // isLoadingPrevMessagesScroll: boolean;
+  isLastAddElementRef: boolean;
   // isLoadingAddMessagesSecond: boolean;
   isLoadingPrevNextMessages: boolean;
-
+  unsubscribeElements: (() => void) | null;
   constructor() {
     makeAutoObservable(this, {
       setLoadingMessage: action,
+      setLastAddElementRef: action,
       // setLoadingAddMessagesSecond: action,
       setArrayLastUserRef: action,
     });
@@ -51,25 +53,34 @@ class ChatStore {
     this.userStatus = [];
     this.isLoadingPrevMessagesLoading = false;
     this.isLoadingNextMessagesScroll = false;
-    this.isLoadingNextMessagesLoading = false;
+    this.isLoadingNextMessages = false;
     this.isLoadingMessage = false;
     this.lastNumberViewMessages = 1;
     this.isBlocked = false;
     this.activeRef = null;
     this.arrayLastUserRef = [];
-    this.isLoadingMessagesStartId = null;
+    this.isLoadingMessagesStartId = false;
     this.dataMessagesId = null;
-    // this.isLoadingPrevMessagesScroll = false;
+    this.unsubscribeElements = null;
+    this.isLastAddElementRef = false;
     // this.isLoadingAddMessagesSecond = false;
     this.isLoadingPrevNextMessages = false;
+    this.isLoadingMessagesNextId = 0;
+  }
+
+  setLoadingMessagesNextId(value: number) {
+    this.isLoadingMessagesNextId = value;
+  }
+
+  setUnsubscribeElements(value: (() => void) | null) {
+    this.unsubscribeElements = value;
   }
 
   setDataMessagesId(data: IData | null | undefined) {
-    console.log("DDDDDDD", data);
     this.dataMessagesId = data;
   }
 
-  setLoadingMessagesStartId(value: number | null) {
+  setLoadingMessagesStartId(value: boolean) {
     this.isLoadingMessagesStartId = value;
   }
 
@@ -101,8 +112,9 @@ class ChatStore {
     this.params = params;
   }
 
-  setState(state: IMessage[]) {
-    this.state = state;
+  setState(messages: IMessage[]) {
+    this.state = messages;
+    this.filterUniqueMessagesState();
   }
 
   addMessageState(message: IMessage) {
@@ -112,11 +124,24 @@ class ChatStore {
     }
     this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
   }
-  filterUniqueMessages(messages: IMessage[]): IMessage[] {
-    const newMessages: IMessage[] = messages.filter(
-      (m) => !this.state.find((e) => e.id === m.id)
-    );
-    return newMessages;
+
+  // private filterUniqueMessages(messages: IMessage[]): IMessage[] {
+  //   const newMessages: IMessage[] = messages.filter(
+  //     (m) => !this.state.find((e) => e.id === m.id)
+  //   );
+  //   return newMessages;
+  // }
+
+  private filterUniqueMessagesState() {
+    const set = new Set();
+    const newState = [];
+    for (const m of this.state) {
+      if (!set.has(m.id)) {
+        newState.push(m);
+        set.add(m.id);
+      }
+    }
+    this.state = newState;
   }
 
   deleteMessagesRef(messages: IMessage[]) {
@@ -132,8 +157,8 @@ class ChatStore {
   }
 
   addPrevMessages(messages: IMessage[]) {
-    const newMessages: IMessage[] = this.filterUniqueMessages(messages);
-    const fullMessage: IMessage[] = [...newMessages, ...this.state];
+    const fullMessage: IMessage[] = [...messages, ...this.state];
+
     if (fullMessage.length > 300) {
       console.log("HHHHHHH", [...messages]);
       this.state = fullMessage.slice(0, -50); //Видаляємо нові повідомлення
@@ -142,15 +167,16 @@ class ChatStore {
     } else {
       this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
     }
+    this.filterUniqueMessagesState();
   }
 
   addNextMessages(messages: IMessage[]) {
-    const newMessages: IMessage[] = this.filterUniqueMessages(messages);
-    const fullMessage: IMessage[] = [...this.state, ...newMessages];
+    const fullMessage: IMessage[] = [...this.state, ...messages];
     if (fullMessage.length > 300) {
       fullMessage.splice(0, 50); //Видаляємо старі повідомлення
     }
     this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
+    this.filterUniqueMessagesState();
   }
 
   addMessages(messages: IMessage[]) {
@@ -188,9 +214,9 @@ class ChatStore {
     this.userStatus = userStatus;
   }
 
-  // setLoadingPrevMessagesScroll(value: boolean) {
-  //   this.isLoadingPrevMessagesScroll = value;
-  // }
+  setLastAddElementRef(value: boolean) {
+    this.isLastAddElementRef = value;
+  }
 
   setLoadingNextMessagesScroll(value: boolean) {
     this.isLoadingNextMessagesScroll = value;
@@ -200,8 +226,8 @@ class ChatStore {
   //   this.isLoadingDataFuncReturn = value;
   // }
 
-  setLoadingNextMessagesLoading(value: boolean) {
-    this.isLoadingNextMessagesLoading = value;
+  setLoadingNextMessages(value: boolean) {
+    this.isLoadingNextMessages = value;
   }
   setLoadingPrevMessagesLoading(value: boolean) {
     this.isLoadingPrevMessagesLoading = value;
@@ -237,7 +263,7 @@ class ChatStore {
     this.arrayLastUserRef.push(value);
   }
 
-  deleteFirstElementArrayLastUserRef() {
+  deleteFirstElementArrayLastUserRef(): HTMLLIElement | null | undefined {
     return this.arrayLastUserRef.shift();
   }
 }

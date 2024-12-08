@@ -5,6 +5,7 @@ import styles from "./header.module.scss";
 import { observer } from "mobx-react-lite";
 import { sendLeftRoomToServer } from "../socket/setDataSocket";
 import { useNavigate } from "react-router-dom";
+import SetNum from "../../setNum/setNum";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const Header: React.FC = () => {
         )}
       </h2>
       <div className={styles.users}>{chatStore.users} users in this room</div>
+      <SetNum />
       <button className={styles.left} onClick={leftRoom}>
         Left the room
       </button>

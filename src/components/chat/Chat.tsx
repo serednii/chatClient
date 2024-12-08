@@ -13,6 +13,7 @@ import useConnectHooks from "../socket/useSocketControllers";
 import ReadFullMessages from "./ReadFullMessages/ReadFullMessages";
 import { getNextUserId } from "../Util";
 import InfoNewMessage from "./infoNewMessage/InfoNewMessage";
+import GotoEndMessage from "./gotoEndMessage/GotoEndMessage";
 
 const Chat: React.FC = () => {
   const [isReadFullMessages, setReadFullMessages] = useState(false);
@@ -47,17 +48,21 @@ const Chat: React.FC = () => {
         <section className={styles.messages}>
           {chatStore.state.length > 0 && <Messages />}
         </section>
-        <aside className={styles.users_list}>
-          <Users />
-        </aside>
+        <aside className={styles.users_list}>{/* <Users /> */}</aside>
         <aside className={styles.users_list}>
           {/* {chatStore.arrayLastUserRef.length > 0 && <ReadFullMessages />} */}
         </aside>
-        <aside className={styles.InfoNewMessage_wrapper}>
+        {/* <aside className={styles.InfoNewMessage_wrapper}>
           {chatStore.dataMessagesId?.unreadMessagesCount === 0 || (
             <InfoNewMessage />
           )}
         </aside>
+        <aside className={styles.gotoEndMessage_wrapper}>
+          {(chatStore.dataMessagesId &&
+            chatStore.dataMessagesId.unreadMessagesCount > 0) || (
+            <GotoEndMessage />
+          )}
+        </aside> */}
       </main>
 
       <Footer />

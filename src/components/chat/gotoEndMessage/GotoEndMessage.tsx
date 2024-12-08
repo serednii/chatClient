@@ -1,23 +1,22 @@
 import { observer } from "mobx-react-lite";
 import chatStore from "../../../mobx/chatStore";
 import { LiaArrowCircleDownSolid } from "react-icons/lia";
-import styles from "./InfoNewMessage.module.scss";
 import { sendNextPrevMessagesServer } from "../../socket/setDataSocket";
 import { getNextUserId } from "../../Util";
+import styles from "./gotoEndMessage.module.scss";
 
-const InfoNewMessage = () => {
+const GotoEndMessage = () => {
   const handleClick = (event: any) => {
     event.preventDefault();
     // chatStore.setArrayLastUserRef([]);
     // chatStore.setLoadingNextMessagesScroll(true);
-    // const lastId = getNextUserId(chatStore.state) || 1;
+    const lastId = getNextUserId(chatStore.state) || 1;
 
-    // const newData = {
-    //   ...chatStore.dataMessagesId,
-    //   viewMessageId: chatStore.dataMessagesId?.lastMessageId,
-    // };
+    const newData = {
+      ...chatStore.dataMessagesId,
+      viewMessageId: chatStore.dataMessagesId?.lastMessageId,
+    };
 
-    chatStore.unsubscribeElements && chatStore.unsubscribeElements();
     console.log("LLLLLLLLLLLLLLLLL", chatStore.dataMessagesId?.lastMessageId);
     sendNextPrevMessagesServer({
       name: chatStore.params.name,
@@ -29,10 +28,6 @@ const InfoNewMessage = () => {
 
   return (
     <div className={styles.infoNewMessage}>
-      You have {chatStore.dataMessagesId?.unreadMessagesCount} new{" "}
-      {chatStore.dataMessagesId?.unreadMessagesCount === 1
-        ? "message"
-        : "messages"}
       <button onClick={handleClick}>
         <LiaArrowCircleDownSolid style={{ fontSize: "40px", color: "red" }} />
       </button>
@@ -40,4 +35,4 @@ const InfoNewMessage = () => {
   );
 };
 
-export default observer(InfoNewMessage);
+export default observer(GotoEndMessage);

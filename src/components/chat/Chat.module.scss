@@ -26,7 +26,7 @@ main {
 }
 
 .messages {
-  // flex-grow: 1;
+
   width: 100%;
   color: #fff;
   font-size: 18px;
@@ -35,10 +35,19 @@ main {
   height: inherit;
 }
 
-.InfoNewMessage_wrapper {
+.InfoNewMessage_wrapper,
+.gotoEndMessage_wrapper {
   position: absolute;
   z-index: 10;
   bottom: 0;
   left: 350px;
+
+}
+
+.gotoEndMessage_wrapper {
+  position: absolute;
+  left: auto;
+  bottom: 15px;
+  right: 40px;
 
 }

@@ -19,6 +19,7 @@ function areDifferentDays(prevDate: string, todayDate: string) {
     prev.getDate() !== today.getDate()
   );
 }
+
 const Messages: React.FC = () => {
   // console.log("RENDER MESSAGES");
   //Коли ми редагуємо повідомлення то не прокручувати
@@ -29,7 +30,6 @@ const Messages: React.FC = () => {
   const isFirstRender = useRef<number>(-1);
   const isEndMapRender = useRef<boolean>(false);
   const lastElement = useRef<boolean>(false);
-
   const prevDate = useRef<string>("");
 
   //Перший елемент з якого починаються непереглянуті повідомлення
@@ -45,11 +45,13 @@ const Messages: React.FC = () => {
     lastUserRef.current = null;
     chatStore.setArrayLastUserRef([]);
   }
-  // console.log("CCCCCCCCCCCC", chatStore.arrayLastUserRef);
-  const newState = chatStore.state.map((e) => e.id);
-  console.log("SSSSSSS", newState);
 
-  const { subscribe } = useIntersectionObserver();
+  const newState = chatStore.state.map((e) => e.id);
+  // console.log("SSSSSSS", newState);
+
+  useIntersectionObserver();
+
+  // console.log(observerRef);
   //Автопідгрузка при скролі догори
   useScrollLoadingMessage(listRef, lastUserRef);
 
@@ -58,18 +60,18 @@ const Messages: React.FC = () => {
 
   const prevReturnRef = useCallback(
     (ref: HTMLLIElement | null) => {
-      returnRef(ref, lastElement, lastUserRef, subscribe);
+      returnRef(ref, lastElement, lastUserRef);
     },
-    [isMyMessage, lastUserRef, subscribe, lastElement.current]
+    [isMyMessage, lastUserRef, lastElement.current]
   );
 
   useEffect(() => {
-    // chatStore.setLoadingPrevMessagesScroll(false);
-    chatStore.setLoadingMessagesStartId(null);
+    chatStore.setLoadingMessagesStartId(false);
+    chatStore.setLoadingNextMessages(false);
   }, [
     isEndMapRender.current,
     chatStore.setLoadingMessagesStartId,
-    // chatStore.setLoadingPrevMessagesScroll,
+    chatStore.setLoadingNextMessages,
   ]);
 
   return (
@@ -80,7 +82,6 @@ const Messages: React.FC = () => {
           const { author, message, id, date } = data;
 
           const isPrevDey = areDifferentDays(prevDate.current, date);
-          // console.log(isPrevDey, prevDate.current, date); // Виведе: true
 
           prevDate.current = date;
 
@@ -101,14 +102,43 @@ const Messages: React.FC = () => {
           let MyClassName = itsMe ? styles.me : styles.user;
           MyClassName = itsAdmin ? styles.admin : MyClassName;
 
-          //Якщо підгрузилися нові непрочитанні повідомлення також при старті
-          if (chatStore.isLoadingMessagesStartId) {
-            if (chatStore.isLoadingMessagesStartId < data.id) {
-              startLastUserRef = true;
-            }
+          //Якщо підгрузилися  повідомлення  при старті
+          // console.log(chatStore.isLoadingMessagesStartId, id);
+          if (chatStore.isLoadingMessagesStartId && chatStore.dataMessagesId) {
             if (i === lengthState - 1) {
-              lastElement.current = true;
-              startLastUserRef = true;
+              chatStore.setLastAddElementRef(true);
+              console.log(chatStore.arrayLastUserRef);
+            }
+            //якщо  всі повідомлення переглянуті
+            if (
+              chatStore.dataMessagesId.viewMessageId ===
+              chatStore.dataMessagesId.lastMessageId
+            ) {
+              if (i === lengthState - 1) {
+                //переходимо на останній елемент
+                // console.log("BBBBBBBBBBB");
+                startLastUserRef = true;
+              }
+            } else {
+              //якщо не всі повідомлення переглянуті
+              if (chatStore.dataMessagesId.viewMessageId < id) {
+                if (chatStore.dataMessagesId.viewMessageId + 1 === id) {
+                  //переходимо на ел слідуючий за преглянутим
+                  lastElement.current = true; //вказуємо що то буде останній елемент
+                }
+                startLastUserRef = true;
+              }
+            }
+          }
+
+          //-----------------------------------------------------------------------------
+          //Якщо підгрузилися  повідомлення  при скролі в низ
+          if (chatStore.isLoadingNextMessages) {
+            // console.log(chatStore.isLoadingMessagesStartId, id);
+            startLastUserRef = true;
+            if (i === lengthState - 1) {
+              chatStore.setLastAddElementRef(true);
+              console.log(chatStore.arrayLastUserRef);
             }
           }
 
@@ -126,7 +156,7 @@ const Messages: React.FC = () => {
               startLastUserRef = true;
             }
           }
-          
+
           // if (chatStore.isLoadingNextMessagesScroll) {
           //   if (i === lengthState - 1) {
           //     lastElement.current = true;
