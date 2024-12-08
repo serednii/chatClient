@@ -30,14 +30,13 @@ class ChatStore {
   arrayLastUserRef: (HTMLLIElement | null)[];
   isLoadingMessagesStartId: boolean;
   dataMessagesId: IData | null | undefined;
-  isLastAddElementRef: boolean;
+
   // isLoadingAddMessagesSecond: boolean;
   isLoadingPrevNextMessages: boolean;
   unsubscribeElements: (() => void) | null;
   constructor() {
     makeAutoObservable(this, {
       setLoadingMessage: action,
-      setLastAddElementRef: action,
       // setLoadingAddMessagesSecond: action,
       setArrayLastUserRef: action,
     });
@@ -62,7 +61,7 @@ class ChatStore {
     this.isLoadingMessagesStartId = false;
     this.dataMessagesId = null;
     this.unsubscribeElements = null;
-    this.isLastAddElementRef = false;
+
     // this.isLoadingAddMessagesSecond = false;
     this.isLoadingPrevNextMessages = false;
     this.isLoadingMessagesNextId = 0;
@@ -212,10 +211,6 @@ class ChatStore {
 
   setUserStatus(userStatus: IUsersName[]) {
     this.userStatus = userStatus;
-  }
-
-  setLastAddElementRef(value: boolean) {
-    this.isLastAddElementRef = value;
   }
 
   setLoadingNextMessagesScroll(value: boolean) {

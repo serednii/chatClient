@@ -31,7 +31,7 @@ const Messages: React.FC = () => {
   const isEndMapRender = useRef<boolean>(false);
   const lastElement = useRef<boolean>(false);
   const prevDate = useRef<string>("");
-
+  const isLastAddElementRef = useRef<boolean>(false);
   //Перший елемент з якого починаються непереглянуті повідомлення
   let startLastUserRef: boolean = false;
   const lengthState: number | undefined = chatStore?.state?.length;
@@ -47,9 +47,9 @@ const Messages: React.FC = () => {
   }
 
   const newState = chatStore.state.map((e) => e.id);
-  // console.log("SSSSSSS", newState);
+  console.log("SSSSSSS", newState);
 
-  useIntersectionObserver();
+  useIntersectionObserver(isLastAddElementRef);
 
   // console.log(observerRef);
   //Автопідгрузка при скролі догори
@@ -106,7 +106,7 @@ const Messages: React.FC = () => {
           // console.log(chatStore.isLoadingMessagesStartId, id);
           if (chatStore.isLoadingMessagesStartId && chatStore.dataMessagesId) {
             if (i === lengthState - 1) {
-              chatStore.setLastAddElementRef(true);
+              isLastAddElementRef.current = true;
               console.log(chatStore.arrayLastUserRef);
             }
             //якщо  всі повідомлення переглянуті
@@ -137,7 +137,7 @@ const Messages: React.FC = () => {
             // console.log(chatStore.isLoadingMessagesStartId, id);
             startLastUserRef = true;
             if (i === lengthState - 1) {
-              chatStore.setLastAddElementRef(true);
+              isLastAddElementRef.current = true;
               console.log(chatStore.arrayLastUserRef);
             }
           }

@@ -5,7 +5,7 @@ import { sendLastViewMessagesServer } from "../socket/setDataSocket";
 import throttle from "lodash/throttle";
 import infoStore from "../../mobx/infoStore";
 
-const useIntersectionObserver = () => {
+const useIntersectionObserver = (isLastAddElementRef: any) => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const processedElements = useRef(new Set<Element>());
 
@@ -18,10 +18,10 @@ const useIntersectionObserver = () => {
     if (observerRef.current && chatStore.arrayLastUserRef.length > 0) {
       chatStore.arrayLastUserRef.forEach((ref) => subscribe(ref));
 
-      chatStore.setLastAddElementRef(false);
+      isLastAddElementRef.current = false
       chatStore.setArrayLastUserRef([]);
     }
-  }, [observerRef.current, chatStore.isLastAddElementRef]);
+  }, [observerRef.current, isLastAddElementRef.current]);
 
   const handleScrollThrottle = throttle((idNumber) => {
     chatStore.setLastNumberViewMessages(idNumber);
