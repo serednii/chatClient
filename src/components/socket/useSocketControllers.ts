@@ -1,22 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { CardHeader } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import {
-  addLastIdMessageViewLocalStorage,
-  getLastIdMessageViewLocalStorage,
-} from "../../localStorage/localStorage";
 import chatStore from "../../mobx/chatStore";
-import infoStore from "../../mobx/infoStore";
 import {
   IData,
-  IMessage,
   IMessageAdd,
   IMessagesAdd,
   IMessageStart,
   IParams,
   IUserWrite,
 } from "../interface";
-import { getNextUserId } from "../Util";
 import { sendJoinToServer } from "./setDataSocket";
 import useWebSocket from "./useWebsocket";
 

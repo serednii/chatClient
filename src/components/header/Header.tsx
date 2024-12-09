@@ -28,7 +28,7 @@ const Header: React.FC = () => {
         )}
       </h2>
       <div className={styles.users}>{chatStore.users} users in this room</div>
-      <SetNum />
+      {/* <SetNum /> */}
       <button className={styles.left} onClick={leftRoom}>
         Left the room
       </button>

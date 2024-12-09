@@ -74,9 +74,9 @@ export const sendNextPrevMessagesServer = (getParams: ILastMessages) => {
 };
 
 export const sendStartNum = (getParams: INum) => {
-  console.log(getParams);
+  // console.log(getParams);
   chatStore.socket?.emit("sendStartNum", getParams);
 };
-
+//for test
 export const sendLastViewMessagesServer = (getParams: ILastIdViewMessage) =>
   chatStore.socket?.emit("updateLastIdViewMessageServer", getParams);

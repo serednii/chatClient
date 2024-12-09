@@ -44,7 +44,7 @@ const returnRef = (
         chatStore.dataMessagesId.viewMessageId ===
         chatStore.dataMessagesId.lastMessageId
       ) {
-        console.log(ref);
+        // console.log(ref);
         lastUserRef.current = ref;
         //переходимо на останнє повідомлення
         infoStore.setIdActive(ref);

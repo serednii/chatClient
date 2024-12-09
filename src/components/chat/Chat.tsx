@@ -37,12 +37,12 @@ const Chat: React.FC = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  console.log(
-    isStartChat,
-    isReadFullMessages,
-    chatStore.isMoveTop,
-    chatStore.dataMessagesId?.unreadMessagesCount
-  );
+  // console.log(
+  //   isStartChat,
+  //   isReadFullMessages,
+  //   chatStore.isMoveTop,
+  //   chatStore.dataMessagesId?.unreadMessagesCount
+  // );
 
   return (
     <div className={styles.wrap}>
@@ -51,7 +51,9 @@ const Chat: React.FC = () => {
         <section className={styles.messages}>
           {chatStore.state.length > 0 && <Messages />}
         </section>
-        <aside className={styles.users_list}>{/* <Users /> */}</aside>
+        <aside className={styles.users_list}>
+          <Users />
+        </aside>
         <aside className={styles.users_list}></aside>
 
         <aside className={styles.InfoNewMessage_wrapper}>
@@ -61,12 +63,12 @@ const Chat: React.FC = () => {
             ))}
         </aside>
 
-        {/* <aside className={styles.gotoEndMessage_wrapper}>
+        <aside className={styles.gotoEndMessage_wrapper}>
           {isStartChat &&
             chatStore.dataMessagesId?.unreadMessagesCount === 0 &&
             chatStore.isMoveTop &&
             isReadFullMessages.current && <GotoEndMessage />}
-        </aside> */}
+        </aside>
 
         {/* <aside className={styles.gotoEndMessage_wrapper}>
           {isReadFullMessages && <GotoEndMessage />}

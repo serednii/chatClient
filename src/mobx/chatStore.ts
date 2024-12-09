@@ -123,7 +123,7 @@ class ChatStore {
       fullMessage.splice(0, 50);
     }
     this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
-    console.log(this.state);
+    // console.log(this.state);
   }
 
   // private filterUniqueMessages(messages: IMessage[]): IMessage[] {
@@ -161,7 +161,7 @@ class ChatStore {
     const fullMessage: IMessage[] = [...messages, ...this.state];
 
     if (fullMessage.length > 300) {
-      console.log("HHHHHHH", [...messages]);
+      // console.log("HHHHHHH", [...messages]);
       this.state = fullMessage.slice(0, -50); //Видаляємо нові повідомлення
 
       this.deleteMessagesRef(fullMessage.slice(-50));

@@ -158,14 +158,6 @@ const Messages: React.FC = () => {
             }
           }
 
-          // if (chatStore.isLoadingNextMessagesScroll) {
-          //   if (i === lengthState - 1) {
-          //     lastElement.current = true;
-          //     // console.log("BBBBBBBBBBB");
-          //     startLastUserRef = true;
-          //   }
-          // }
-
           if (i === lengthState - 1) {
             isEndMapRender.current = !isEndMapRender.current;
           }

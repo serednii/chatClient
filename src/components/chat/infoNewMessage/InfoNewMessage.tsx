@@ -20,7 +20,7 @@ const InfoNewMessage: React.FC<InfoNewMessageProps> = ({
       isReadFullMessages.current = true;
     }, 1000);
     chatStore.unsubscribeElements && chatStore.unsubscribeElements();
-    console.log("LLLLLLLLLLLLLLLLL", chatStore.dataMessagesId?.lastMessageId);
+    // console.log("LLLLLLLLLLLLLLLLL", chatStore.dataMessagesId?.lastMessageId);
     sendNextPrevMessagesServer({
       name: chatStore.params.name,
       room: chatStore.params.room,

@@ -34,7 +34,7 @@ interface IControllerMessages {
 
 const controllerMessages: IControllerMessages = {
   handleDeleteMessage: (divRef, setBlockLastUserRef) => {
-    console.log("handleDeleteMessage");
+    // console.log("handleDeleteMessage");
     // chatStore.setDeleteMessage(true);
     if (divRef.current) {
       const dataIdStr = divRef.current.getAttribute("data-id");
