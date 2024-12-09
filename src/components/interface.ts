@@ -40,9 +40,9 @@ interface IUser {
 }
 
 export interface IData {
-  viewMessageId: number;
   firstMessageId: number;
   lastMessageId: number;
+  viewMessageId: number;
   unreadMessagesCount: number;
 }
 export interface IMessageStart {

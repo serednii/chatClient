@@ -1,24 +1,21 @@
 import { useCallback, useEffect, useRef } from "react";
-import { addLastIdMessageViewLocalStorage } from "../../localStorage/localStorage";
 import chatStore from "../../mobx/chatStore";
 import { sendLastViewMessagesServer } from "../socket/setDataSocket";
 import throttle from "lodash/throttle";
-import infoStore from "../../mobx/infoStore";
 
 const useIntersectionObserver = (isLastAddElementRef: any) => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const processedElements = useRef(new Set<Element>());
 
-  // console.log(
-  //   "1111111111111111111111111111111111111",
-  //   observerRef.current // отут ==null
-  // );
+  // console.log("RENDER useIntersectionObserver");
 
   useEffect(() => {
     if (observerRef.current && chatStore.arrayLastUserRef.length > 0) {
-      chatStore.arrayLastUserRef.forEach((ref) => subscribe(ref));
-
-      isLastAddElementRef.current = false
+      chatStore.arrayLastUserRef.forEach((ref) => {
+        subscribe(ref);
+        // console.log("subscribe ----- ", observerRef.current, ref); //==null
+      });
+      isLastAddElementRef.current = false;
       chatStore.setArrayLastUserRef([]);
     }
   }, [observerRef.current, isLastAddElementRef.current]);
@@ -36,8 +33,7 @@ const useIntersectionObserver = (isLastAddElementRef: any) => {
         room: chatStore.params.room,
         id: idNumber,
       });
-    }
-    if (chatStore.dataMessagesId) {
+
       chatStore.setDataMessagesId({
         ...chatStore.dataMessagesId,
         viewMessageId: idNumber,
@@ -49,7 +45,6 @@ const useIntersectionObserver = (isLastAddElementRef: any) => {
 
   const subscribe = useCallback(
     (nextElement: Element | null | undefined) => {
-      // console.log("subscribe ----- ", observerRef.current); //==null
       if (nextElement) {
         observerRef.current?.observe(nextElement);
         processedElements.current.add(nextElement);
@@ -98,7 +93,7 @@ const useIntersectionObserver = (isLastAddElementRef: any) => {
     //Створення нового Intersection Observer:
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        console.log(entries);
+        // console.log(entries);
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             if (processedElements.current.has(entry.target)) {

@@ -8,14 +8,6 @@ import styles from "./gotoEndMessage.module.scss";
 const GotoEndMessage = () => {
   const handleClick = (event: any) => {
     event.preventDefault();
-    // chatStore.setArrayLastUserRef([]);
-    // chatStore.setLoadingNextMessagesScroll(true);
-    const lastId = getNextUserId(chatStore.state) || 1;
-
-    const newData = {
-      ...chatStore.dataMessagesId,
-      viewMessageId: chatStore.dataMessagesId?.lastMessageId,
-    };
 
     console.log("LLLLLLLLLLLLLLLLL", chatStore.dataMessagesId?.lastMessageId);
     sendNextPrevMessagesServer({

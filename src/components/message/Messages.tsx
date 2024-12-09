@@ -47,7 +47,7 @@ const Messages: React.FC = () => {
   }
 
   const newState = chatStore.state.map((e) => e.id);
-  console.log("SSSSSSS", newState);
+  // console.log("SSSSSSS", newState);
 
   useIntersectionObserver(isLastAddElementRef);
 
@@ -107,7 +107,7 @@ const Messages: React.FC = () => {
           if (chatStore.isLoadingMessagesStartId && chatStore.dataMessagesId) {
             if (i === lengthState - 1) {
               isLastAddElementRef.current = true;
-              console.log(chatStore.arrayLastUserRef);
+              // console.log(chatStore.arrayLastUserRef);
             }
             //якщо  всі повідомлення переглянуті
             if (
@@ -138,7 +138,7 @@ const Messages: React.FC = () => {
             startLastUserRef = true;
             if (i === lengthState - 1) {
               isLastAddElementRef.current = true;
-              console.log(chatStore.arrayLastUserRef);
+              // console.log(chatStore.arrayLastUserRef);
             }
           }
 
@@ -146,6 +146,7 @@ const Messages: React.FC = () => {
           if (chatStore.isLoadingMessage) {
             if (i === lengthState - 1) {
               // console.log("BBBBBBBBBBB");
+              isLastAddElementRef.current = true;
               startLastUserRef = true;
             }
           }

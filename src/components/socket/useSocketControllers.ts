@@ -55,7 +55,7 @@ const useJoin = () => {
 const useMessageStart = () => {
   useEffect(() => {
     const handleMessageStart = ({ messages, data }: IMessageStart) => {
-      console.log("messageStart----------------------------", messages);
+      // console.log("messageStart----------------------------", messages);
 
       if (messages && data) {
         chatStore.setState(messages);
@@ -77,30 +77,28 @@ const useMessageStart = () => {
 const useMessageAdd = () => {
   useEffect(() => {
     const handleMessageAdd = ({ message, data }: IMessageAdd) => {
-      console.log(
-        "useMessageAdd-=-=-=-=-***************---------",
-        message,
-        data
-      );
-      if (message && data) {
-        chatStore.addMessageState(message);
-        data.viewMessageId = chatStore.dataMessagesId?.viewMessageId || 1;
-        if (message.author === chatStore.params.name) {
-          if (chatStore.arrayLastUserRef.length === 0) {
-            data.viewMessageId = data.lastMessageId;
-            data.unreadMessagesCount =
-              chatStore.dataMessagesId?.unreadMessagesCount || 1;
-          } else {
-            data.viewMessageId = chatStore.dataMessagesId?.viewMessageId || 1;
-          }
-          chatStore.setDataMessagesId(data);
-        } else {
-          data.unreadMessagesCount =
-            chatStore.dataMessagesId?.unreadMessagesCount || 1;
-          chatStore.setDataMessagesId(data);
-        }
+      // console.log(
+      //   "useMessageAdd-=-=-=-=-***************---------",
+      //   message,
+      //   data
+      // );
+      if (message && data && chatStore.dataMessagesId) {
         chatStore.setLoadingMessage(true);
-        // chatStore.setLoadingAddMessagesSecond(true);
+        chatStore.addMessageState(message);
+
+        data.viewMessageId = chatStore.dataMessagesId.viewMessageId;
+        data.unreadMessagesCount = chatStore.dataMessagesId.unreadMessagesCount;
+        if (message.author !== "Admin") {
+          if (message.author === chatStore.params.name) {
+            //if user added message
+            if (data.unreadMessagesCount === 0) {
+              data.viewMessageId = data.lastMessageId;
+            }
+          } else {
+            data.unreadMessagesCount++;
+          }
+        }
+        chatStore.setDataMessagesId(data);
       }
     };
     chatStore.socket?.on("messageAdd", handleMessageAdd);
@@ -139,7 +137,7 @@ const usePrevMessageAdd = () => {
 const useNextMessageAdd = () => {
   useEffect(() => {
     const handleNextMessageAdd = ({ messages, data }: IMessagesAdd) => {
-      console.log("handleMessageAdd-----ZZZZZZZZZZ------", messages);
+      // console.log("handleMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
         chatStore.addNextMessages(messages);
         chatStore.setLoadingNextMessages(true);
@@ -160,13 +158,18 @@ const useNextMessageAdd = () => {
 const useNextPrevMessageAdd = () => {
   useEffect(() => {
     const handleNextPrevMessageAdd = ({ messages, data }: IMessagesAdd) => {
-      console.log("handleMessageAdd-----ZZZZZZZZZZ------", messages);
-      if (messages && messages.length !== 0) {
+      // console.log("handleMessageAdd-----ZZZZZZZZZZ------", messages);
+      if (messages && messages.length !== 0 && data) {
+        chatStore.setDataMessagesId({
+          ...data,
+          viewMessageId: data.lastMessageId,
+          unreadMessagesCount: 0,
+        });
         chatStore.addNextMessages(messages);
         chatStore.setLoadingPrevNextMessages(true);
         setTimeout(() => {
           chatStore.setLoadingPrevNextMessages(false);
-        }, 2000);
+        }, 1000);
       }
     };
 
@@ -232,7 +235,7 @@ const useUpdateDataIdUser = () => {
   useEffect(() => {
     const handleUpdateDataIdUser = (data: IData) => {
       if (data) {
-        console.log("XXXXXXXXXX", data);
+        // console.log("XXXXXXXXXX", data);
         chatStore.setDataMessagesId(data);
       }
     };

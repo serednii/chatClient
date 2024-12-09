@@ -30,14 +30,13 @@ class ChatStore {
   arrayLastUserRef: (HTMLLIElement | null)[];
   isLoadingMessagesStartId: boolean;
   dataMessagesId: IData | null | undefined;
-
-  // isLoadingAddMessagesSecond: boolean;
+  isMoveTop: boolean;
   isLoadingPrevNextMessages: boolean;
   unsubscribeElements: (() => void) | null;
+
   constructor() {
     makeAutoObservable(this, {
       setLoadingMessage: action,
-      // setLoadingAddMessagesSecond: action,
       setArrayLastUserRef: action,
     });
     this.isWrite = false;
@@ -61,10 +60,12 @@ class ChatStore {
     this.isLoadingMessagesStartId = false;
     this.dataMessagesId = null;
     this.unsubscribeElements = null;
-
-    // this.isLoadingAddMessagesSecond = false;
+    this.isMoveTop = false;
     this.isLoadingPrevNextMessages = false;
     this.isLoadingMessagesNextId = 0;
+  }
+  setMoveTop(value: boolean) {
+    this.isMoveTop = value;
   }
 
   setLoadingMessagesNextId(value: number) {
@@ -122,6 +123,7 @@ class ChatStore {
       fullMessage.splice(0, 50);
     }
     this.state = fullMessage; // Додаємо нові повідомлення і оновлюємо стан
+    console.log(this.state);
   }
 
   // private filterUniqueMessages(messages: IMessage[]): IMessage[] {

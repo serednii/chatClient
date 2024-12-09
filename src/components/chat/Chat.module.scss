@@ -5,19 +5,16 @@
   align-items: center;
   flex-direction: column;
   color: #fff;
-  // padding-top: 65px;
+
 }
 
 main {
-  // display: flex;
   width: 100%;
-  // flex-grow: 1;
   height: calc(100vh - 132px);
   position: relative;
 }
 
 .users_list {
-  // flex: 150px 1 1;
   overflow-y: auto;
   position: absolute;
   top: 0px;
@@ -26,7 +23,6 @@ main {
 }
 
 .messages {
-
   width: 100%;
   color: #fff;
   font-size: 18px;
@@ -40,14 +36,14 @@ main {
   position: absolute;
   z-index: 10;
   bottom: 0;
-  left: 350px;
+  right: 30px;
 
 }
 
 .gotoEndMessage_wrapper {
   position: absolute;
   left: auto;
-  bottom: 15px;
+  bottom: 150px;
   right: 40px;
 
 }

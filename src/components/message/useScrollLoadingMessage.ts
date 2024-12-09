@@ -7,24 +7,43 @@ import {
   sendPrevMessagesServer,
 } from "../socket/setDataSocket";
 import { getNextUserId, getPrevUserId } from "../Util";
-
+const checkIfScrollAtBottom = (
+  scrollHeight: number,
+  clientHeight: number,
+  scrollTop: number
+): boolean => {
+  return scrollHeight - clientHeight - 20 > scrollTop;
+};
 const useScrollLoadingMessage = (
   listRef: React.MutableRefObject<HTMLUListElement | null>,
   lastUserRef: React.MutableRefObject<HTMLLIElement | null>
 ) => {
   const prevScrollTop = useRef<number>(0); // Зберігаємо попереднє значення scrollTop
+  const isChangeScroll = useRef<boolean>(false);
+
   const handleScroll = useCallback(() => {
     if (listRef.current) {
       const { scrollTop, clientHeight, scrollHeight } = listRef.current;
+      const isMoveTop = checkIfScrollAtBottom(scrollHeight, clientHeight, scrollTop);
+
+      if (isMoveTop !== isChangeScroll.current) {
+        chatStore.setMoveTop(isMoveTop)
+        isChangeScroll.current = isMoveTop
+      }
+
       // console.log(
       //   "EEEEEEEEEEEEE",
       //   parseInt(scrollTop.toString()),
-      //   parseInt(prevScrollTop.current.toString()),
-      //   scrollTop + clientHeight,
-      //   scrollHeight * 0.9,
-      //   scrollHeight * 0.25,
+      //   // parseInt(prevScrollTop.current.toString()),
+      //   // scrollTop + clientHeight,
+      //   // scrollHeight * 0.9,
+      //   // scrollHeight * 0.25,
       //   scrollHeight,
       //   clientHeight,
+      //   scrollHeight - clientHeight - 20 > scrollTop,
+      //   scrollHeight - clientHeight,
+
+      //   scrollTop + clientHeight >= scrollHeight,
       //   // chatStore.isLoadingPrevMessagesLoading,
       //   chatStore.isLoadingNextMessages
       // );
@@ -95,8 +114,6 @@ const useScrollLoadingMessage = (
     chatStore.isLoadingPrevMessagesLoading,
     chatStore.isLoadingNextMessages,
     listRef.current,
-    chatStore.isBlocked,
-    chatStore.activeRef,
     chatStore.setLoadingPrevMessagesLoading,
     chatStore.setLoadingNextMessages,
   ]);

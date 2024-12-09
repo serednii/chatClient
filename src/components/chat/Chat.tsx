@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Messages from "../message/Messages";
 import Users from "../users/Users";
 import Footer from "../footer/Footer";
@@ -16,7 +16,10 @@ import InfoNewMessage from "./infoNewMessage/InfoNewMessage";
 import GotoEndMessage from "./gotoEndMessage/GotoEndMessage";
 
 const Chat: React.FC = () => {
-  const [isReadFullMessages, setReadFullMessages] = useState(false);
+  // const [isReadFullMessages, setReadFullMessages] = useState<boolean>(true);
+  const isReadFullMessages = useRef<boolean>(true);
+  const [isStartChat, setStartChat] = useState<boolean>(false);
+
   // console.log("RENDER CHAT");
   useConnectHooks();
   useEffect(() => {
@@ -26,20 +29,20 @@ const Chat: React.FC = () => {
       clearSetWrite();
     }
   }, [chatStore.isDeleteMessage]);
-  useEffect(() => {
-    const lastId = getNextUserId(chatStore.state);
-    setReadFullMessages(lastId !== chatStore.dataMessagesId?.lastMessageId);
-  }, [chatStore.state, chatStore.dataMessagesId]);
 
-  // let counterNewMessage: boolean | undefined = true;
-  // if (chatStore.dataMessagesId) {
-  //   if (
-  //     chatStore.dataMessagesId?.viewMessageId <
-  //     chatStore.dataMessagesId?.lastMessageId
-  //   ) {
-  //     counterNewMessage = true;
-  //   }
-  // }
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setStartChat(true);
+    }, 600);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  console.log(
+    isStartChat,
+    isReadFullMessages,
+    chatStore.isMoveTop,
+    chatStore.dataMessagesId?.unreadMessagesCount
+  );
 
   return (
     <div className={styles.wrap}>
@@ -49,19 +52,24 @@ const Chat: React.FC = () => {
           {chatStore.state.length > 0 && <Messages />}
         </section>
         <aside className={styles.users_list}>{/* <Users /> */}</aside>
-        <aside className={styles.users_list}>
-          {/* {chatStore.arrayLastUserRef.length > 0 && <ReadFullMessages />} */}
+        <aside className={styles.users_list}></aside>
+
+        <aside className={styles.InfoNewMessage_wrapper}>
+          {chatStore.dataMessagesId?.unreadMessagesCount === 0 ||
+            (isStartChat && (
+              <InfoNewMessage isReadFullMessages={isReadFullMessages} />
+            ))}
         </aside>
-        {/* <aside className={styles.InfoNewMessage_wrapper}>
-          {chatStore.dataMessagesId?.unreadMessagesCount === 0 || (
-            <InfoNewMessage />
-          )}
-        </aside>
-        <aside className={styles.gotoEndMessage_wrapper}>
-          {(chatStore.dataMessagesId &&
-            chatStore.dataMessagesId.unreadMessagesCount > 0) || (
-            <GotoEndMessage />
-          )}
+
+        {/* <aside className={styles.gotoEndMessage_wrapper}>
+          {isStartChat &&
+            chatStore.dataMessagesId?.unreadMessagesCount === 0 &&
+            chatStore.isMoveTop &&
+            isReadFullMessages.current && <GotoEndMessage />}
+        </aside> */}
+
+        {/* <aside className={styles.gotoEndMessage_wrapper}>
+          {isReadFullMessages && <GotoEndMessage />}
         </aside> */}
       </main>
 

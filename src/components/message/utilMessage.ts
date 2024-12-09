@@ -11,24 +11,35 @@ const returnRef = (
 ): void => {
   if (ref) {
     // console.log("CCCCCCCCCCCCCCCCCC", ref);
+
     //Коли добавляємо по одному повідомленню
     if (chatStore.isLoadingMessage) {
-      chatStore.setLoadingMessage(false);
-      if (
-        chatStore.state[chatStore.state.length - 1].author !==
-        chatStore.params.name
-      ) {
+      const author = chatStore.state[chatStore.state.length - 1].author;
+      if (author === "Admin") {
+        // chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
+        lastUserRef.current = ref;
+        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", ref);
+        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", chatStore.arrayLastUserRef);
+        // subscribe(ref);
+      } else if (author !== chatStore.params.name) {
         // chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
         chatStore.addArrayLastUserRef(ref);
         // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", ref);
-
+        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", chatStore.arrayLastUserRef);
         // subscribe(ref);
       } else {
-        lastUserRef.current = ref;
+        if (chatStore.dataMessagesId?.unreadMessagesCount === 0) {
+          lastUserRef.current = ref;
+        }
+        chatStore.addArrayLastUserRef(ref);
+        // console.log("KKKKKKKKKKKKKKKKKKKKKKKK", ref);
+
         infoStore.setIdActive(ref);
       }
-    } else if (chatStore.isLoadingMessagesStartId && chatStore.dataMessagesId) {
-      //якщо  всі повідомлення переглянуті
+    }
+
+    //якщо  всі повідомлення переглянуті
+    if (chatStore.isLoadingMessagesStartId && chatStore.dataMessagesId) {
       if (
         chatStore.dataMessagesId.viewMessageId ===
         chatStore.dataMessagesId.lastMessageId
@@ -39,10 +50,8 @@ const returnRef = (
         infoStore.setIdActive(ref);
       } else {
         //якщо не всі повідомлення переглянуті
-        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", ref);
         chatStore.addArrayLastUserRef(ref);
         // subscribe(ref);
-
         if (lastElement.current) {
           // console.log("NNNNNNNNNNNNNNNNNNNNNNNNN", ref);
           lastUserRef.current = ref;
@@ -50,27 +59,18 @@ const returnRef = (
           lastElement.current = false;
         }
       }
-    } else if (chatStore.isLoadingNextMessages) {
-      //Якщо підгрузилися  повідомлення  при скролі в низ
+    }
+
+    //Якщо підгрузилися  повідомлення  при скролі в низ
+    if (chatStore.isLoadingNextMessages) {
+      chatStore.addArrayLastUserRef(ref);
+    }
+
+    if (chatStore.isLoadingPrevNextMessages) {
+      lastUserRef.current = ref;
       chatStore.addArrayLastUserRef(ref);
     }
   }
 };
 
 export { returnRef };
-// chatStore.dataMessagesId?.viewMessageId || 1
-// let idMessage: number = parseInt(ref.getAttribute("data-id") || "");
-// if (idMessage && idMessage === chatStore.dataMessagesId?.viewMessageId) {
-//   lastUserRef.current = ref;
-// } else {
-//   // chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
-//   subscribe(
-//     ref
-//     // chatStore.arrayLastUserRef[chatStore.arrayLastUserRef.length - 1]
-//   );
-// }
-// if (lastElement.current) {
-//   //переходимо на останнє повідомлення
-//   infoStore.setIdActive(ref);
-//   // lastElement.current = false;
-// }

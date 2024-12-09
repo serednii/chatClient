@@ -7,7 +7,11 @@ const useAutoScroll = (
   lastUserRef: React.MutableRefObject<HTMLLIElement | null>
 ) => {
   useEffect(() => {
+    // console.log("MMMMMMMMMMMMMMMMMMM-----------", chatStore.isLoadingMessage);
+
     if (chatStore.isLoadingMessagesStartId && chatStore.dataMessagesId) {
+      // console.log("MMMMMMMMMMMMMMMMMMM---***************----");
+
       //якщо  всі повідомлення переглянуті
       // if (
       //   chatStore.dataMessagesId.viewMessageId ===
@@ -19,21 +23,33 @@ const useAutoScroll = (
       //   //якщо не всі повідомлення переглянуті
 
       // }
-    }
-
-    if (chatStore.isLoadingPrevNextMessages) {
+    } else if (chatStore.isLoadingPrevNextMessages) {
+      // console.log("MMMMMMMMMMMMMMMMMMM-----//////////////////-");
       lastUserRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "end",
       });
-    } else if (!chatStore.isLoadingNextMessagesScroll) {
+    }
+
+    if (!chatStore.isLoadingNextMessagesScroll) {
       // lastUserRef.current?.scrollIntoView(false);
       chatStore.setLoadingNextMessagesScroll(false);
     }
+
+    if (chatStore.isLoadingMessage) {
+      // console.log("MMMMMMMMMMMMMMMMMMM");
+      chatStore.setLoadingMessage(false);
+      lastUserRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+
     lastUserRef.current = null;
     infoStore.setIdActive(null);
   }, [
     lastUserRef.current,
+    chatStore.isLoadingMessage,
     chatStore.isLoadingNextMessagesScroll,
     chatStore.isLoadingPrevNextMessages,
     chatStore.isLoadingMessagesStartId,
