@@ -33,7 +33,7 @@ const Chat: React.FC = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setStartChat(true);
-    }, 600);
+    }, 2000);
     return () => clearTimeout(timeout);
   }, []);
 
