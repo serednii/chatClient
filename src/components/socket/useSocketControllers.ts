@@ -24,7 +24,7 @@ const useJoin = () => {
     }
 
     if (!hasJoined.current) {
-      // console.log("JOIN----------------------------", search);
+      console.log("JOIN----------------------------", search);
       const searchParamsObj = Object.fromEntries(new URLSearchParams(search));
       const searchParams: IParams = {
         name: searchParamsObj.name || "",

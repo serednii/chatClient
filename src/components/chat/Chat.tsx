@@ -14,6 +14,7 @@ import ReadFullMessages from "./ReadFullMessages/ReadFullMessages";
 import { getNextUserId } from "../Util";
 import InfoNewMessage from "./infoNewMessage/InfoNewMessage";
 import GotoEndMessage from "./gotoEndMessage/GotoEndMessage";
+import useIntersectionObserver from "../message/useIntersectionObserver";
 
 const Chat: React.FC = () => {
   // const [isReadFullMessages, setReadFullMessages] = useState<boolean>(true);
@@ -21,7 +22,9 @@ const Chat: React.FC = () => {
   const [isStartChat, setStartChat] = useState<boolean>(false);
 
   // console.log("RENDER CHAT");
+
   useConnectHooks();
+
   useEffect(() => {
     if (chatStore.isDeleteMessage) {
       handleChangeChat();
@@ -37,6 +40,8 @@ const Chat: React.FC = () => {
     return () => clearTimeout(timeout);
   }, []);
 
+  const { subscribe, observerRef } = useIntersectionObserver();
+  // console.log(subscribe, observerRef);
   // console.log(
   //   isStartChat,
   //   isReadFullMessages,
@@ -49,7 +54,7 @@ const Chat: React.FC = () => {
       <Header />
       <main className={styles.main}>
         <section className={styles.messages}>
-          {chatStore.state.length > 0 && <Messages />}
+          {chatStore.state.length > 0 && <Messages subscribe={subscribe} />}
         </section>
         <aside className={styles.users_list}>
           <Users />
@@ -69,10 +74,6 @@ const Chat: React.FC = () => {
             chatStore.isMoveTop &&
             isReadFullMessages.current && <GotoEndMessage />}
         </aside>
-
-        {/* <aside className={styles.gotoEndMessage_wrapper}>
-          {isReadFullMessages && <GotoEndMessage />}
-        </aside> */}
       </main>
 
       <Footer />

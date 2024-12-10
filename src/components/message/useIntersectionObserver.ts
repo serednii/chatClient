@@ -3,22 +3,11 @@ import chatStore from "../../mobx/chatStore";
 import { sendLastViewMessagesServer } from "../socket/setDataSocket";
 import throttle from "lodash/throttle";
 
-const useIntersectionObserver = (isLastAddElementRef: any) => {
+const useIntersectionObserver = () => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const processedElements = useRef(new Set<Element>());
 
-  // console.log("RENDER useIntersectionObserver");
-
-  useEffect(() => {
-    if (observerRef.current && chatStore.arrayLastUserRef.length > 0) {
-      chatStore.arrayLastUserRef.forEach((ref) => {
-        subscribe(ref);
-        // console.log("subscribe ----- ", observerRef.current, ref); //==null
-      });
-      isLastAddElementRef.current = false;
-      chatStore.setArrayLastUserRef([]);
-    }
-  }, [observerRef.current, isLastAddElementRef.current]);
+  // console.log("RENDER useIntersectionObserver", isLastAddElement);
 
   const handleScrollThrottle = throttle((idNumber) => {
     chatStore.setLastNumberViewMessages(idNumber);
@@ -48,8 +37,8 @@ const useIntersectionObserver = (isLastAddElementRef: any) => {
       if (nextElement) {
         observerRef.current?.observe(nextElement);
         processedElements.current.add(nextElement);
-        // console.log("Subscribing to element:", nextElement);
-        // console.log("ADD-----------", processedElements.current);
+        console.log("Subscribing to element:", nextElement);
+        console.log("ADD-----------", processedElements.current);
       }
     },
     [observerRef.current]
@@ -121,7 +110,7 @@ const useIntersectionObserver = (isLastAddElementRef: any) => {
   //   observerRef.current
   // );
 
-  return {};
+  return { subscribe, observerRef };
 };
 
 export default useIntersectionObserver;

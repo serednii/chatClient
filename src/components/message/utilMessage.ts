@@ -6,8 +6,8 @@ import infoStore from "../../mobx/infoStore";
 const returnRef = (
   ref: HTMLLIElement | null,
   lastElement: React.MutableRefObject<boolean>,
-  lastUserRef: React.MutableRefObject<HTMLLIElement | null>
-  // subscribe: any
+  lastUserRef: React.MutableRefObject<HTMLLIElement | null>,
+  subscribe: (nextElement: Element | null | undefined) => void
 ): void => {
   if (ref) {
     // console.log("CCCCCCCCCCCCCCCCCC", ref);
@@ -18,21 +18,22 @@ const returnRef = (
       if (author === "Admin") {
         // chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
         lastUserRef.current = ref;
-        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", ref);
-        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", chatStore.arrayLastUserRef);
-        // subscribe(ref);
+        console.log("LLLLLLLLLLLLLLLLLLLLLLLL", ref);
+        console.log("LLLLLLLLLLLLLLLLLLLLLLLL", chatStore.arrayLastUserRef);
+        subscribe(ref);
       } else if (author !== chatStore.params.name) {
         // chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
-        chatStore.addArrayLastUserRef(ref);
-        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", ref);
-        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", chatStore.arrayLastUserRef);
-        // subscribe(ref);
+        // chatStore.addArrayLastUserRef(ref);
+        console.log("KKKKKKKKKKKKKKKKK", ref);
+        console.log("KKKKKKKKKKKKKKKKK", chatStore.arrayLastUserRef);
+        subscribe(ref);
       } else {
         if (chatStore.dataMessagesId?.unreadMessagesCount === 0) {
           lastUserRef.current = ref;
         }
-        chatStore.addArrayLastUserRef(ref);
+        // chatStore.addArrayLastUserRef(ref);
         // console.log("KKKKKKKKKKKKKKKKKKKKKKKK", ref);
+        subscribe(ref);
 
         infoStore.setIdActive(ref);
       }
@@ -50,8 +51,8 @@ const returnRef = (
         infoStore.setIdActive(ref);
       } else {
         //якщо не всі повідомлення переглянуті
-        chatStore.addArrayLastUserRef(ref);
-        // subscribe(ref);
+        // chatStore.addArrayLastUserRef(ref);
+        subscribe(ref);
         if (lastElement.current) {
           // console.log("NNNNNNNNNNNNNNNNNNNNNNNNN", ref);
           lastUserRef.current = ref;
@@ -63,14 +64,28 @@ const returnRef = (
 
     //Якщо підгрузилися  повідомлення  при скролі в низ
     if (chatStore.isLoadingNextMessages) {
-      chatStore.addArrayLastUserRef(ref);
+      // chatStore.addArrayLastUserRef(ref);
+      subscribe(ref);
     }
 
     if (chatStore.isLoadingPrevNextMessages) {
       lastUserRef.current = ref;
-      chatStore.addArrayLastUserRef(ref);
+      // chatStore.addArrayLastUserRef(ref);
+      subscribe(ref);
     }
   }
 };
 
-export { returnRef };
+function areDifferentDays(prevDate: string, todayDate: string) {
+  const prev = new Date(prevDate);
+  const today = new Date(todayDate);
+
+  // Порівнюємо тільки рік, місяць і день
+  return (
+    prev.getFullYear() !== today.getFullYear() ||
+    prev.getMonth() !== today.getMonth() ||
+    prev.getDate() !== today.getDate()
+  );
+}
+
+export { returnRef, areDifferentDays };
