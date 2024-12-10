@@ -8,6 +8,11 @@
     width: 100%;
     color: #fff;
     background: #333;
+    background: rgb(63, 94, 251);
+    background: -moz-radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(34, 33, 64, 0.876715652081145) 99%);
+    background: -webkit-radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(34, 33, 64, 0.876715652081145) 99%);
+    background: radial-gradient(circle, rgba(63, 94, 251, 1) 0%, rgba(34, 33, 64, 0.876715652081145) 99%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f5efb", endColorstr="#222140", GradientType=1);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -33,6 +38,12 @@
 
 .left {
     background: rgb(253, 73, 73);
+    background: linear-gradient(135deg, rgb(253, 73, 73), rgb(255, 171, 171), rgb(255, 232, 217));
+    background: linear-gradient(135deg, rgb(253, 73, 73), rgb(139, 0, 0), rgb(255, 99, 71));
+    // background: linear-gradient(135deg, rgb(253, 73, 73), rgb(255, 150, 150), rgb(255, 215, 215));
+
+
+
     border-radius: 6px;
     font-size: 14px;
     padding: 10px;

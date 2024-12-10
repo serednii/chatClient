@@ -23,6 +23,8 @@
   left: 50%;
   translate: -50%;
   background-color: #9a9b99;
+  background: linear-gradient(135deg, #5e83d9, #ffafbd, #ffc3a0);
+
   padding: 1px 4px;
   border-bottom-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -116,21 +118,44 @@
   border-bottom-left-radius: 10px;
   border-top-right-radius: 10px;
 
-  background: #5e83d9;
+  // background: #5e83d9;
+  background: linear-gradient(135deg, #5e83d9, #9cbef2);
+  background: linear-gradient(135deg, #5e83d9, #2e4b7a);
+  // background: linear-gradient(135deg, #5e83d9, #9cbef2, #dce4f9);
+
+
+
 }
 
 .admin .message__inner {
   border-bottom-left-radius: 10px;
   border-top-right-radius: 10px;
   background: #f06767;
+  background: linear-gradient(135deg, #f06767, #f7a8a8, #ffe4e4);
+  background: linear-gradient(135deg, #f06767, #ff9a9a, #c1c8ff);
+  // background: linear-gradient(135deg, #f06767, #d94f4f, #8b3d3d);
+
+
   color: black;
 }
+
 
 .user .message__inner {
   border-top-left-radius: 10px;
   border-bottom-right-radius: 10px;
   background: #e8e3e3;
+  background: linear-gradient(135deg, #e8e3e3, #bfc9d2, #8fa3b4);
+  background: linear-gradient(135deg, #e8e3e3, #f3d1e1, #dec5f1);
+  background: linear-gradient(135deg, #e8e3e3, #a8d5ba, #6fbfdd);
+  background: linear-gradient(135deg, #e8e3e3, #a3b1c6, #5d6d82);
+
+
+
+
+
+
 }
+
 
 .messages__user {
   display: flex;
