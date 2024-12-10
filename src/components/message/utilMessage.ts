@@ -16,22 +16,18 @@ const returnRef = (
     if (chatStore.isLoadingMessage) {
       const author = chatStore.state[chatStore.state.length - 1].author;
       if (author === "Admin") {
-        // chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
         lastUserRef.current = ref;
-        console.log("LLLLLLLLLLLLLLLLLLLLLLLL", ref);
-        console.log("LLLLLLLLLLLLLLLLLLLLLLLL", chatStore.arrayLastUserRef);
+        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", ref);
+        // console.log("LLLLLLLLLLLLLLLLLLLLLLLL", chatStore.arrayLastUserRef);
         subscribe(ref);
       } else if (author !== chatStore.params.name) {
-        // chatStore.addArrayLastUserRef(ref); //добавляємо в масив для перегляду
-        // chatStore.addArrayLastUserRef(ref);
-        console.log("KKKKKKKKKKKKKKKKK", ref);
-        console.log("KKKKKKKKKKKKKKKKK", chatStore.arrayLastUserRef);
+        // console.log("KKKKKKKKKKKKKKKKK", ref);
+        // console.log("KKKKKKKKKKKKKKKKK", chatStore.arrayLastUserRef);
         subscribe(ref);
       } else {
         if (chatStore.dataMessagesId?.unreadMessagesCount === 0) {
           lastUserRef.current = ref;
         }
-        // chatStore.addArrayLastUserRef(ref);
         // console.log("KKKKKKKKKKKKKKKKKKKKKKKK", ref);
         subscribe(ref);
 
@@ -51,7 +47,6 @@ const returnRef = (
         infoStore.setIdActive(ref);
       } else {
         //якщо не всі повідомлення переглянуті
-        // chatStore.addArrayLastUserRef(ref);
         subscribe(ref);
         if (lastElement.current) {
           // console.log("NNNNNNNNNNNNNNNNNNNNNNNNN", ref);
@@ -64,13 +59,11 @@ const returnRef = (
 
     //Якщо підгрузилися  повідомлення  при скролі в низ
     if (chatStore.isLoadingNextMessages) {
-      // chatStore.addArrayLastUserRef(ref);
       subscribe(ref);
     }
 
     if (chatStore.isLoadingPrevNextMessages) {
       lastUserRef.current = ref;
-      // chatStore.addArrayLastUserRef(ref);
       subscribe(ref);
     }
   }
