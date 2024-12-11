@@ -30,7 +30,6 @@ const returnRef = (
         }
         // console.log("KKKKKKKKKKKKKKKKKKKKKKKK", ref);
         subscribe(ref);
-
         infoStore.setIdActive(ref);
       }
     }

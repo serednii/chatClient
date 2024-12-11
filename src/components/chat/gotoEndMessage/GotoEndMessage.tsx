@@ -21,7 +21,9 @@ const GotoEndMessage = () => {
   return (
     <div className={styles.infoNewMessage}>
       <button onClick={handleClick}>
-        <LiaArrowCircleDownSolid style={{ fontSize: "40px", color: "red" }} />
+        <LiaArrowCircleDownSolid
+          style={{ fontSize: "40px", color: "rgb(244, 238, 238)" }}
+        />
       </button>
     </div>
   );

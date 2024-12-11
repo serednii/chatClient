@@ -16,7 +16,7 @@ const DateDayComponent: React.FC<DateComponentProps> = ({ date }) => {
     // second: "2-digit",
   });
 
-  return <span className={styles.message__top_date_mini}>{localDate}</span>;
+  return <span>{localDate}</span>;
 };
 
 export default DateDayComponent;

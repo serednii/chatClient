@@ -16,7 +16,7 @@ const DateHourComponent: React.FC<DateComponentProps> = ({ date }) => {
     // second: "2-digit",
   });
 
-  return <span className={styles.message__top_date_full}>{localDate}</span>;
+  return <span>{localDate}</span>;
 };
 
 export default DateHourComponent;

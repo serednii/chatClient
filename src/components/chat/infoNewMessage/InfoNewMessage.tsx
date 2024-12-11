@@ -41,7 +41,9 @@ const InfoNewMessage: React.FC<InfoNewMessageProps> = ({
         ? "message"
         : "messages"}
       <button onClick={handleClick}>
-        <LiaArrowCircleDownSolid style={{ fontSize: "40px", color: "red" }} />
+        <LiaArrowCircleDownSolid
+          style={{ fontSize: "40px", color: "rgb(244, 238, 238)" }}
+        />
       </button>
     </div>
   );

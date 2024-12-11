@@ -31,5 +31,11 @@ export const handleChangeChat = () => {
   }
 };
 
-export const onEmojiClick = ({ emoji }: any) =>
+export const onEmojiClick = (
+  emoji: any,
+  message: string,
+  setMessage: (value: string) => void
+) => {
+  setMessage(`${message} ${emoji.emoji}`);
   chatStore.setMessage(`${chatStore.message} ${emoji}`);
+};

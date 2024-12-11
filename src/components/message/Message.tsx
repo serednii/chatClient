@@ -61,10 +61,16 @@ const Message: React.FC<MessageProps> = ({
           <DateDayComponent date={date} />
         </div>
       )}
+
       <div className={styles.message__inner}>
         <div className={styles.message__inner_top}>
+          <img
+            className={styles.message__inner_user_foto}
+            src="/user_foto/icon.jfif"
+            alt="foto user"
+          />
           <span className={styles.message__inner_user}>{author}</span>
-          <div className={styles.message__top_date}>
+          <div className={styles.message__top_hour}>
             <DateHourComponent date={date} />
           </div>
         </div>
@@ -79,7 +85,7 @@ const Message: React.FC<MessageProps> = ({
         )}
 
         {!isEditMessage && (
-          <div data-id={id} ref={divRef} className={styles.message__text}>
+          <div data-id={id} ref={divRef} className={styles.message__inner_text}>
             {message + " " + id}
             {/* {message + " " + id} */}
 

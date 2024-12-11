@@ -85,7 +85,7 @@ const Messages: React.FC<MessagesProps> = ({ subscribe }) => {
 
           const itsAdmin = author.trim().toLowerCase() === "admin";
 
-          let MyClassName = itsMe ? styles.me : styles.user;
+          let MyClassName = itsMe ? styles.iam : styles.user;
           MyClassName = itsAdmin ? styles.admin : MyClassName;
 
           //Якщо підгрузилися  повідомлення  при старті

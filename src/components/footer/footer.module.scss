@@ -16,7 +16,7 @@
     // background: linear-gradient(to right, #ff9966, #ff5e62);
     // background: linear-gradient(to right, #134e5e, #71b280);
     // background: linear-gradient(to right, #ffe259, #ffa751);
-    background: linear-gradient(to right, #2c3e50, #bdc3c7);
+    // background: linear-gradient(to right, #2c3e50, #bdc3c7);
 
     justify-content: space-between;
     height: 80px;
@@ -50,13 +50,12 @@
 
 
 .emoji {
-    width: 40px;
     cursor: pointer;
     position: relative;
 }
 
 .emoji img {
-    vertical-align: middle;
+    // vertical-align: middle;
 }
 
 .emojies {

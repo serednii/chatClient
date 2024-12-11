@@ -58,7 +58,7 @@ li {
 }
 
 .container {
-  max-width: 1240px;
+  max-width: 1024px;
   margin: 0 auto;
   min-height: 100vh;
   padding: 0 5px;

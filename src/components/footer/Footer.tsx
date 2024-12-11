@@ -1,9 +1,10 @@
 import EmojiPicker from "emoji-picker-react";
-import React, { useCallback, useEffect, useRef, memo } from "react";
+import React, { useEffect, useRef, memo } from "react";
 import { useState } from "react";
 import { IParams } from "../interface";
 import { debounce } from "../Util";
 import chatStore from "../../mobx/chatStore";
+import { BsEmojiTear } from "react-icons/bs";
 import {
   THandleChange,
   TDebouncedFunction,
@@ -26,7 +27,7 @@ const Footer: React.FC = () => {
   const getTimerRef = useRef<TGetTimer | null>(null);
   const [message, setMessage] = useState<string>("");
   // console.log("RENDER FOOTER");
-
+  console.log(isOpen);
   const [debouncedFunction, getTimer]: TDebounce = debounce(
     (params: IParams) => {
       clearSetWrite(); // Ваш код
@@ -40,6 +41,7 @@ const Footer: React.FC = () => {
     if (getTimerRef.current) {
       clearTimeout(getTimerRef.current());
     }
+    setOpen(false);
     handleSubmitChat(message);
     setMessage("");
   };
@@ -76,11 +78,22 @@ const Footer: React.FC = () => {
           />
         </div>
         <div className={styles.emoji}>
-          <img src={icon} alt="" onClick={() => setOpen(!isOpen)} />
-
+          <p
+            onClick={(e) => {
+              e.preventDefault();
+              setOpen(!isOpen);
+            }}
+          >
+            {" "}
+            😘
+          </p>
           {isOpen && (
             <div className={styles.emojies}>
-              <EmojiPicker onEmojiClick={onEmojiClick} />
+              <EmojiPicker
+                onEmojiClick={(emoji) =>
+                  onEmojiClick(emoji, message, setMessage)
+                }
+              />
             </div>
           )}
         </div>
