@@ -11,15 +11,12 @@ main {
   width: 100%;
   height: calc(100vh - 132px);
   position: relative;
+  display: flex;
+  // flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-.users_list {
-  overflow-y: auto;
-  position: absolute;
-  top: 0px;
-  right: 135px;
-  border-radius: 15px;
-}
+
 
 .messages {
   width: 100%;

@@ -91,15 +91,15 @@ const Messages: React.FC<MessagesProps> = ({ subscribe }) => {
           //Якщо підгрузилися  повідомлення  при старті
           // console.log(chatStore.isLoadingMessagesStartId, id);
           if (chatStore.isLoadingMessagesStartId && chatStore.dataMessagesId) {
-            if (i === lengthState - 1) {
-            }
+            // if (i === lengthState - 1) {
+            // }
             //якщо  всі повідомлення переглянуті
             if (
               chatStore.dataMessagesId.viewMessageId ===
               chatStore.dataMessagesId.lastMessageId
             ) {
+              startLastUserRef = true;
               if (i === lengthState - 1) {
-                startLastUserRef = true;
               }
             } else {
               //якщо не всі повідомлення переглянуті

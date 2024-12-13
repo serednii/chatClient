@@ -53,13 +53,13 @@ const Chat: React.FC = () => {
     <div className={styles.wrap}>
       <Header />
       <main className={styles.main}>
+        <aside>
+          <Users />
+        </aside>
         <section className={styles.messages}>
           {chatStore.state.length > 0 && <Messages subscribe={subscribe} />}
         </section>
-        <aside className={styles.users_list}>
-          <Users />
-        </aside>
-        <aside className={styles.users_list}></aside>
+        {/* <aside className={styles.users_list}></aside> */}
 
         <aside className={styles.InfoNewMessage_wrapper}>
           {chatStore.dataMessagesId?.unreadMessagesCount === 0 ||

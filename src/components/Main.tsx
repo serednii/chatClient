@@ -12,7 +12,7 @@ import { observer } from "mobx-react-lite";
 
 const Main = () => {
   // const location = useLocation();
-  const [values, setValues] = useState<IParams>({ name: "", room: "" });
+  const [values, setValues] = useState<IParams>({ name: "user", room: "test" });
   // console.log(values);
 
   const handleChange: THandleChange = ({ target: { name, value } }) => {

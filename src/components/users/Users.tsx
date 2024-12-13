@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import TypingIndicator from "../TypingIndicator";
 import { IUsersName, IUserWrite } from "../interface";
 import chatStore from "../../mobx/chatStore";
-import styles from "./users.module.scss";
 import { observer } from "mobx-react-lite";
+import DateHourComponent from "../DateHourComponent";
+import styles from "./users.module.scss";
 
 const Users = () => {
-  const [show, setShow] = useState(true);
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст
   //Сортуємо
@@ -29,32 +29,43 @@ const Users = () => {
   const newListUser = [...filterUserWrite, ...filterUsersName];
 
   return (
-    <ul className={styles.usersName}>
-      <button className={styles.title} onClick={() => setShow((prev) => !prev)}>
-        List users
-      </button>
+    <ul className={styles.users__items}>
+      {newListUser.map((user, index) => {
+        const findUser = chatStore.userWrite?.find(
+          (_user: IUserWrite) => _user.name === user.name
+        );
 
-      {show &&
-        newListUser.map((user, index) => {
-          const findUser = chatStore.userWrite?.find(
-            (_user: IUserWrite) => _user.name === user.name
-          );
+        const classStatus = chatStore.userStatus
+          ? chatStore.userStatus.find(
+              (_user: IUsersName) => _user.name === user.name
+            )?.status
+          : "";
 
-          const classStatus = chatStore.userStatus
-            ? chatStore.userStatus.find(
-                (_user: IUsersName) => _user.name === user.name
-              )?.status
-            : "";
+        return (
+          <li key={index} className={styles.user__message}>
+            {/* <div className={userStatus}> */}
 
-          return (
-            <li key={index} className={classStatus + " user__message"}>
-              {/* <div className={userStatus}> */}
-              <h3>{user?.name} </h3>
+            <div className={styles.message__inner_top}>
+              <img
+                className={styles.message__inner_user_foto}
+                src="/user_foto/icon.jfif"
+                alt="foto user"
+              />
+              <span
+                className={`${styles.message__inner_user} ${
+                  styles[classStatus || ""]
+                }`}
+              >
+                {user.name}
+              </span>
               {findUser && <TypingIndicator />}
-              {/* </div> */}
-            </li>
-          );
-        })}
+              {/* <div className={styles.message__top_hour}>
+                <DateHourComponent date="12:30" />
+              </div> */}
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 };
