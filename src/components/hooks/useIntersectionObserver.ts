@@ -37,8 +37,8 @@ const useIntersectionObserver = () => {
       if (nextElement) {
         observerRef.current?.observe(nextElement);
         processedElements.current.add(nextElement);
-        console.log("Subscribing to element:", nextElement);
-        console.log("ADD-----------", processedElements.current);
+        // console.log("Subscribing to element:", nextElement);
+        // console.log("ADD-----------", processedElements.current);
       }
     },
     [observerRef.current]
@@ -82,7 +82,6 @@ const useIntersectionObserver = () => {
     //Створення нового Intersection Observer:
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        // console.log(entries);
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             if (processedElements.current.has(entry.target)) {
@@ -104,11 +103,6 @@ const useIntersectionObserver = () => {
     //Очищення обсерверу при розмонтаженні компонента:
     return () => unsubscribe();
   }, []);
-
-  // console.log(
-  //   "444444444444444444444444444444444444444------------------",
-  //   observerRef.current
-  // );
 
   return { subscribe, observerRef };
 };

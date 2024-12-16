@@ -60,26 +60,30 @@ const Users = () => {
               (_user: IUsersName) => _user.name === user.name
             )?.status
           : "";
-
-        const lastDateVisit = chatStore.lastUserVisitTime.find(
-          (userVisit: ILastUserVisitTime) =>
-            userVisit.user_name === user.name &&
-            user.name !== chatStore.params.name
-        );
+        const lastDateVisit =
+          user.name !== chatStore.params.name
+            ? chatStore.getLastUserVisitTimeByName(user.name)
+            : undefined;
+        // const lastDateVisit = chatStore.lastUserVisitTime.find(
+        //   (userVisit: ILastUserVisitTime) =>
+        //     userVisit.user_name === user.name &&
+        //     user.name !== chatStore.params.name
+        // );
 
         return (
           <li key={index} className={styles.user__message}>
-            {/* <div className={userStatus}> */}
-
             <div className={styles.message__inner_top}>
-              {/* <img
-                className={styles.message__inner_user_foto}
-                src="/user_foto/Lena.png"
-                alt="foto user"
-              /> */}
-              <div className={styles.message__inner_user_avatar}>
-                <GeneratorAvatar userName={user.name} />
-              </div>
+              {!lastDateVisit?.avatar ? (
+                <div className={styles.message__inner_user_avatar}>
+                  <GeneratorAvatar userName={user.name} />
+                </div>
+              ) : (
+                <img
+                  className={styles.message__inner_user_avatar}
+                  src={`/user_foto/${lastDateVisit?.avatar}`}
+                  alt="foto user"
+                />
+              )}
 
               <div
                 className={`${styles.message__inner_user} ${
@@ -93,7 +97,6 @@ const Users = () => {
               <span>
                 {<DateComponent date={lastDateVisit?.last_visit_date} />}
               </span>
-              {/* {findUser && <TypingIndicator />} */}
             </div>
           </li>
         );

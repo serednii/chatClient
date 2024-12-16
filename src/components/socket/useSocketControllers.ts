@@ -49,7 +49,7 @@ const useMessageStart = () => {
     const handleMessageStart = ({ messages, data }: IMessageStart) => {
       // console.log("messageStart----------------------------", data);
 
-      console.log("messageStart---", data.lastUserVisitTime);
+      // console.log("messageStart---", data.lastUserVisitTime);
       if (messages && data) {
         chatStore.setState(messages);
         chatStore.setDataMessagesId(data);

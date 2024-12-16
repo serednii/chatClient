@@ -9,6 +9,7 @@ import DateDayComponent from "../DateDayComponent";
 import styles from "./Messages.module.scss";
 import { observer } from "mobx-react-lite";
 import GeneratorAvatar from "../generatorAvatar/GeneratorAvatar";
+import chatStore from "../../mobx/chatStore";
 
 interface MessageProps {
   id: number;
@@ -48,7 +49,12 @@ const Message: React.FC<MessageProps> = ({
     }
   }, [startLastUserRef, lastUserRef, returnRef]);
 
-  // console.log(date);
+  const lastDateVisit =
+    author !== "Admin"
+      ? chatStore.getLastUserVisitTimeByName(author)
+      : undefined;
+  // const lastDateVisit = chatStore.getLastUserVisitTimeByName(author);
+
   return (
     <li
       data-id={id}
@@ -70,9 +76,19 @@ const Message: React.FC<MessageProps> = ({
             src="/user_foto/icon.jfif"
             alt="foto user"
           /> */}
-          <div className={styles.message__inner_user_avatar}>
-            <GeneratorAvatar userName={author} />
-          </div>
+
+          {!lastDateVisit?.avatar ? (
+            <div className={styles.message__inner_user_avatar}>
+              <GeneratorAvatar userName={author} />
+            </div>
+          ) : (
+            <img
+              className={styles.message__inner_user_avatar}
+              src={`/user_foto/${lastDateVisit?.avatar}`}
+              alt="foto user"
+            />
+          )}
+
           <span className={styles.message__inner_user}>{author}</span>
           <div className={styles.message__top_hour}>
             <DateHourComponent date={date} />
@@ -90,8 +106,7 @@ const Message: React.FC<MessageProps> = ({
 
         {!isEditMessage && (
           <div data-id={id} ref={divRef} className={styles.message__inner_text}>
-            {message + " " + id}
-            {/* {message + " " + id} */}
+            {message}
 
             {itsMe && (
               <div className={styles.message__text_buttons}>

@@ -26,8 +26,7 @@ const Footer: React.FC = () => {
   const debouncedFunctionRef = useRef<TDebouncedFunction | null>(null);
   const getTimerRef = useRef<TGetTimer | null>(null);
   const [message, setMessage] = useState<string>("");
-  // console.log("RENDER FOOTER");
-  console.log(isOpen);
+
   const [debouncedFunction, getTimer]: TDebounce = debounce(
     (params: IParams) => {
       clearSetWrite(); // Ваш код

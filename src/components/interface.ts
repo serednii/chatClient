@@ -23,6 +23,7 @@ export interface IMessage {
 export interface ILastUserVisitTime {
   user_name: string;
   last_visit_date: string;
+  avatar: string;
 }
 
 export interface IState {

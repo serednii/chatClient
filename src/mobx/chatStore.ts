@@ -72,6 +72,14 @@ class ChatStore {
     this.lastUserVisitTime = value;
   }
 
+  getLastUserVisitTimeByName(name: string):ILastUserVisitTime | undefined {
+    const lastDateVisit = this.lastUserVisitTime.find(
+      (userVisit: ILastUserVisitTime) =>
+        userVisit.user_name === name 
+    );
+    return lastDateVisit
+  }
+
   setMoveTop(value: boolean) {
     this.isMoveTop = value;
   }

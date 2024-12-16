@@ -12,7 +12,7 @@ import { handleChangeChat } from "../footer/controllerFooter";
 import useConnectHooks from "../socket/useSocketControllers";
 import InfoNewMessage from "./infoNewMessage/InfoNewMessage";
 import GotoEndMessage from "./gotoEndMessage/GotoEndMessage";
-import useIntersectionObserver from "../message/useIntersectionObserver";
+import useIntersectionObserver from "../hooks/useIntersectionObserver";
 
 const Chat: React.FC = () => {
   // const [isReadFullMessages, setReadFullMessages] = useState<boolean>(true);

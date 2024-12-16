@@ -4,10 +4,10 @@ import Message from "./Message";
 import chatStore from "../../mobx/chatStore";
 import { observer } from "mobx-react-lite";
 // import useIntersectionObserver from "./useIntersectionObserver";
-import useAutoScroll from "./useAutoScroll";
+import useAutoScroll from "../hooks/useAutoScroll";
 import { areDifferentDays, returnRef } from "./utilMessage";
 import styles from "./Messages.module.scss";
-import useScrollLoadingMessage from "./useScrollLoadingMessage";
+import useScrollLoadingMessage from "../hooks/useScrollLoadingMessage";
 
 interface MessagesProps {
   subscribe: (nextElement: Element | null | undefined) => void;
