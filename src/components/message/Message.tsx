@@ -53,7 +53,6 @@ const Message: React.FC<MessageProps> = ({
     author !== "Admin"
       ? chatStore.getLastUserVisitTimeByName(author)
       : undefined;
-  // const lastDateVisit = chatStore.getLastUserVisitTimeByName(author);
 
   return (
     <li
@@ -71,12 +70,6 @@ const Message: React.FC<MessageProps> = ({
 
       <div className={styles.message__inner}>
         <div className={styles.message__inner_top}>
-          {/* <img
-            className={styles.message__inner_user_avatar}
-            src="/user_foto/icon.jfif"
-            alt="foto user"
-          /> */}
-
           {!lastDateVisit?.avatar ? (
             <div className={styles.message__inner_user_avatar}>
               <GeneratorAvatar userName={author} />
