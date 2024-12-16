@@ -1,0 +1,12 @@
+.info {
+    position: fixed;
+    background-color: antiquewhite;
+    z-index: 100;
+    left: 50%;
+    top: 250px;
+    padding: 10px;
+    border: 5px solid yellow;
+    border-radius: 15px;
+    max-height: 40vh;
+    overflow-y: scroll;
+}

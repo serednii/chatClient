@@ -9,8 +9,9 @@ body {
   font-family: Rubik, Roboto, sans-serif;
   padding: 0;
   margin: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
   color: rgb(48, 43, 43);
+  min-width: 320px;
 }
 
 h1,
@@ -58,10 +59,10 @@ li {
 }
 
 .container {
-  max-width: 1240px;
+  max-width: 1024px;
   margin: 0 auto;
   min-height: 100vh;
-  padding: 0 15px;
+  padding: 0 5px;
 }
 
 .user__message {
@@ -85,24 +86,7 @@ li {
 }
 
 .wrapper {
-  padding-top: 20px;
   position: relative;
   display: flex;
-  justify-content: end;
-}
-
-.active {
-  background-color: #0a9b6a;
-}
-
-.lowActive {
-  background-color: #7e4400;
-}
-
-.notActive {
-  background-color: dimgrey;
-}
-
-.deleteUser {
-  background-color: rgb(96 34 34);
+  justify-content: flex-end;
 }

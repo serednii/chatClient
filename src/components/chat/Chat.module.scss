@@ -5,28 +5,41 @@
   align-items: center;
   flex-direction: column;
   color: #fff;
-  padding-top: 65px;
 }
 
-.main {
-  display: flex;
+main {
   width: 100%;
-  flex-grow: 1;
+  height: calc(100vh - 132px);
+  position: relative;
+  display: flex;
+  // flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-.users_list {
-  flex: 150px 1 1;
-  overflow-y: auto;
-  height: calc(100vh - 150px);
-}
+
 
 .messages {
-  flex-grow: 1;
   width: 100%;
   color: #fff;
   font-size: 18px;
-  background: rgb(35, 35, 35);
-  padding: 32px;
-  overflow-y: auto;
-  height: calc(100vh - 150px);
+  background: white; // background-image: url('../../../public/background/fon6.jpg');
+  padding: 4px;
+  height: inherit;
+}
+
+.InfoNewMessage_wrapper,
+.gotoEndMessage_wrapper {
+  position: absolute;
+  z-index: 10;
+  bottom: 150px;
+  right: 30px;
+
+}
+
+.gotoEndMessage_wrapper {
+  position: absolute;
+  left: auto;
+  bottom: 150px;
+  right: 40px;
+
 }

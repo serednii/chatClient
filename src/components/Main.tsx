@@ -4,23 +4,18 @@ import { Link } from "react-router-dom";
 import AuthUser from "../AuthUser/components/AuthUser/AuthUser";
 import authStore from "../AuthUser/mobx/AuthStore";
 
-import styles from "../styles/Main.module.scss";
 import Input from "./Input";
-
-const FIELDS = {
-  NAME: "name",
-  ROOM: "room",
-};
-// type IHandleChange = ({ target: { value: string, name: string } }) => void;
-type IHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
+import { IParams } from "./interface";
+import { THandleChange } from "./type";
+import styles from "../styles/Main.module.scss";
+import { observer } from "mobx-react-lite";
 
 const Main = () => {
-  const { NAME, ROOM } = FIELDS;
-  const [values, setValues] = useState({ [NAME]: "", [ROOM]: "" });
-  console.log(values);
+  // const location = useLocation();
+  const [values, setValues] = useState<IParams>({ name: "user", room: "test" });
+  // console.log(values);
 
-  const handleChange: IHandleChange = ({ target: { name, value } }) => {
-    // console.log(event);
+  const handleChange: THandleChange = ({ target: { name, value } }) => {
     setValues({ ...values, [name]: value });
   };
 
@@ -39,19 +34,8 @@ const Main = () => {
 
         <form className={styles.form}>
           <div className={styles.group}>
-            {/* <input
-              type="text"
-              name="name"
-              value={values[NAME]}
-              placeholder="Username"
-              className={styles.input}
-              onChange={handleChange}
-              autoComplete="off"
-              required
-            /> */}
-
             <Input
-              value={values[NAME]}
+              value={values.name}
               handleChange={handleChange}
               style={styles.input}
               name="name"
@@ -60,31 +44,20 @@ const Main = () => {
           </div>
 
           <div className={styles.group}>
-            {/* <input
-              type="text"
-              name="room"
-              placeholder="Room"
-              value={values[ROOM]}
-              className={styles.input}
-              onChange={handleChange}
-              autoComplete="off"
-              required
-            /> */}
-
             <Input
-              value={values[ROOM]}
+              value={values.room}
               handleChange={handleChange}
               style={styles.input}
               name="room"
-              placeholder="Room"
+              placeholder='Room (input "test")'
             />
           </div>
 
           <Link
             className={styles.group}
             onClick={handleClick}
-            // to={`/chat?name=${authStore.user.userName}&room=${values[ROOM]}`}
-            to={`/chat?name=${values[NAME]}&room=${values[ROOM]}`}
+            // to={`/chat?name=${authStore.user.userName}&room=${values.room}`}
+            to={`/chat?name=${values.name}&room=${values.room}`}
           >
             <button type="submit" className={styles.button}>
               Join the room
@@ -96,4 +69,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default observer(Main);

@@ -1,22 +1,29 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import authStore from "../../../mobx/AuthStore";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-
+import logicStore from "../../../../mobx/LogicStore";
 import "./LoginForm.scss";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
   console.log("LoginForm");
+
+  useEffect(() => {
+    logicStore.setError("");
+  }, []);
 
   const handleLogin = (event: FormEvent) => {
     event.preventDefault();
+    logicStore.setError("");
     authStore.login(email, password);
   };
 
+  console.log(authStore);
   return (
     <div className="login-form">
       <div className="login-form__inner">
@@ -50,6 +57,9 @@ const LoginForm: React.FC = () => {
               />
             </Form.Group>
           </Form.Group>
+          {logicStore.error !== "" && (
+            <p style={{ color: "red" }}>{logicStore.error}</p>
+          )}
 
           <Button
             variant="primary"

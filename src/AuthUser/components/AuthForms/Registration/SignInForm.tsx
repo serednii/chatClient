@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import authStore from "../../../mobx/AuthStore";
 import logicStore from "../../../../mobx/LogicStore";
@@ -12,15 +12,14 @@ const SignInForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
   const [lastUserName, setLastUserName] = useState<string>("");
-  // console.log(authStore.user);
-  // console.log(authStore.users);
-  // console.log(authStore.isAuth);
-  // console.log(authStore.isLoading);
-  console.log("SignInForm");
 
+  console.log("SignInForm");
+  useEffect(() => {
+    logicStore.setError("");
+  }, []);
   const handleSignIn = (event: FormEvent) => {
     event.preventDefault();
-
+    logicStore.setError("");
     if (userName.length < 3 || lastUserName.length < 3) {
       logicStore.setError("The text must have at least 3 characters");
     } else if (!email) {
@@ -88,7 +87,9 @@ const SignInForm: React.FC = () => {
               />
             </Form.Group>
           </Form.Group>
-
+          {logicStore.error !== "" && (
+            <p style={{ color: "red" }}>{logicStore.error}</p>
+          )}
           <Button
             variant="secondary"
             type="button"

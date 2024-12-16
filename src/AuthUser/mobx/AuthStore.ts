@@ -4,7 +4,7 @@ import axios from "axios";
 import UserService from "../services/UserService";
 import { IUser } from "../models/IUser";
 import { AuthResponse } from "../models/response/authResponse";
-import { URL_AUTH } from "../../const";
+import { URL_AUTH } from "../../config";
 import AuthService from "../services/AuthServices"; // Додайте цей імпорт
 // import menuStore from "../../mobx/asyncDataStore/AsyncMenuStore";
 import dataStore from "../../mobx/DataStore";
@@ -62,7 +62,7 @@ class AuthStore {
     } catch (e) {
       const error = e as AxiosError<{ message: string }>;
       console.log(error?.response?.data?.message);
-      logicStore.setError(error.response?.data?.message || "Error login");
+      logicStore.setError(error.response?.data?.message || "Error login or password");
     }
   }
 

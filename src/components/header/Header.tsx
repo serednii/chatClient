@@ -1,19 +1,25 @@
-import React from "react";
+import React, { memo } from "react";
 import { IParams } from "../interface";
+import chatStore from "../../mobx/chatStore";
 import styles from "./header.module.scss";
+import { observer } from "mobx-react-lite";
+import { sendLeftRoomToServer } from "../socket/setDataSocket";
+import { useNavigate } from "react-router-dom";
+import SetNum from "../../setNum/setNum";
 
-interface IHeader {
-  leftRoom: () => void;
-  params: IParams;
-  users: number;
-  isWrite: boolean | null;
-}
-const Header: React.FC<IHeader> = ({ leftRoom, params, users, isWrite }) => {
+const Header: React.FC = () => {
+  const navigate = useNavigate();
+  //Left the room
+  const leftRoom = (): void => {
+    sendLeftRoomToServer();
+    navigate("./main");
+  };
+
   return (
     <header className={styles.header}>
       <h2 className={styles.title}>
-        Room {params.room} Name {params.name}{" "}
-        {isWrite && (
+        Room {chatStore.params.room} Name {chatStore.params.name}{" "}
+        {chatStore.isWrite && (
           <div className="typing-indicator">
             <span></span>
             <span></span>
@@ -21,7 +27,8 @@ const Header: React.FC<IHeader> = ({ leftRoom, params, users, isWrite }) => {
           </div>
         )}
       </h2>
-      <div className={styles.users}>{users} users in this room</div>
+      <div className={styles.users}>{chatStore.users} users in this room</div>
+      {/* <SetNum /> */}
       <button className={styles.left} onClick={leftRoom}>
         Left the room
       </button>
@@ -29,4 +36,4 @@ const Header: React.FC<IHeader> = ({ leftRoom, params, users, isWrite }) => {
   );
 };
 
-export default Header;
+export default memo(observer(Header));

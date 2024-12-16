@@ -1,57 +1,108 @@
-import React, { useState } from "react";
-import styles from "./users.module.scss";
+import React from "react";
 import TypingIndicator from "../TypingIndicator";
+import { ILastUserVisitTime, IUsersName, IUserWrite } from "../interface";
+import chatStore from "../../mobx/chatStore";
+import { observer } from "mobx-react-lite";
 
-const Users = ({ usersName, userWrite, name, userStatus, leftRoom }: any) => {
-  const [show, setShow] = useState(true);
+import styles from "./users.module.scss";
+import DateComponent from "../DateComponent";
+import GeneratorAvatar from "../generatorAvatar/GeneratorAvatar";
 
+const Users = () => {
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст
   //Сортуємо
-  const filterUsersName = usersName
-    ? usersName
-        .filter((user: any) => {
-          const findUser = userWrite.find(
-            (_user: any) => _user.name === user.name
+  const filterUsersName = chatStore.usersName
+    ? [...chatStore.usersName]
+        .sort((a: IUsersName, b: IUsersName) => {
+          const findA = chatStore.lastUserVisitTime.find(
+            (userVisit: ILastUserVisitTime) => userVisit.user_name === a.name
           );
-          return user.name !== name && !findUser;
+          const findB = chatStore.lastUserVisitTime.find(
+            (userVisit: ILastUserVisitTime) => userVisit.user_name === b.name
+          );
+
+          // Якщо будь-якого користувача немає в lastUserVisitTime
+          if (!findA || !findB) {
+            return !findA ? 1 : -1;
+          }
+
+          const dateA = new Date(findA.last_visit_date).getTime();
+          const dateB = new Date(findB.last_visit_date).getTime();
+
+          // Порівняння дат
+          return dateB - dateA; // Зворотне сортування: останні візити на початку
         })
-        .sort((a: any, b: any) => a.name.localeCompare(b.name))
+        .filter((user: IUserWrite) => user.name !== chatStore.params.name)
     : [];
 
-  const filterUserWrite = userWrite
-    .filter((user: any) => user.name !== name)
-    .sort((a: any, b: any) => a.name.localeCompare(b.name));
+  // chatStore.lastUserVisitTime.find(
+  //   (userVisit: ILastUserVisitTime) =>
+  //     userVisit.user_name === user.name && user.name !== chatStore.params.name
+  // );
+
+  // const filterUserWrite = chatStore.userWrite.filter(
+  //   (user: IUserWrite) => user.name !== chatStore.params.name
+  // );
+  // .sort((a: IUserWrite, b: IUserWrite) => a.name.localeCompare(b.name));
 
   //Обєднюємо два списки, першими йдуть користувачі які набирають текст а потім інші
-  const newListUser = [...filterUserWrite, ...filterUsersName];
-
+  const newListUser = [...filterUsersName];
   return (
-    <ul className={styles.usersName}>
-      <button className={styles.title} onClick={() => setShow((prev) => !prev)}>
-        List users
-      </button>
+    <ul className={styles.users__items}>
+      {newListUser.map((user, index) => {
+        const findUser = chatStore.userWrite?.find(
+          (_user: IUserWrite) => _user.name === user.name
+        );
 
-      {show &&
-        newListUser.map((user, index) => {
-          const findUser = userWrite?.find(
-            (_user: any) => _user.name === user.name
-          );
-          const classStatus = userStatus
-            ? userStatus.find((_user: any) => _user.name === user.name).status
-            : "";
+        const classStatus = chatStore.userStatus
+          ? chatStore.userStatus.find(
+              (_user: IUsersName) => _user.name === user.name
+            )?.status
+          : "";
+        const lastDateVisit =
+          user.name !== chatStore.params.name
+            ? chatStore.getLastUserVisitTimeByName(user.name)
+            : undefined;
+        // const lastDateVisit = chatStore.lastUserVisitTime.find(
+        //   (userVisit: ILastUserVisitTime) =>
+        //     userVisit.user_name === user.name &&
+        //     user.name !== chatStore.params.name
+        // );
 
-          return (
-            <li key={index} className={classStatus + " user__message"}>
-              {/* <div className={userStatus}> */}
-              <h3>{user.name} </h3>
-              {findUser && <TypingIndicator />}
-              {/* </div> */}
-            </li>
-          );
-        })}
+        return (
+          <li key={index} className={styles.user__message}>
+            <div className={styles.message__inner_top}>
+              {!lastDateVisit?.avatar ? (
+                <div className={styles.message__inner_user_avatar}>
+                  <GeneratorAvatar userName={user.name} />
+                </div>
+              ) : (
+                <img
+                  className={styles.message__inner_user_avatar}
+                  src={`/user_foto/${lastDateVisit?.avatar}`}
+                  alt="foto user"
+                />
+              )}
+
+              <div
+                className={`${styles.message__inner_user} ${
+                  styles[classStatus || ""]
+                }`}
+              >
+                <span> {user.name}</span>
+                {findUser && <TypingIndicator />}
+              </div>
+
+              <span>
+                {<DateComponent date={lastDateVisit?.last_visit_date} />}
+              </span>
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 };
 
-export default Users;
+export default observer(Users);
