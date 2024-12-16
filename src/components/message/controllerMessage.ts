@@ -74,24 +74,15 @@ const controllerMessages: IControllerMessages = {
       setValues(dataMessage);
       setIsEditMessage(true);
       setBlockLastUserRef(false);
-      setTimeout(() => {
-        // chatStore.setDeleteMessage(false);
-      }, 2000);
+      setTimeout(() => {}, 2000);
       setTimeout(() => setBlockLastUserRef(true), 3050);
     }
   },
   handleClose: (event, setIsEditMessage) => {
     event.preventDefault();
     setIsEditMessage(false);
-    // chatStore.setDeleteMessage(false);
   },
-  handleSendMessage: (
-    event,
-    setIsEditMessage,
-    // updateMessageById,
-    data,
-    values
-  ) => {
+  handleSendMessage: (event, setIsEditMessage, data, values) => {
     event.preventDefault();
     if (data) {
       const dataId = parseInt(data?.dataIdStr);

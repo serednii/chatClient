@@ -28,8 +28,6 @@ const Messages: React.FC<MessagesProps> = ({ subscribe }) => {
   let startLastUserRef: boolean = false;
   const lengthState: number | undefined = chatStore?.state?.length;
   const name: string = chatStore.params.name;
-  const isMyMessage: boolean =
-    chatStore.params.name === chatStore.state.at(-1)?.author;
   isFirstRender.current++;
 
   if (isFirstRender.current === 0) {
@@ -37,7 +35,7 @@ const Messages: React.FC<MessagesProps> = ({ subscribe }) => {
     chatStore.setArrayLastUserRef([]);
   }
 
-  const newState = chatStore.state.map((e) => e.id);
+  // const newState = chatStore.state.map((e) => e.id);
   // console.log("SSSSSSS", newState);
 
   //Автопідгрузка при скролі догори

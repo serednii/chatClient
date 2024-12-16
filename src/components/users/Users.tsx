@@ -1,15 +1,11 @@
 import React from "react";
-import TypingIndicator from "../TypingIndicator";
-import { ILastUserVisitTime, IUsersName, IUserWrite } from "../interface";
-import chatStore from "../../mobx/chatStore";
 import { observer } from "mobx-react-lite";
-
-import DateComponent from "../DateComponent";
-import GeneratorAvatar from "../generatorAvatar/GeneratorAvatar";
-import styles from "./users.module.scss";
+import chatStore from "../../mobx/chatStore";
+import { ILastUserVisitTime, IUsersName, IUserWrite } from "../interface";
 import User from "./User";
+import styles from "./users.module.scss";
 
-const Users = () => {
+const filterSortUsers = () => {
   //Відкидаємо з списку себе як користувача,
   //Відкидаємо тих користувачів які набирають текст
   //Сортуємо
@@ -38,13 +34,19 @@ const Users = () => {
         })
         .filter((user: IUserWrite) => user.name !== chatStore.params.name)
     : [];
+  return filterUsersName;
+};
 
-  //Обєднюємо два списки, першими йдуть користувачі які набирають текст а потім інші
-  const newListUser = [...filterUsersName];
+const Users = () => {
+  //Відкидаємо з списку себе як користувача,
+  //Відкидаємо тих користувачів які набирають текст
+  //Сортуємо
+
+  const filterUsersName = filterSortUsers();
 
   return (
     <ul key="users1" className={styles.users__items}>
-      {newListUser.map((user, index) => {
+      {filterUsersName.map((user, index) => {
         const findUser: IUserWrite | undefined = chatStore.userWrite?.find(
           (_user: IUserWrite) => _user.name === user.name
         );
@@ -68,35 +70,6 @@ const Users = () => {
             classStatus={classStatus}
             findUser={findUser}
           />
-
-          // <li key={index} className={styles.user__message}>
-          //   <div className={styles.message__inner_top}>
-          //     {!lastDateVisit?.avatar ? (
-          //       <div className={styles.message__inner_user_avatar}>
-          //         <GeneratorAvatar userName={user.name} />
-          //       </div>
-          //     ) : (
-          //       <img
-          //         className={styles.message__inner_user_avatar}
-          //         src={`/user_foto/${lastDateVisit?.avatar}`}
-          //         alt="foto user"
-          //       />
-          //     )}
-
-          //     <div
-          //       className={`${styles.message__inner_user} ${
-          //         styles[classStatus || ""]
-          //       }`}
-          //     >
-          //       <span> {user.name}</span>
-          //       {findUser && <TypingIndicator />}
-          //     </div>
-
-          //     <span>
-          //       {<DateComponent date={lastDateVisit?.last_visit_date} />}
-          //     </span>
-          //   </div>
-          // </li>
         );
       })}
     </ul>
