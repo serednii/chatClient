@@ -6,6 +6,7 @@ import {
   IUsersName,
   IUserWrite,
   IData,
+  ILastUserVisitTime,
 } from "../components/interface";
 
 class ChatStore {
@@ -33,6 +34,7 @@ class ChatStore {
   isMoveTop: boolean;
   isLoadingPrevNextMessages: boolean;
   unsubscribeElements: (() => void) | null;
+  lastUserVisitTime: ILastUserVisitTime[];
 
   constructor() {
     makeAutoObservable(this, {
@@ -63,7 +65,13 @@ class ChatStore {
     this.isMoveTop = false;
     this.isLoadingPrevNextMessages = false;
     this.isLoadingMessagesNextId = 0;
+    this.lastUserVisitTime = [];
   }
+
+  setLastUserVisitTime(value: ILastUserVisitTime[]) {
+    this.lastUserVisitTime = value;
+  }
+
   setMoveTop(value: boolean) {
     this.isMoveTop = value;
   }

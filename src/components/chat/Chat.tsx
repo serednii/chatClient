@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Messages from "../message/Messages";
 import Users from "../users/Users";
 import Footer from "../footer/Footer";
@@ -10,8 +10,6 @@ import { observer } from "mobx-react-lite";
 import { clearSetWrite } from "./controllerChat";
 import { handleChangeChat } from "../footer/controllerFooter";
 import useConnectHooks from "../socket/useSocketControllers";
-import ReadFullMessages from "./ReadFullMessages/ReadFullMessages";
-import { getNextUserId } from "../Util";
 import InfoNewMessage from "./infoNewMessage/InfoNewMessage";
 import GotoEndMessage from "./gotoEndMessage/GotoEndMessage";
 import useIntersectionObserver from "../message/useIntersectionObserver";
@@ -21,9 +19,8 @@ const Chat: React.FC = () => {
   const isReadFullMessages = useRef<boolean>(true);
   const [isStartChat, setStartChat] = useState<boolean>(false);
 
-  // console.log("RENDER CHAT");
-
   useConnectHooks();
+  // console.log("RENDER CHAT");
 
   useEffect(() => {
     if (chatStore.isDeleteMessage) {

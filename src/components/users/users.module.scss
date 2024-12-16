@@ -6,36 +6,7 @@
   border: 1px solid gray;
 }
 
-.user__message {
-  padding: 5px;
-  background-color: white;
-  color: black;
-  border-bottom: 1px solid rgba(148, 144, 144, 0.5);
 
-  .active {
-    color: #00FF00;
-    // color: #420707;
-  }
-
-  .lowActive {
-    // color: #000000;
-    color: #6d6d0c;
-
-  }
-
-  .notActive {
-    color: #FFA500;
-    // color: #000000;
-
-  }
-
-  .deleteUser {
-    color: #FF0000;
-    // color: #FFFFFF;
-
-  }
-
-}
 
 .title {
   text-align: center;
@@ -44,26 +15,55 @@
 
 .message__inner_top {
   display: grid;
-  grid-template-columns: 50px minmax(50px, min-content);
+  grid-template-columns: 50px minmax(280px, min-content);
   column-gap: 15px;
   font-size: 14px;
   color: rgb(12, 12, 12);
   position: relative;
 
-
-  .message__inner_user_foto {
+  .message__inner_user_avatar {
     grid-row: 1/3;
     grid-column: 1/2;
-    background-color: white;
+    // background-color: white;
     width: 50px;
     height: 50px;
     display: block;
-    border-radius: 50%;
+    // border-radius: 50%;
+    position: relative;
+    z-index: 1;
   }
 
+  // .message__inner_top::after {
+  //   position: absolute;
+  //   content: "";
+  //   width: 10px;
+  //   height: 10px;
+  //   // border-radius: 50%;
+  //   background-color: #121412;
+  //   top: 0;
+  //   left: 0;
+  //   z-index: 2;
+  // }
+
   .message__inner_user {
+    display: flex;
+    gap: 5px;
     font-weight: 700;
     font-size: 1rem;
+    position: relative;
+  }
+
+
+  .message__inner_user::before {
+    position: absolute;
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #dcdcdc;
+    top: 5px;
+    left: -20px;
+    z-index: 2;
   }
 
   .message__top_hour {
@@ -73,16 +73,81 @@
   }
 }
 
-@media (max-width: 576px) {
+.user__message {
+  padding: 5px;
+  background-color: white;
+  color: black;
+  border-bottom: 1px solid rgba(148, 144, 144, 0.5);
+
+  // .active {
+
+  // color: #00FF00;
+  .active.message__inner_user::before {
+    background-color: #00FF00;
+  }
+
+  // color: #420707;
+  // }
+
+
+  .lowActive.message__inner_user::before {
+    background-color: #FFA500;
+  }
+
+  // color: #000000;
+  // color: #6d6d0c;
+
+
+
+
+
+  // color: #FFA500;
+  .notActive.message__inner_user::before {
+    background-color: red;
+  }
+
+  // color: #000000;
+
+
+
+  // color: #FF0000;
+
+  .deleteUser.message__inner_user::before {
+    background-color: #dcdcdc;
+  }
+
+  // color: #FFFFFF;
+
+
+}
+
+
+@media (max-width: 768px) {
   .users__items {
-    width: 100px;
+    // width: 100px;
   }
 
   .message__inner_top {
-    display: grid;
-    grid-template-columns: minmax(50px, min-content);
+    // grid-template-columns: minmax(50px, min-content);
+    grid-template-columns: 30px minmax(100px, min-content);
 
-    .message__inner_user_foto {
+    .message__inner_user_avatar {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .users__items {
+    width: 90px;
+  }
+
+  .message__inner_top {
+    grid-template-columns: minmax(50px, min-content);
+    // grid-template-columns: 30px minmax(100px, min-content);
+
+    .message__inner_user_avatar {
       display: none;
     }
   }

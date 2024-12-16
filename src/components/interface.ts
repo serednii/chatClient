@@ -15,9 +15,14 @@ export interface IMessage {
   room: string;
 }
 
-interface IMessageAdmin {
-  message: string;
-  id: string;
+// interface IMessageAdmin {
+//   message: string;
+//   id: string;
+// }
+
+export interface ILastUserVisitTime {
+  user_name: string;
+  last_visit_date: string;
 }
 
 export interface IState {
@@ -44,6 +49,7 @@ export interface IData {
   lastMessageId: number;
   viewMessageId: number;
   unreadMessagesCount: number;
+  lastUserVisitTime?: ILastUserVisitTime[];
 }
 export interface IMessageStart {
   messages: IMessage[];

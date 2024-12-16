@@ -8,6 +8,7 @@ import FormMessage from "./FormMessage";
 import DateDayComponent from "../DateDayComponent";
 import styles from "./Messages.module.scss";
 import { observer } from "mobx-react-lite";
+import GeneratorAvatar from "../generatorAvatar/GeneratorAvatar";
 
 interface MessageProps {
   id: number;
@@ -64,11 +65,14 @@ const Message: React.FC<MessageProps> = ({
 
       <div className={styles.message__inner}>
         <div className={styles.message__inner_top}>
-          <img
-            className={styles.message__inner_user_foto}
+          {/* <img
+            className={styles.message__inner_user_avatar}
             src="/user_foto/icon.jfif"
             alt="foto user"
-          />
+          /> */}
+          <div className={styles.message__inner_user_avatar}>
+            <GeneratorAvatar userName={author} />
+          </div>
           <span className={styles.message__inner_user}>{author}</span>
           <div className={styles.message__top_hour}>
             <DateHourComponent date={date} />

@@ -19,7 +19,7 @@ const useJoin = () => {
 
   useEffect(() => {
     if (!chatStore.socket) {
-      // console.error("Socket is not defined");
+      console.error("Socket is not defined");
       return;
     }
 
@@ -40,18 +40,22 @@ const useJoin = () => {
         console.error("Missing required search parameters: name and/or room.");
       }
     }
-  }, [chatStore.socket, search]);
+  }, [search]);
   return { joinStatus };
 };
 
 const useMessageStart = () => {
   useEffect(() => {
     const handleMessageStart = ({ messages, data }: IMessageStart) => {
-      // console.log("messageStart----------------------------", messages);
+      // console.log("messageStart----------------------------", data);
 
+      console.log("messageStart---", data.lastUserVisitTime);
       if (messages && data) {
         chatStore.setState(messages);
         chatStore.setDataMessagesId(data);
+        if (data.lastUserVisitTime && data.lastUserVisitTime.length > 0) {
+          chatStore.setLastUserVisitTime(data.lastUserVisitTime);
+        }
         // console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", data);
         chatStore.setLoadingMessagesStartId(true);
       }
@@ -62,7 +66,7 @@ const useMessageStart = () => {
     return () => {
       chatStore.socket?.off("messageStart", handleMessageStart);
     };
-  }, [chatStore.socket, chatStore.state]);
+  }, [chatStore.state]);
   return {};
 };
 
@@ -80,6 +84,9 @@ const useMessageAdd = () => {
 
         data.viewMessageId = chatStore.dataMessagesId.viewMessageId;
         data.unreadMessagesCount = chatStore.dataMessagesId.unreadMessagesCount;
+        if (data.lastUserVisitTime && data.lastUserVisitTime.length > 0) {
+          chatStore.setLastUserVisitTime(data.lastUserVisitTime);
+        }
         if (message.author !== "Admin") {
           if (message.author === chatStore.params.name) {
             //if user added message
@@ -97,7 +104,7 @@ const useMessageAdd = () => {
     return () => {
       chatStore.socket?.off("messageAdd", handleMessageAdd);
     };
-  }, [chatStore.socket, chatStore.state]);
+  }, [chatStore.state]);
   return {};
 };
 
@@ -122,7 +129,7 @@ const usePrevMessageAdd = () => {
     return () => {
       chatStore.socket?.off("prevMessagesUser", handlePrevMessageAdd);
     };
-  }, [chatStore.socket, chatStore.state]);
+  }, [chatStore.state]);
   return {};
 };
 
@@ -131,6 +138,9 @@ const useNextMessageAdd = () => {
     const handleNextMessageAdd = ({ messages, data }: IMessagesAdd) => {
       // console.log("handleMessageAdd-----ZZZZZZZZZZ------", messages);
       if (messages && messages.length !== 0) {
+        if (data.lastUserVisitTime && data.lastUserVisitTime.length > 0) {
+          chatStore.setLastUserVisitTime(data.lastUserVisitTime);
+        }
         chatStore.addNextMessages(messages);
         chatStore.setLoadingNextMessages(true);
         setTimeout(() => {
@@ -143,7 +153,7 @@ const useNextMessageAdd = () => {
     return () => {
       chatStore.socket?.off("nextMessagesUser", handleNextMessageAdd);
     };
-  }, [chatStore.socket]);
+  }, []);
   return {};
 };
 
@@ -169,7 +179,7 @@ const useNextPrevMessageAdd = () => {
     return () => {
       chatStore.socket?.off("nextPrevMessagesUser", handleNextPrevMessageAdd);
     };
-  }, [chatStore.socket]);
+  }, []);
   return {};
 };
 
@@ -182,7 +192,7 @@ const useMessagesStatus = () => {
     return () => {
       chatStore.socket?.off("messageStatus", handleStatusMessage);
     };
-  }, [chatStore.socket]);
+  }, []);
   return {};
 };
 
@@ -219,7 +229,7 @@ const useMessageWrite = () => {
     return () => {
       chatStore.socket?.off("messageWrite", handleStatusMessageWrite);
     };
-  }, [chatStore.socket]);
+  }, []);
   return {};
 };
 
@@ -250,7 +260,7 @@ const useMessageRoom = () => {
     return () => {
       chatStore.socket?.off("room", handleRoom);
     };
-  }, [chatStore.socket]);
+  }, []);
   return {};
 };
 
